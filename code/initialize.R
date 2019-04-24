@@ -1,5 +1,4 @@
 library(tidyverse)
 library(data.table)
-library(sqldf)
 library(kevostools)
 library(rgdal)

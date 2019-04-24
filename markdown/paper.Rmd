@@ -6,7 +6,6 @@ output: pdf_document
 bibliography: "test.bib"
 link-citations: yes
 ---
-
 <!-- --- -->
 <!-- title: "Rethinking Felony Disenfranchisement: The Case of New York City and Miami" -->
 
@@ -27,12 +26,12 @@ link-citations: yes
 
 <!-- output: rticles::asa_article -->
 <!-- --- -->
-
-```{r, echo = F}
-knitr::opts_knit$set(root.dir = "../..")
+```{r setup, echo = F, message = F}
+knitr::opts_knit$set(root.dir = "..")
 library(scales)
+library(ggplot2)
+library(extrafont)
 ```
-
 "There is no Negro problem. There is no Southern problem. There is no Northern problem. There is only an American problem"
 
 -*Lyndon Johnson, March 15, 1965*
@@ -53,11 +52,15 @@ The racial imbalance of felony disenfranchisement laws are not confined to the 1
 
 #Academic Literature and Felony Disenfranchisement
 
-In the aftermath of the 2000 presidential election, academic interest in the political implications of felony disenfranchisement was stirred thanks to a paper from Christopher Uggen and Jeff Manza [-@Uggen2002]. George W. Bush's margin of victory in Florida in 2000 was famously just 537 votes. In their 2002 paper, Uggen and Manza estimate the likely partisan composition of the disenfranchised population with felony convictions in their past. They estimate that, if this group had been allowed to vote, they would have supported Al Gore. Their enfranchisement, Uggen and Manza posit, would have tipped the presidential contest and resulted in the election of Al Gore. They based their estimates on the voting patterns of *non*-disenfranchised individuals who were demographically similar to the disenfranchised population. Though much of the research conducted since their 2002 study has undermined some of their key assumptions (namely, that formerly incarcerated individuals turnout and cast ballots similarly to those who have not been incarcerated), Uggen and Manza convincingly demonstrated that felony disenfranchisement can have material political consequences. In the years after the Uggen and Manza published their paper, scholars sought to investigate the effect of felony disenfranchisement on African American turnout [@Miles2004], young adult turnout [@Hjalmarsson2010], and other questions. Some of this research compared states and regions with differing disenfranchisement regimes to estimate these effects [@Miles2004]. Others used survey data or interviews to construct their estimates [@Uggen2004; @Drucker2005].
+In the aftermath of the 2000 presidential election, academic interest in the political implications of felony disenfranchisement was stirred thanks to a paper from Christopher Uggen and Jeff Manza [-@Uggen2002]. George W. Bush's margin of victory in Florida in 2000 was famously just 537 votes. In their 2002 paper, Uggen and Manza estimate the likely partisan composition of the disenfranchised population with felony convictions in their past. They estimate that, if this group had been allowed to vote, they would have supported Al Gore. Their enfranchisement, Uggen and Manza posit, would have tipped the presidential contest and resulted in the election of Al Gore. They based their estimates on the voting patterns of *non*-disenfranchised individuals who were demographically similar to the disenfranchised population. Though much of the research conducted since their 2002 study has undermined some of their key assumptions (namely, that formerly incarcerated individuals turnout and cast ballots similarly to those who have not been incarcerated), Uggen and Manza convincingly demonstrated that felony disenfranchisement can have material political consequences. In the years after the Uggen and Manza published their paper, scholars sought to investigate the effect of felony disenfranchisement on African American turnout [@Miles2004], young adult turnout [@Hjalmarsson2010], and other questions. Some of this research compared states and regions with differing disenfranchisement regimes to estimate these effects [@Miles2004; @Ochs2006]. Others have used survey data or interviews to construct their estimates [@Uggen2004; @Drucker2005].
 
-In a series of papers in between 2009 and 2011, researchers developed methods for directly estimating the turnout of formerly disenfranchised individuals. Haselswerdt [-@Haselswerdt2009] matched release data and voter registration data from Erie County, NY, to estimate turnout among a small group of formerly incarcerated individuals. Traci Burch [-@Burch2010; -@Burch2011] expanded upon this matching methodology to estimate the voting patters of formerly disenfranchised individuals in a range of states. She uses release data from states' Departments of Corrections and their Registered Voter Files to estimate the number of formerly incarcerated individuals who went on to register to vote. Using the Registered Voter Files, she is also able to estimate the party affiliation of formerly incarcerated individuals (in states with party registration) and the turnout rate among these individuals. Her methodology has been used to investigate other questions surrounding the voting patterns of formerly incarcerated individuals under different circumstances and to examine the impact of changes in disenfranchisement policy [xx].
+In a series of papers in between 2009 and 2011, researchers developed methods for directly estimating the turnout of formerly disenfranchised individuals. Haselswerdt [-@Haselswerdt2009] matched release data and voter registration data from Erie County, NY, to estimate turnout among a small group of formerly incarcerated individuals. Traci Burch [-@Burch2010; -@Burch2011] expanded upon this matching methodology to estimate the voting patterns of formerly disenfranchised individuals in a range of states. She uses release data from states' Departments of Corrections and their Registered Voter Files to estimate the number of formerly incarcerated individuals who went on to register to vote. Using the Registered Voter Files, she is also able to estimate the party affiliation of formerly incarcerated individuals (in states with party registration) and the turnout rate among these individuals. Her methodology has been used to investigate other questions surrounding the voting patterns of formerly incarcerated individuals under different circumstances and to examine the impact of changes in disenfranchisement policy [xx].
 
-These investigations into the implications of felony disenfranchisement have shed great light on the impact that restricting access to the ballot box might have on election outcomes, and for understanding the political participation of some of the most marginalized members of society. The literature has explored the intersection of race and disenfranchisement and discussed in broad terms how disproportionately disenfranchising Black men is hugely problematic. The literature has not, however, spent a great deal of time exploring the political implications of felony disenfranchisement for *communities* of color. 
+A number of papers have also explored the impact that felony disenfranchisement policies have on turnout among non-disenfranchised residents. King and Erickson [-@King2016], for instance, leverage state-level variation in disenfranchisement laws to estimate the impact that felony disenfranchisement has on turnout among African Americans. They use data from the 2004 Current Population Survey Voting and Registration Supplement to determine individual-level turnout. They include estimates of the share of African Americans who are disenfranchised in each state from @locked_out to explore the impact of these policies on eligible voters. Ultimately, they argue that "African American disenfranchisement plays a unique role in predicting African American voter turnout." They conclude that disenfranchisement has spillover effects for African American voters: where more African Americans are disenfranchised, elibible African Americans are less likely to cast a ballot. These findings are in line with other research that has explored whether the effects of disenfranchisement extend beyond those whose voting rights are directly suspended [@Bowers2009; @Ochs2006; @Walker2014]. As @Bowers2009 sum up: "[I]t is not solely the direct vote of ex-felons that is denied through these laws. [Felony disenfranchisement] impacts the political power of communities that extends beyond felons' collateral penalty."
+
+These findings are not suprising given the large body of research establishing the social nature of voting. Outside the felony disenfranchisement conversation, an enormous body of research has demonstrated that individuals are far more likely to cast a ballot if their peers, family members or neighbors are doing so. [Build this out]
+
+Although scholars have established that felony disenfranchisement decreases turnout among Black voters at the *state* level, relatively little research has been done on how felony disenfranchisement operates at the sub-state level. Though we know that Black voters are generally less likely to cast a ballot when they live in a state with strict disenfranchisement laws, less work has been done exploring the types of neighborhoods in which these effects are concentrated, and the impact these laws might have at the local level.
 
 
 #Spatial Effects of Concentrated Policing and Incarceration
@@ -65,5 +68,14 @@ These investigations into the implications of felony disenfranchisement have she
 Previous literature has called attention to the racially disparate impacts of felony disenfranchisement in the United States. It has often failed, however, to explore the ways in which the disenfranchisement of individuals leads to a loss of political power for community members
 
 ##concentrated policing
+
+#Research Design: Spatial Implications of Felony Disenfranchisement in New York City and Miami
+
+##Matching
+##Geocoding
+
+#Maps
+
+
 \newpage
 #References
