@@ -56,23 +56,22 @@ nys <- filter(nys, longitude != 0) %>%
 
 dists <- fortify(council_districts)
 
-ggplot() +
+city_map <- ggplot() +
   theme(axis.ticks = element_blank(),
         axis.text = element_blank(),
         panel.background = element_blank(),
         panel.border = element_blank(),
         legend.position = "bottom",
-        text = element_text(family = "Gadugi"),
         plot.title = element_text(hjust = 0.5),
         legend.background = element_blank(),
         legend.key=element_blank()) +
   geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
-  geom_point(data = filter(nys, !is.na(district), voted == "Cast Ballot in Past 10 Years"), aes(x = longitude, y = latitude), color = "red") +
+  geom_point(data = filter(nys, !is.na(district), voted == "Cast Ballot in Past 10 Years"), aes(x = longitude, y = latitude), shape = 21, color = "black", fill = "red") +
   coord_map() +
   labs(x = NULL, y = NULL, caption = "Sources: NYSBOE, NYSDOCCS")
 
-ggsave("./output/citywide_map.png")
+saveRDS(city_map, "./output/city_map.RDS")
 
 ggplot() +
   theme(axis.ticks = element_blank(),

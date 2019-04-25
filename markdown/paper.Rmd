@@ -2,7 +2,9 @@
 title: "Rethinking Felony Disenfranchisement: The Case of New York City and Miami"
 author: "Kevin Morris"
 date: "April 22, 2019"
-output: pdf_document
+output:
+  pdf_document:
+    fig_caption: yes
 bibliography: "test.bib"
 link-citations: yes
 ---
@@ -27,7 +29,8 @@ link-citations: yes
 <!-- output: rticles::asa_article -->
 <!-- --- -->
 ```{r setup, echo = F, message = F}
-knitr::opts_knit$set(root.dir = "..")
+knitr::opts_knit$set(root.dir = "..", dev = "cairo_pdf"
+                     )
 library(scales)
 library(ggplot2)
 library(extrafont)
@@ -75,9 +78,13 @@ Previous literature has called attention to the racially disparate impacts of fe
 ##Geocoding
 
 #Maps
-![\label{fig:citymap}Individuals Incarcerated in 2017 Who Voted Between 2007 and 2016](../output/citywide_map.png)
+```{r figs, echo = FALSE, fig.width = 5, fig.height = 5, fig.cap = "\\label{fig:citymap}Individuals Incarcerated in 2017 Who Voted Between 2007 and 2016"}
+j <- readRDS("./output/city_map.RDS")
+j
+```
 
-As we can see in Figure \ref{fig:citymap}, these are not distributed evenly throughout the city.
+
+As we can see in Figure \ref{fig:citymap}, all these other observations
 
 \newpage
 #References
