@@ -1,9 +1,9 @@
 ## read voter file
-
-db <- dbConnect(SQLite(), "D:/rolls.db")
+# pull everyone who is active now (and registered before 1/1/17)
+# or who is purged now but was registered on 1/1/17
 nys_roll <- dbGetQuery(db, "select last_name, first_name, middle_name, dob, voter_status, nys_id
                        from nys_roll_0319
-                       where (voter_status != 'PURGED' and registration_date < 20170000) or
+                       where (voter_status != 'PURGED' and registration_date < 20170000) or 
                        (voter_status == 'PURGED' and registration_date < 20170000 and date_purged >= 20170000)")
 
 nys_roll <- nys_roll %>% 

@@ -1,7 +1,7 @@
 ## geocode matched individuals
 
 matches <- readRDS("./temp/matched_ids_17.rds")
-e16 <- fread("D:/rolls/new_york/misc/2016_elections.csv")
+elects <- fread("./temp/elects.csv")
 
 # ## NYS
 # db <- dbConnect(SQLite(), "D:/rolls.db")
@@ -31,21 +31,28 @@ e16 <- fread("D:/rolls/new_york/misc/2016_elections.csv")
 nys <- readRDS("./temp/geocoded_17.rds")
 
 
-nys <- cSplit(nys, "history", sep = ";", direction = "long", type.convert = F) %>% 
+nys <- cSplit(nys, "history", sep = ";", direction = "long", type.convert = F)
+
+nys <- left_join(nys, elects, by = "history") %>% 
   group_by(nys_id) %>% 
-  mutate(v16 = max(history %in% e16$election)) %>% 
-  filter(row_number() == 1)
+  mutate(voted = max(year > 2006 & !is.na(year))) %>% 
+  filter(row_number() == 1) %>% 
+  ungroup()
 
-nys$voted_16 <- ifelse(nys$v16 == 1, "Cast Ballot in 2016", "Didn't Cast Ballot in 2016")
+nys$voted <- ifelse(nys$voted == 1, "Cast Ballot in Past 10 Years", "Didn't Cast Ballot in Past 10 Years")
 
+
+# get borough boundaries for projection
+bb <- readOGR("./raw_data/shapefiles/Borough Boundaries", "geo_export_14dc9d2c-e65a-48c5-ac4d-1bcd90c6758d")
+#
 
 council_districts <- readOGR("./raw_data/shapefiles/nycc_19a", "nycc")
-council_districts <- spTransform(council_districts, CRS("+proj=longlat +datum=WGS84"))
+council_districts <- spTransform(council_districts, CRS(bb@proj4string@projargs))
 pings  <- SpatialPoints(nys[c('longitude','latitude')], proj4string = council_districts@proj4string)
 nys$district   <- over(pings, council_districts)$CounDist
 
 nys <- filter(nys, longitude != 0) %>% 
-  arrange(v16)
+  arrange(voted)
 
 dists <- fortify(council_districts)
 
@@ -61,12 +68,10 @@ ggplot() +
         legend.key=element_blank()) +
   geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
-  geom_point(data = filter(nys, !is.na(district)), aes(x = longitude, y = latitude, color = as.factor(voted_16))) +
-  coord_equal(ratio = 1) +
-  labs(x = NULL, y = NULL, color = "Voted in 2016", caption = "Sources: NYSBOE, NYSDOCCS") +
-  scale_color_manual(values = c("red", "blue")) +
-  guides(color = guide_legend(title = "Voted in 2016?", title.position = "top", title.hjust = 0.5)) +
-  ggtitle("2017 Prison Admissions Who Were\nRegistered to Vote in 2016")
+  geom_point(data = filter(nys, !is.na(district), voted == "Cast Ballot in Past 10 Years"), aes(x = longitude, y = latitude), color = "red") +
+  coord_map() +
+  labs(x = NULL, y = NULL, caption = "Sources: NYSBOE, NYSDOCCS")
+
 ggsave("./output/citywide_map.png")
 
 ggplot() +

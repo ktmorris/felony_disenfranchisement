@@ -270,4 +270,17 @@ number = "3",
   publisher = {{SAGE} Publications},
 }
 
+@Article{Walker2014,
+  author    = {Hannah L. Walker},
+  title     = {Extending the effects of the carceral state. Proximal contact, polit-ical participation, and race},
+  journal   = {Political Research Quarterly},
+  year      = {2014},
+  volume    = {67},
+  number    = {4},
+  month     = {jul},
+  pages     = {809--822},
+  doi       = {10.1177/1065912914542522},
+  publisher = {{SAGE} Publications},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
