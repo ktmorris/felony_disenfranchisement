@@ -3,30 +3,31 @@
 matches <- readRDS("./temp/matched_ids_17.rds")
 elects <- fread("./temp/elects.csv")
 
-# ## NYS
-# db <- dbConnect(SQLite(), "D:/rolls.db")
-# nys <- dbGetQuery(db, "select res_house_number, res_pre_street, res_street_name, res_post_street_dir, res_city, zip5, nys_id, voter_status, history
-#                   from nys_roll_0319") %>% 
-#   filter(nys_id %in% matches$nys_id) %>% 
-#   mutate(street = paste("-", res_house_number, res_pre_street, res_street_name, res_post_street_dir, "-", sep = "-"),
-#          street = gsub("\\s+", " ", str_trim(gsub("-", " ", gsub("-NA-", " ", street)))),
-#          city = res_city,
-#          zip = zip5,
-#          state = "NY") %>% 
-#   select(street, city, zip, state, nys_id, voter_status, history)
-# 
-# nys <- nys %>% 
-#   mutate(a = as.integer(voter_status == "ACTIVE"),
-#          b = as.integer(voter_status == "INACTIVE"),
-#          c = as.integer(voter_status == "PREREG"))
-# 
-# nys <- setorder(nys, nys_id, -a, -b, -c) ## KEEP ONE RECORD FOR EVERY VOTER
-# nys <- nys[!duplicated(nys$nys_id),]
-# nys <- select(nys, -a, -b, -c)
-# 
-# nys <- geocode(nys) %>% 
-#   filter(longitude != 0)
-# saveRDS(nys, "./temp/geocoded_17.rds")
+## NYS
+db <- dbConnect(SQLite(), "D:/rolls.db")
+nys <- dbGetQuery(db, "select res_house_number, res_pre_street, res_street_name, res_post_street_dir, res_city, zip5, nys_id, voter_status, history
+                  from nys_roll_0319") %>%
+  filter(nys_id %in% matches$nys_id) %>%
+  mutate_at(vars(res_house_number, res_pre_street, res_street_name, res_post_street_dir), funs(ifelse(is.na(.), "", .))) %>% 
+  mutate(street = paste(res_house_number, res_pre_street, res_street_name, res_post_street_dir),
+         street = gsub("\\s+", " ", street),
+         city = res_city,
+         zip = zip5,
+         state = "NY") %>%
+  select(street, city, zip, state, nys_id, voter_status, history)
+
+nys <- nys %>%
+  mutate(a = as.integer(voter_status == "ACTIVE"),
+         b = as.integer(voter_status == "INACTIVE"),
+         c = as.integer(voter_status == "PREREG"))
+
+nys <- setorder(nys, nys_id, -a, -b, -c) ## KEEP ONE RECORD FOR EVERY VOTER
+nys <- nys[!duplicated(nys$nys_id),]
+nys <- select(nys, -a, -b, -c)
+
+nys <- geocode(nys) %>%
+  filter(longitude != 0)
+saveRDS(nys, "./temp/geocoded_17.rds")
 
 nys <- readRDS("./temp/geocoded_17.rds")
 
