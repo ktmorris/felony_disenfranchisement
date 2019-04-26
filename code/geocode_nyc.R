@@ -1,5 +1,6 @@
 ## geocode nyc
 
+<<<<<<< HEAD
 # nyc <- dbGetQuery(db, "select dob, res_house_number, res_pre_street, res_street_name, res_post_street_dir, res_city,
 #                        zip5, nys_id, voter_status, last_name, county_code, gender, political_party, history
 #                   from nys_roll_0319
@@ -48,7 +49,6 @@ history <- cSplit(dplyr::select(nyc, nys_id, history), "history", sep = ";", dir
 
 history <- left_join(history, elects, by = "history")
 history <- filter(history, year == 2017, election_type == "general")
-
 nyc$v2017 <- nyc$nys_id %in% history$nys_id
 ### block group level
 
