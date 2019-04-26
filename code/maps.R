@@ -41,6 +41,17 @@ nys <- left_join(nys, elects, by = "history") %>%
 
 nys$voted <- ifelse(nys$voted == 1, "Cast Ballot in Past 10 Years", "Didn't Cast Ballot in Past 10 Years")
 
+bg_shp <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
+pings  <- SpatialPoints(nys[c('longitude','latitude')], proj4string = bg_shp@proj4string)
+nys$bg <- over(pings, bg_shp)$GEOID
+
+count_by_bg <- nys %>% 
+  filter(voted == "Cast Ballot in Past 10 Years") %>% 
+  group_by(bg) %>% 
+  tally() %>% 
+  rename(lost_voters = n)
+
+saveRDS(count_by_bg, "./temp/disen_by_bg.rds")
 
 # get borough boundaries for projection
 bb <- readOGR("./raw_data/shapefiles/Borough Boundaries", "geo_export_14dc9d2c-e65a-48c5-ac4d-1bcd90c6758d")
