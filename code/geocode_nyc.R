@@ -48,7 +48,6 @@ history <- cSplit(dplyr::select(nyc, nys_id, history), "history", sep = ";", dir
 
 history <- left_join(history, elects, by = "history")
 history <- filter(history, year == 2017, election_type == "general")
-
 nyc$v2017 <- nyc$nys_id %in% history$nys_id
 ### block group level
 
