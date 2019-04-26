@@ -37,7 +37,6 @@
 # 
 # saveRDS(nyc, "./temp/nyc.rds")
 
-
 nyc <- readRDS("./temp/nyc.rds")
 
 ##### 2017 ballots bg
