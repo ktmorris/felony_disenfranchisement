@@ -36,7 +36,7 @@ nys <- cSplit(nys, "history", sep = ";", direction = "long", type.convert = F)
 
 nys <- left_join(nys, elects, by = "history") %>% 
   group_by(nys_id) %>% 
-  mutate(voted = max(year > 2006 & !is.na(year))) %>% 
+  mutate(voted = max(year > 2006 & year <= 2016 & !is.na(year))) %>% 
   filter(row_number() == 1) %>% 
   ungroup()
 

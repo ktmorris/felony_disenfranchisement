@@ -48,6 +48,19 @@ history <- cSplit(dplyr::select(nyc, nys_id, history), "history", sep = ";", dir
 history <- left_join(history, elects, by = "history")
 history <- filter(history, year == 2017, election_type == "general")
 nyc$v2017 <- nyc$nys_id %in% history$nys_id
+##### arrests
+arrests <- fread("./raw_data/NYPD_Arrests_Data__Historic_.csv") %>% 
+  filter(LAW_CAT_CD == "F")
+
+bg_shp <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
+pings  <- SpatialPoints(arrests[c('Longitude','Latitude')], proj4string = bg_shp@proj4string)
+arrests$bg <- over(pings, bg_shp)$GEOID
+
+arrests_bg <- arrests %>% 
+  group_by(bg) %>% 
+  summarize(arrests = n())
+
+
 ### block group level
 
 share_dem <- nyc %>% 
@@ -80,7 +93,11 @@ vap <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), f
 }))
 
 
-block_groups <- left_join(income, left_join(race, left_join(education, left_join(age, left_join(vap, share_dem, by = c("GEOID" = "bg"))))))
+block_groups <- left_join(income,
+                          left_join(race, left_join(education,
+                                                    left_join(age,left_join(vap, share_dem, by = c("GEOID" = "bg"))))))
+
+block_groups <- left_join(block_groups, arrests_bg, by = c("GEOID" = "bg"))
 
 lost_voters <- readRDS("./temp/disen_by_bg.rds")
 
@@ -139,6 +156,9 @@ match_w <- matches_v %>%
 reg <- inner_join(block_groups, match_w, by = "GEOID")
 
 summary(lm(to ~ treat, data = reg, weights = weight))
+
+summary(lm(to ~ arrests + median_income + latino + nh_black + nh_white + some_college + median_age + vap + share_dem,
+           data = block_groups))
 
 # 
 # ###########
