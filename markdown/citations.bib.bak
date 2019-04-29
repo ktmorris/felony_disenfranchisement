@@ -283,4 +283,17 @@ number = "3",
   publisher = {{SAGE} Publications},
 }
 
+@Article{Meredith2015,
+  author    = {Marc Meredith and Michael Morse},
+  title     = {The Politics of the Restoration of Ex-Felon Voting Rights: The Case of Iowa},
+  journal   = {Quarterly Journal of Political Science},
+  year      = {2015},
+  volume    = {10},
+  number    = {1},
+  month     = {may},
+  pages     = {41--100},
+  doi       = {10.1561/100.00013026},
+  publisher = {Now Publishers},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}

@@ -139,6 +139,4 @@ saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 
 
 
-#### regression
-summary(lm(to ~ arrests + median_income + latino + nh_black + nh_white + some_college + median_age + vap + share_dem,
-           data = block_groups))
+

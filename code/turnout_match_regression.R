@@ -1,15 +1,15 @@
 ####### match at bg and tract level
 
-for(geo in c("tract")){
+for(geo in c("block_group", "tract")){
 
   units <- readRDS(paste0("./temp/", geo, "_pre_match.rds"))
   
   match_data <- units %>% 
     dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem)
   
-  genout <- GenMatch(Tr = units$treat, X = match_data,
-                     M = 3, replace = T, pop.size = 1000)
-  saveRDS(genout, paste0("./temp/genout_", geo, ".rds"))
+  # genout <- GenMatch(Tr = units$treat, X = match_data,
+  #                    M = 3, replace = T, pop.size = 1000)
+  # saveRDS(genout, paste0("./temp/genout_", geo, ".rds"))
   
   genout <- readRDS(paste0("./temp/genout_", geo, ".rds"))
   
@@ -52,7 +52,9 @@ for(geo in c("tract")){
   
   reg <- inner_join(units, match_w, by = "GEOID")
   
-  lm(to ~ treat, data = reg, weights = weight)
+  reg_output <- lm(to ~ treat, data = reg, weights = weight)
+  saveRDS(reg_output, paste0("./temp/match_reg_", geo, ".rds"))
+  
   
   ###########
   load(paste0("./temp/mout_", geo, ".RData"))
@@ -112,8 +114,15 @@ for(geo in c("tract")){
   
   colnames(df) <- c("", "Treated", "Control", "Treated", "Control", "Mean Diff", "eQQ Med", "eQQ Mean", "eQQ Max")
   
+  saveRDS(df, paste0("./temp/match_table_", geo, ".rds"))
+  
   kable(df, escape = FALSE, align = c('l', rep('c', 99))) %>%
     add_header_above(c(" " = 1, "Means: Unmatched Data" = 2, "Means: Matched Data" = 2, "Percent Improvement" = 4), align = "c") %>%
     kable_styling(font_size = 12, full_width = F) %>%
     save_kable(file = paste0("./output/matches_", geo, ".html"), self_contained = T)
-  }
+}
+
+
+#### regression
+summary(lm(to ~ arrests + median_income + latino + nh_black + nh_white + some_college + median_age + vap + share_dem,
+           data = units))
