@@ -57,176 +57,88 @@ pings  <- SpatialPoints(arrests[c('Longitude','Latitude')], proj4string = bg_shp
 arrests$bg <- over(pings, bg_shp)$GEOID
 
 arrests_bg <- arrests %>% 
-  group_by(bg) %>% 
+  group_by(GEOID = bg) %>% 
   summarize(arrests = n())
 
+arrests_tract <- arrests %>% 
+  group_by(GEOID = substring(bg, 1, 11)) %>% 
+  summarize(arrests = n())
 
-### block group level
+### lost voters 
+lost_voters_bg <- readRDS("./temp/disen_by_bg.rds") %>% 
+  rename(GEOID = bg)
 
-share_dem <- nyc %>% 
-  group_by(bg) %>% 
+lost_voters_tract <- lost_voters_bg %>% 
+  group_by(GEOID = substring(GEOID, 1, 11)) %>% 
+  summarize(lost_voters = sum(lost_voters))
+
+## share dem
+share_dem_bg <- nyc %>% 
+  group_by(GEOID = bg) %>% 
   summarize(share_dem = mean(party == 0),
             v2017 = sum(v2017),
             vcount = n())
 
-income <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-  income <- census_income("block group", state = "NY", year = 2017, county = c) %>% 
-    dplyr::select(-NAME)
-}))
+share_dem_tract <- nyc %>% 
+  group_by(GEOID = substring(bg, 1, 11)) %>% 
+  summarize(share_dem = mean(party == 0),
+            v2017 = sum(v2017),
+            vcount = n())
 
-race <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-  race <- census_race_ethnicity("block group", state = "NY", year = 2017, county = c) %>% 
-    dplyr::select(-NAME)
-}))
+### block group / tract level
+geos <- lapply(c("tract", "block group"), function(var) {
+  income <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
+    income <- census_income(var, state = "NY", year = 2017, county = c) %>% 
+      dplyr::select(-NAME)
+  }))
+  
+  race <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
+    race <- census_race_ethnicity(var, state = "NY", year = 2017, county = c) %>% 
+      dplyr::select(-NAME)
+  }))
+  
+  education <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
+    education <- census_education(var, state = "NY", year = 2017, county = c) %>% 
+      dplyr::select(-NAME)
+  }))
+  
+  age <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
+    age <- census_median_age(var, state = "NY", year = 2017, county = c)
+  }))
+  
+  vap <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
+    vap <- census_vap(var, state = "NY", year = 2017, county = c) 
+  }))
+  
+  
+  units <- left_join(income,
+                            left_join(race, left_join(education,
+                                                      left_join(age,vap))))
+  return(units)
 
-education <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-  education <- census_education("block group", state = "NY", year = 2017, county = c) %>% 
-    dplyr::select(-NAME)
-}))
+  })
 
-age <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-  age <- census_median_age("block group", state = "NY", year = 2017, county = c)
-}))
-
-vap <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-  vap <- census_vap("block group", state = "NY", year = 2017, county = c) 
-}))
-
-
-block_groups <- left_join(income,
-                          left_join(race, left_join(education,
-                                                    left_join(age,left_join(vap, share_dem, by = c("GEOID" = "bg"))))))
-
-block_groups <- left_join(block_groups, arrests_bg, by = c("GEOID" = "bg"))
-
-lost_voters <- readRDS("./temp/disen_by_bg.rds")
-
-block_groups <- left_join(block_groups, lost_voters, by = c("GEOID" = "bg")) %>% 
+tracts <- left_join(geos[[1]], left_join(share_dem_tract, left_join(arrests_tract, lost_voters_tract))) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
+block_groups <- left_join(geos[[2]], left_join(share_dem_bg, left_join(arrests_bg, lost_voters_bg))) %>% 
+  mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
+
+tracts <- tracts[complete.cases(tracts), ] %>% 
+  mutate(treat = lost_voters > 0,
+         to = v2017 / vap)
+
+saveRDS(tracts, "./temp/tract_pre_match.rds")
 
 block_groups <- block_groups[complete.cases(block_groups), ] %>% 
   mutate(treat = lost_voters > 0,
          to = v2017 / vap)
 
-match_data <- block_groups %>% 
-  dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem)
 
-genout <- GenMatch(Tr = block_groups$treat, X = match_data,
-                   M = 3, replace = T, pop.size = 1000)
-saveRDS(genout, "./temp/genout.rds")
+saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 
-genout <- readRDS("./temp/genout.rds")
 
-treat <- block_groups$treat
 
-X <- block_groups %>% 
-  dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem)
 
-mout <- Match(Tr = treat, X = X, estimand = "ATT", Weight.matrix = genout, version = "fast", M = 30)
-summary(mout)
-
-save(mout, file = "./temp/mout_full.RData")
-
-matches <- data.frame("treated" = mout[["index.treated"]],
-                      "control" = mout[["index.control"]])
-
-block_groups <- block_groups %>% 
-  mutate(id = row_number())
-
-treat_row <- block_groups %>% 
-  filter(treat) %>% 
-  select(id, GEOID)
-
-untreat_row <- block_groups %>% 
-  filter(!treat) %>% 
-  select(id, control_GEOID = GEOID)
-
-matches <- left_join(matches, treat_row, by = c("treated" = "id"))
-matches <- left_join(matches, untreat_row, by = c("control" = "id"))
-
-saveRDS(matches, file = "./temp/full_match_output.rds")
-
-matches_v <- as.data.frame(c(matches$GEOID, matches$control_GEOID))
-colnames(matches_v) = "GEOID"
-
-match_w <- matches_v %>% 
-  group_by(GEOID) %>% 
-  summarize(weight = n())
-
-reg <- inner_join(block_groups, match_w, by = "GEOID")
-
-summary(lm(to ~ treat, data = reg, weights = weight))
-
+#### regression
 summary(lm(to ~ arrests + median_income + latino + nh_black + nh_white + some_college + median_age + vap + share_dem,
            data = block_groups))
-
-# 
-# ###########
-# load("./temp/mout_full.RData")
-# load("./temp/post_match_census_data.RData")
-# order <- fread("./misc_data/var_orders.csv")
-# 
-# balance <- MatchBalance(treated ~ latino + nh_black + nh_white + median_income + some_college + cvap_17 +
-#                           unem + median_age + share_non_citizen + share_moved + share_no_car +
-#                           pop_change + share_republican_2016 + share_reg_14 + total_13, match.out = mout,
-#                         data = census_data)
-# TrMean <- c()
-# PreMean <- c()
-# PreQQmed <- c()
-# PreQQmean <- c()
-# PreQQmax <- c()
-# PostMean <- c()
-# PostQQmed <- c()
-# PostQQmean <- c()
-# PostQQmax <- c()
-# 
-# for(i in c(1:length(balance$BeforeMatching))){
-#   TrMean <- unlist(c(TrMean, balance$BeforeMatching[[i]][3][1]))
-#   PreMean <- unlist(c(PreMean, balance$BeforeMatching[[i]][4][1]))
-#   PreQQmed <- unlist(c(PreQQmed, balance$BeforeMatching[[i]]$qqsummary[2]))
-#   PreQQmean <- unlist(c(PreQQmean, balance$BeforeMatching[[i]]$qqsummary[1]))
-#   PreQQmax <- unlist(c(PreQQmax, balance$BeforeMatching[[i]]$qqsummary[3]))
-#   
-#   PostMean <- unlist(c(PostMean, balance$AfterMatching[[i]][4][1]))
-#   PostQQmed <- unlist(c(PostQQmed, balance$AfterMatching[[i]]$qqsummary[2]))
-#   PostQQmean <- unlist(c(PostQQmean, balance$AfterMatching[[i]]$qqsummary[1]))
-#   PostQQmax <- unlist(c(PostQQmax, balance$AfterMatching[[i]]$qqsummary[3]))
-# }
-# 
-# varnames <- c("latino", "nh_black", "nh_white", "median_income", "some_college", "cvap_17",
-#               "unem", "median_age", "share_non_citizen", "share_moved", "share_no_car",
-#               "pop_change", "share_republican_2016", "share_reg_14", "total_13")
-# 
-# 
-# df <- data.frame("TrMean" = TrMean,
-#                  "TrMean2" = TrMean,
-#                  "PreMean" = PreMean,
-#                  "PreQQmed" = PreQQmed,
-#                  "PreQQmean" = PreQQmean,
-#                  "PreQQmax" = PreQQmax,
-#                  "PostMean" = PostMean,
-#                  "PostQQmed" = PostQQmed,
-#                  "PostQQmean" = PostQQmean,
-#                  "PostQQmax" = PostQQmax,
-#                  "names" = varnames) %>% 
-#   mutate(change_mean = 1 - (abs(TrMean - PostMean) / abs(TrMean - PreMean)),
-#          change_eqqmed = 1 - abs(PostQQmed / PreQQmed),
-#          change_eqqmean = 1 - abs(PostQQmean / PreQQmean),
-#          change_eqqmax = 1 - abs(PostQQmax / PreQQmax)) %>% 
-#   mutate_at(vars(TrMean, PreMean, TrMean2, PostMean), funs(comma(round(., 2), accuracy = .01))) %>% 
-#   mutate_at(vars(change_mean, change_eqqmed, change_eqqmean, change_eqqmax), funs(round(. * 100, 2)))
-# 
-# df <- full_join(df, order, by = c("names" = "variable")) %>%
-#   arrange(order) %>% 
-#   select(name, TrMean, PreMean, TrMean2, PostMean, change_mean, change_eqqmed, change_eqqmean, change_eqqmax) %>% 
-#   mutate(name = ifelse(name == "County-Level Variables", "State-Level Variables", name)) %>% 
-#   filter(!is.na(TrMean))
-# 
-# colnames(df) <- c("", "Treated", "Control", "Treated", "Control", "Mean Diff", "eQQ Med", "eQQ Mean", "eQQ Max")
-# 
-# kable(df, escape = FALSE, align = c('l', rep('c', 99))) %>% 
-#   add_header_above(c(" " = 1, "Means: Unmatched Data" = 2, "Means: Matched Data" = 2, "Percent Improvement" = 4), align = "c") %>% 
-#   group_rows("Tract-Level Variables", 1, 13) %>% 
-#   group_rows("County-Level Variables", 14, 15) %>% 
-#   kable_styling(font_size = 12, full_width = F) %>% 
-#   save_kable(file = "./output/matches_all.html", self_contained = T)

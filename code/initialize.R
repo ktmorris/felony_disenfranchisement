@@ -6,6 +6,9 @@ library(rgdal)
 library(sqldf)
 library(splitstackshape)
 library(extrafont)
+library(scales)
+library(kableExtra)
+library(stargazer)
 
 
 db <- dbConnect(SQLite(), "D:/rolls.db")
