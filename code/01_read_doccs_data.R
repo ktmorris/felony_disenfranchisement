@@ -38,6 +38,8 @@ incarcerated = read_fwf(
 colnames(incarcerated) = names
 rm(names)
 
+saveRDS(nrow(incarcerated), "./temp/number_incarcerated.rds")
+
 incarcerated <- incarcerated %>%
   mutate(dob = as.Date(as.character(dob), "%Y%m%d"),
          original_reception_date = as.Date(as.character(original_reception_date), "%Y%m%d"),
