@@ -41,7 +41,7 @@ nyc <- readRDS("./temp/nyc.rds")
 
 ##### 2017 ballots bg
 # read election names
-elects <- fread("./temp/elects.csv")
+elects <- fread("./raw_data/misc/elects.csv")
 
 history <- cSplit(dplyr::select(nyc, nys_id, history), "history", sep = ";", direction = "long", type.convert = F)
 

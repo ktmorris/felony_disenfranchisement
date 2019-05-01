@@ -77,6 +77,7 @@ Previous literature has called attention to the racially disparate impacts of fe
 #Research Design: Spatial Implications of Felony Disenfranchisement in New York City and Miami {-}
 
 ##Matching {-}
+Method.^[Matching on first and last names and dates of birth can result in false positive matches, especially in large states like New York. Following @Meredith2013, I report estimates of the potential impact of these false positives in the Appendix.]
 ##Geocoding {-}
 
 #Maps {-}

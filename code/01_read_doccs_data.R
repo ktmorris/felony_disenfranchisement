@@ -60,10 +60,20 @@ saveRDS(all_doccs, "./temp/all_doccs.rds")
 rm(incarcerated, nys_released)
 
 
-in_2017 <- all_doccs %>% 
-  filter(substring(latest_reception_date, 1, 4) == "2017",
+entered_in_2017 <- all_doccs %>% 
+  filter(gsub("[-]", "", latest_reception_date) >= "20170000",
+         gsub("[-]", "", latest_reception_date) < "20171107",
          current_felon == T) %>% 
   group_by(din) %>% 
   filter(row_number() == 1)
 
-saveRDS(in_2017, "./temp/incarcerated_2017.rds")
+saveRDS(entered_in_2017, "./temp/admit_2017.rds")
+
+in_2017 <- all_doccs %>% 
+  filter(gsub("[-]", "", latest_reception_date) < "20171107",
+         (release_date > "2017-11-07" | is.na(release_date)),
+         current_felon == T) %>% 
+  group_by(din) %>% 
+  filter(row_number() == 1)
+
+saveRDS(in_2017, "./temp/in_2017.rds")

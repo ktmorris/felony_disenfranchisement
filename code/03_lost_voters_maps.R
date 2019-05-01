@@ -1,7 +1,7 @@
 ## geocode matched individuals
 
-matches <- readRDS("./temp/matched_ids_17.rds")
-elects <- fread("./temp/elects.csv")
+matches <- readRDS("./temp/matched_ids_in_17.rds")
+elects <- fread("./raw_data/misc/elects.csv")
 
 ## NYS
 db <- dbConnect(SQLite(), "D:/rolls.db")
