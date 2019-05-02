@@ -296,4 +296,17 @@ number = "3",
   publisher = {Now Publishers},
 }
 
+@Article{WHITE2019,
+  author    = {Ariel White},
+  title     = {Misdemeanor Disenfranchisement? The Demobilizing Effects of Brief Jail Spells on Potential Voters},
+  journal   = {American Political Science Review},
+  year      = {2019},
+  volume    = {113},
+  number    = {2},
+  month     = {feb},
+  pages     = {311--324},
+  doi       = {10.1017/s000305541800093x},
+  publisher = {Cambridge University Press ({CUP})},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
