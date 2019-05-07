@@ -10,6 +10,4 @@ library(scales)
 library(kableExtra)
 library(stargazer)
 
-ttt
-
 db <- dbConnect(SQLite(), "D:/rolls.db")
