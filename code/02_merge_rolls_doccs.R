@@ -20,21 +20,21 @@ nys_roll <- nys_roll %>%
   mutate(middle_name = gsub("[[:punct:]]", "", ifelse(middle_name != "", middle_name, NA))) %>%
   mutate(dob = as.Date(as.character(dob), "%Y%m%d"))
 
-## read doccs data - entered in 2017
-
-doccs_to_rolls <- readRDS("./temp/admit_2017.rds") %>% 
-  rename(first_name = first,
-         middle_name = middle,
-         last_name = last) %>% 
-  mutate(middle_name = gsub("[[:punct:]]", "", ifelse(middle_name != "", middle_name, NA)))
-
-merge_list <- match_rolls_to_doc(doccs_to_rolls, din, nys_roll, nys_id)
-
-small <- merge_list[[1]] %>% 
-  select(nys_id, din) %>% 
-  filter(!is.na(nys_id), !is.na(din))
-
-saveRDS(small, "./temp/matched_ids_enter_17.rds")
+# ## read doccs data - entered in 2017
+# 
+# doccs_to_rolls <- readRDS("./temp/admit_2017.rds") %>% 
+#   rename(first_name = first,
+#          middle_name = middle,
+#          last_name = last) %>% 
+#   mutate(middle_name = gsub("[[:punct:]]", "", ifelse(middle_name != "", middle_name, NA)))
+# 
+# merge_list <- match_rolls_to_doc(doccs_to_rolls, din, nys_roll, nys_id)
+# 
+# small <- merge_list[[1]] %>% 
+#   select(nys_id, din) %>% 
+#   filter(!is.na(nys_id), !is.na(din))
+# 
+# saveRDS(small, "./temp/matched_ids_enter_17.rds")
 
 ## read doccs data - in at all in 2017
 

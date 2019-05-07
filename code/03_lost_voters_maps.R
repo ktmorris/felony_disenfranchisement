@@ -4,32 +4,33 @@ matches <- readRDS("./temp/matched_ids_in_17.rds")
 elects <- fread("./raw_data/misc/elects.csv")
 
 ## NYS
-db <- dbConnect(SQLite(), "D:/rolls.db")
-nys <- dbGetQuery(db, "select res_house_number, res_pre_street, res_street_name, res_post_street_dir, res_city, zip5, nys_id, voter_status, history
-                  from nys_roll_0319") %>%
-  filter(nys_id %in% matches$nys_id) %>%
-  mutate_at(vars(res_house_number, res_pre_street, res_street_name, res_post_street_dir), funs(ifelse(is.na(.), "", .))) %>% 
-  mutate(street = paste(res_house_number, res_pre_street, res_street_name, res_post_street_dir),
-         street = gsub("\\s+", " ", street),
-         city = res_city,
-         zip = zip5,
-         state = "NY") %>%
-  select(street, city, zip, state, nys_id, voter_status, history)
+# db <- dbConnect(SQLite(), "D:/rolls.db")
+# nys <- dbGetQuery(db, "select res_house_number, res_pre_street, res_street_name, res_post_street_dir, res_city, zip5, nys_id, voter_status, history
+#                   from nys_roll_0319") %>%
+#   mutate_at(vars(res_house_number, res_pre_street, res_street_name, res_post_street_dir), funs(ifelse(is.na(.), "", .))) %>%
+#   mutate(street = paste(res_house_number, res_pre_street, res_street_name, res_post_street_dir),
+#          street = gsub("\\s+", " ", street),
+#          city = res_city,
+#          zip = zip5,
+#          state = "NY") %>%
+#   select(street, city, zip, state, nys_id, voter_status, history)
+# 
+# nys <- nys %>%
+#   mutate(a = as.integer(voter_status == "ACTIVE"),
+#          b = as.integer(voter_status == "INACTIVE"),
+#          c = as.integer(voter_status == "PREREG"))
+# 
+# nys <- setorder(nys, nys_id, -a, -b, -c) ## KEEP ONE RECORD FOR EVERY VOTER
+# nys <- nys[!duplicated(nys$nys_id),]
+# nys <- select(nys, -a, -b, -c)
+# 
+# nys <- geocode(nys) %>%
+#   filter(longitude != 0) %>%
+#   mutate(lost_voter = nys_id %in% matches$nys_id) %>%
+# saveRDS(nys, "./temp/nys_geocoded.rds")
 
-nys <- nys %>%
-  mutate(a = as.integer(voter_status == "ACTIVE"),
-         b = as.integer(voter_status == "INACTIVE"),
-         c = as.integer(voter_status == "PREREG"))
-
-nys <- setorder(nys, nys_id, -a, -b, -c) ## KEEP ONE RECORD FOR EVERY VOTER
-nys <- nys[!duplicated(nys$nys_id),]
-nys <- select(nys, -a, -b, -c)
-
-nys <- geocode(nys) %>%
-  filter(longitude != 0)
-saveRDS(nys, "./temp/geocoded_17.rds")
-
-nys <- readRDS("./temp/geocoded_17.rds")
+nys <- readRDS("./temp/nys_geocoded.rds") %>% 
+  filter(lost_voter)
 
 
 nys <- cSplit(nys, "history", sep = ";", direction = "long", type.convert = F)
@@ -81,7 +82,7 @@ city_map <- ggplot() +
   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
   geom_point(data = filter(nys, !is.na(district), voted == "Cast Ballot in Past 10 Years"), aes(x = longitude, y = latitude), shape = 21, color = "black", fill = "red") +
   coord_map() +
-  labs(x = NULL, y = NULL, caption = "Sources: NYSBOE, NYSDOCCS")
+  labs(x = NULL, y = NULL)
 
 saveRDS(city_map, "./output/city_map.RDS")
 
