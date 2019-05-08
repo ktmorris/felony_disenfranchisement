@@ -1,35 +1,7 @@
-## geocode nyc
+## spatial join nyc
 
-# nyc <- dbGetQuery(db, "select dob, res_house_number, res_pre_street, res_street_name, res_post_street_dir, res_city,
-#                        zip5, nys_id, voter_status, last_name, county_code, gender, political_party, history
-#                   from nys_roll_0319
-#                   where voter_status == 'ACTIVE' and
-#                   county_code in (24, 41, 31, 3, 43)") %>%
-#   mutate(age = floor(dob/10000),
-#          gender = ifelse(gender == "F", 0, ifelse(gender == "M", 1, 2)),
-#          party = ifelse(toupper(political_party) == "DEM", 0, ifelse(toupper(political_party) == "REP", 1, 2)))
-# 
-# nyc <- nyc %>%
-#   mutate(a = as.integer(voter_status == "ACTIVE"),
-#          b = as.integer(voter_status == "INACTIVE"),
-#          c = as.integer(voter_status == "PREREG"))
-# 
-# nyc <- setorder(nyc, nys_id, -a, -b, -c) ## KEEP ONE RECORD FOR EVERY VOTER
-# nyc <- nyc[!duplicated(nyc$nys_id),]
-# nyc <- dplyr::select(nyc, -a, -b, -c)
-# 
-# nyc <- nyc %>%
-#   mutate_at(vars(res_house_number, res_pre_street, res_street_name, res_post_street_dir), funs(ifelse(is.na(.), "", .))) %>% 
-#   mutate(street = paste(res_house_number, res_pre_street, res_street_name, res_post_street_dir),
-#              street = gsub("\\s+", " ", street),
-#              city = res_city,
-#              zip = zip5,
-#              state = "NY") %>%
-#   select(nys_id, county_code, street, city, zip, state, party, gender, age, history)
-# 
-# 
-# 
-# nyc <- geocode(nyc)
+# nyc <- readRDS("./temp/nys_geocoded.rds") %>% 
+#   filter(county_code %in% c(24, 41, 31, 3, 43))
 # 
 # bg_shp <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
 # pings  <- SpatialPoints(nyc[c('longitude','latitude')], proj4string = bg_shp@proj4string)
@@ -64,26 +36,20 @@ arrests_tract <- arrests %>%
   group_by(GEOID = substring(bg, 1, 11)) %>% 
   summarize(arrests = n())
 
-### lost voters 
-lost_voters_bg <- readRDS("./temp/disen_by_bg.rds") %>% 
-  rename(GEOID = bg)
-
-lost_voters_tract <- lost_voters_bg %>% 
-  group_by(GEOID = substring(GEOID, 1, 11)) %>% 
-  summarize(lost_voters = sum(lost_voters))
-
 ## share dem
 share_dem_bg <- nyc %>% 
   group_by(GEOID = bg) %>% 
-  summarize(share_dem = mean(party == 0),
+  summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
-            vcount = n())
+            vcount = n(),
+            lost_voters = sum(lost_voter))
 
 share_dem_tract <- nyc %>% 
   group_by(GEOID = substring(bg, 1, 11)) %>% 
-  summarize(share_dem = mean(party == 0),
+  summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
-            vcount = n())
+            vcount = n(),
+            lost_voters = sum(lost_voter))
 
 ### block group / tract level
 geos <- lapply(c("tract", "block group"), function(var) {
@@ -118,9 +84,10 @@ geos <- lapply(c("tract", "block group"), function(var) {
 
   })
 
-tracts <- left_join(geos[[1]], left_join(share_dem_tract, left_join(arrests_tract, lost_voters_tract))) %>% 
+tracts <- left_join(geos[[1]], left_join(share_dem_tract, arrests_tract)) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
-block_groups <- left_join(geos[[2]], left_join(share_dem_bg, left_join(arrests_bg, lost_voters_bg))) %>% 
+
+block_groups <- left_join(geos[[2]], left_join(share_dem_bg, arrests_bg)) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
 
 tracts <- tracts[complete.cases(tracts), ] %>% 

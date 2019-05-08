@@ -3,17 +3,18 @@
 matches <- readRDS("./temp/matched_ids_in_17.rds")
 elects <- fread("./raw_data/misc/elects.csv")
 
-## NYS
+# NYS
 # db <- dbConnect(SQLite(), "D:/rolls.db")
-# nys <- dbGetQuery(db, "select res_house_number, res_pre_street, res_street_name, res_post_street_dir, res_city, zip5, nys_id, voter_status, history
+# nys <- dbGetQuery(db, "select res_house_number, res_pre_street, res_street_name, res_post_street_dir, dob,
+#                        res_city, zip5, nys_id, voter_status, history, county_code, gender, political_party, last_name
 #                   from nys_roll_0319") %>%
 #   mutate_at(vars(res_house_number, res_pre_street, res_street_name, res_post_street_dir), funs(ifelse(is.na(.), "", .))) %>%
 #   mutate(street = paste(res_house_number, res_pre_street, res_street_name, res_post_street_dir),
-#          street = gsub("\\s+", " ", street),
+#          street = gsub("\\s+", " ", trimws(street)),
 #          city = res_city,
 #          zip = zip5,
 #          state = "NY") %>%
-#   select(street, city, zip, state, nys_id, voter_status, history)
+#   select(street, city, zip, state, nys_id, voter_status, history, county_code, gender, political_party, last_name)
 # 
 # nys <- nys %>%
 #   mutate(a = as.integer(voter_status == "ACTIVE"),
@@ -24,12 +25,11 @@ elects <- fread("./raw_data/misc/elects.csv")
 # nys <- nys[!duplicated(nys$nys_id),]
 # nys <- select(nys, -a, -b, -c)
 # 
-# nys <- geocode(nys) %>%
-#   filter(longitude != 0) %>%
-#   mutate(lost_voter = nys_id %in% matches$nys_id) %>%
+# nys <- geocode(nys)
 # saveRDS(nys, "./temp/nys_geocoded.rds")
 
 nys <- readRDS("./temp/nys_geocoded.rds") %>% 
+  mutate(lost_voter = nys_id %in% matches$nys_id) %>% 
   filter(lost_voter)
 
 

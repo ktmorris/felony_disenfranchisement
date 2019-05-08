@@ -115,7 +115,7 @@ Because I am interested in the spatial effects of felony disenfranchisement at t
 
 These individuals are identified by matching Department of Corrections and Community Supervisions data to the voter file using the methodology developed by Burch [-@Burch2010; -@Burch2011]. I use first, middle, and last names, and dates of birth, to join these two datasets.^[Matching on first and last names and dates of birth can result in false positive matches, especially in large states like New York. Following @Meredith2013, I report estimates of the potential impact of these false positives in the Appendix.] Figure \ref{fig:citymap} shows where these lost voters lived before going to prison (and city council districts).
 
-```{r citywide-map, echo = FALSE, message = F, warning = F, fig.width = 5, fig.height = 5, fig.cap = "\\label{fig:citymap}Individuals Incarcerated in 2017 Who Voted Between 2007 and 2016", out.extra = '', fig.pos = "H", fig.align = "center"}
+```{r citywide-map, echo = FALSE, message = F, warning = F, fig.width = 5, fig.height = 5, fig.cap = "\\label{fig:citymap}Lost Voters on Election Day, 2017", out.extra = '', fig.pos = "H", fig.align = "center"}
 j <- readRDS("./output/city_map.RDS")
 print(j)
 ```
