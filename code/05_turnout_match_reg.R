@@ -1,4 +1,27 @@
-####### match at bg and tract level
+library(tidyverse)
+library(Matching)
+library(data.table)
+library(snow)
+library(parallel)
+library(scales)
+library(kableExtra)
+
+## this can be run locally or on NYU's HPC. Set option in next step
+## option allowed because of how long GenMatch can take
+
+on_nyu <- F
+
+if(on_nyu){
+  setwd("/scratch/km3815/felony_disenfranchisement")
+  
+  NodeFile = Sys.getenv("MY_HOSTFILE")
+  
+  
+  cl <- makeCluster(c(readLines(NodeFile)), type="SOCK")
+}else{
+  source("./code/misc/AutoCluster4.R")
+  cl <- NCPUS(detectCores() - 1)
+}
 
 for(geo in c("block_group", "tract")){
 
@@ -8,7 +31,7 @@ for(geo in c("block_group", "tract")){
     dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem)
   
   genout <- GenMatch(Tr = units$treat, X = match_data,
-                     M = 3, replace = T, pop.size = 1000)
+                     M = 3, replace = T, pop.size = 1000, cluster = cl)
   saveRDS(genout, paste0("./temp/genout_", geo, ".rds"))
   
   genout <- readRDS(paste0("./temp/genout_", geo, ".rds"))
