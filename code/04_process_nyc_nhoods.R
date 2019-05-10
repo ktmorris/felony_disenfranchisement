@@ -120,3 +120,33 @@ saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 
 
 
+###### maps
+
+tract_shp <- readOGR("./raw_data/shapefiles/nyct2010_19a", "nyct2010")
+tract_shp <- spTransform(tract_shp, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
+tract_shp@data$id <- rownames(tract_shp@data)
+temp <- fortify(tract_shp)
+tract_shp <- inner_join(temp, tract_shp@data, by = "id")
+rm(temp)
+
+codes <- data.frame("BoroCode" = as.character(c(1:5)), "cc" = c("061", "005", "047", "081", "085"))
+
+tract_shp <- left_join(tract_shp, codes, by = "BoroCode")
+
+tract_shp$GEOID <- with(tract_shp, paste0("36", cc, CT2010))
+
+tract_shp <- left_join(tract_shp, tracts, by = "GEOID")
+
+ggplot() +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5),
+        legend.background = element_blank(),
+        legend.key=element_blank()) +
+  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group, fill = arrests > 10000), color = "black") +
+  coord_map() +
+  labs(x = NULL, y = NULL) + 
+  ggtitle("Lost Voters by Tract")
