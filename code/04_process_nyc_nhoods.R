@@ -1,16 +1,26 @@
 ## spatial join nyc
 
-# nyc <- readRDS("./temp/nys_geocoded.rds") %>% 
-#   filter(county_code %in% c(24, 41, 31, 3, 43))
+# nyc <- dbGetQuery(db, "select dob, nys_id, voter_status, history, county_code, gender, political_party, last_name
+#                        from nys_roll_0418 where county_code in (24, 41, 31, 3, 43)")
 # 
-# bg_shp <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
-# pings  <- SpatialPoints(nyc[c('longitude','latitude')], proj4string = bg_shp@proj4string)
-# nyc$bg <- over(pings, bg_shp)$GEOID
+# nyc <- nyc %>%
+#   mutate(a = as.integer(voter_status == "ACTIVE"),
+#          b = as.integer(voter_status == "INACTIVE"),
+#          c = as.integer(voter_status == "PREREG"))
 # 
+# nyc <- setorder(nyc, nys_id, -a, -b, -c) ## KEEP ONE RECORD FOR EVERY VOTER
+# nyc <- nyc[!duplicated(nyc$nys_id),]
+# nyc <- select(nyc, -a, -b, -c)
+# 
+# nyc <- left_join(nyc, readRDS("./temp/nys_0418_geocoded.rds"), by = "nys_id")
 # saveRDS(nyc, "./temp/nyc.rds")
 
 nyc <- readRDS("./temp/nyc.rds")
 
+nyc$lost_voter <- nyc$nys_id %in% readRDS("./temp/ids_of_lost_voters.rds")$nys_id
+
+lost_nyc <- sum(nyc$lost_voter)
+saveRDS(lost_nyc, "./temp/lost_count_nyc.rds")
 ##### 2017 ballots bg
 # read election names
 elects <- fread("./raw_data/misc/elects.csv")

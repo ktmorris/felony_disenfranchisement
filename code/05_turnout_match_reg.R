@@ -1,17 +1,17 @@
-library(tidyverse)
-library(Matching)
-library(data.table)
-library(snow)
-library(parallel)
-library(scales)
-library(kableExtra)
-
 ## this can be run locally or on NYU's HPC. Set option in next step
 ## option allowed because of how long GenMatch can take
 
-on_nyu <- F
+on_nyu <- T
 
 if(on_nyu){
+  library(Matching)
+  library(data.table)
+  library(snow)
+  library(parallel)
+  library(scales)
+  library(kableExtra)
+  library(tidyverse)
+  
   setwd("/scratch/km3815/felony_disenfranchisement")
   
   NodeFile = Sys.getenv("MY_HOSTFILE")
@@ -138,14 +138,5 @@ for(geo in c("block_group", "tract")){
   colnames(df) <- c("", "Treated", "Control", "Treated", "Control", "Mean Diff", "eQQ Med", "eQQ Mean", "eQQ Max")
   
   saveRDS(df, paste0("./temp/match_table_", geo, ".rds"))
-  
-  kable(df, escape = FALSE, align = c('l', rep('c', 99))) %>%
-    add_header_above(c(" " = 1, "Means: Unmatched Data" = 2, "Means: Matched Data" = 2, "Percent Improvement" = 4), align = "c") %>%
-    kable_styling(font_size = 12, full_width = F) %>%
-    save_kable(file = paste0("./output/matches_", geo, ".html"), self_contained = T)
+
 }
-
-
-#### regression
-summary(lm(to ~ arrests + median_income + latino + nh_black + nh_white + some_college + median_age + vap + share_dem,
-           data = units))

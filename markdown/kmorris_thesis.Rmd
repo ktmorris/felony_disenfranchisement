@@ -113,7 +113,7 @@ Voters' home addresses were converted to latitudes and longitudes using a geocod
 ##Identification of Lost Voters {-}
 Because I am interested in the spatial effects of felony disenfranchisement at the local level, I explore the impact of disenfranchisement on turnout in the most recent mayoral election, which occured on November 7^th^, 2017. I begin by indentifying "lost voters," defined as individuals who were ineligible to cast a ballot in the 2017 (either because of incarceration of parole status) and had cast a ballot between 2007 and 2016. Lost voters are of particular interest because of their demonstrated propensity to vote. I assume that disenfranchisement is likely to have a bigger impact where it directly impacts residents with a relatively recent history of casting a ballot.
 
-These individuals are identified by matching Department of Corrections and Community Supervisions data to the voter file using the methodology developed by Burch [-@Burch2010; -@Burch2011]. I use first, middle, and last names, and dates of birth, to join these two datasets.^[Matching on first and last names and dates of birth can result in false positive matches, especially in large states like New York. Following @Meredith2013, I report estimates of the potential impact of these false positives in the Appendix.] Figure \ref{fig:citymap} shows where these lost voters lived before going to prison (and city council districts). There were ```r comma(sum(readRDS("./temp/disen_by_bg.rds")$lost_voters))``` such lost voters within New York City as of the 2017 general election, and ```r comma(nrow(readRDS("./temp/matched_ids_in_17.rds")))``` statewide.
+These individuals are identified by matching Department of Corrections and Community Supervisions data to the voter file using the methodology developed by Burch [-@Burch2010; -@Burch2011]. I use first, middle, and last names, and dates of birth, to join these two datasets.^[Matching on first and last names and dates of birth can result in false positive matches, especially in large states like New York. Following @Meredith2013, I report estimates of the potential impact of these false positives in the Appendix.] Figure \ref{fig:citymap} shows where these lost voters lived before going to prison (and city council districts). There were `r comma(readRDS("./temp/lost_count_nyc.rds"))` such lost voters within New York City as of the 2017 general election, and `r comma(nrow(readRDS("./temp/ids_of_lost_voters.rds")))` statewide.
 
 ```{r citywide-map, echo = FALSE, message = F, warning = F, fig.width = 5, fig.height = 5, fig.cap = "\\label{fig:citymap}Lost Voters on Election Day, 2017", out.extra = '', fig.pos = "H", fig.align = "center"}
 j <- readRDS("./output/city_map.RDS")
@@ -169,6 +169,8 @@ stargazer(readRDS("./temp/match_reg_block_group.rds"),
           title = "(\\#tab:blockgroup-reg) Census Block Group Matching Regression",
           table.placement = "H")
 ```
+
+Regression Using Basic Analysis - No matching
 more text
 
 \newpage

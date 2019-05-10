@@ -1,10 +1,7 @@
 ## read voter file
-# pull everyone who is active now (and registered before 2017 deadline)
-# or who is purged now but was registered prior to deadline and purged after election
+
 nys_roll <- dbGetQuery(db, "select last_name, first_name, middle_name, dob, voter_status, nys_id
-                       from nys_roll_0319
-                       where (voter_status != 'PURGED' and registration_date <= 20171013) or 
-                       (voter_status == 'PURGED' and registration_date <= 20171013 and date_purged > 20171107)")
+                       from nys_roll_0418")
 
 nys_roll <- nys_roll %>% 
   mutate(a = as.integer(voter_status == "ACTIVE"),
