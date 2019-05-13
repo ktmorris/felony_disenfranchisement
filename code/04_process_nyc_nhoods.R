@@ -137,6 +137,8 @@ tract_shp$GEOID <- with(tract_shp, paste0("36", cc, CT2010))
 
 tract_shp <- left_join(tract_shp, tracts, by = "GEOID")
 
+tract_shp$dec <- with(tract_shp, lost_voters > 0 & nh_black > (0.45))
+
 ggplot() +
   theme(axis.ticks = element_blank(),
         axis.text = element_blank(),
@@ -146,7 +148,39 @@ ggplot() +
         plot.title = element_text(hjust = 0.5),
         legend.background = element_blank(),
         legend.key=element_blank()) +
-  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group, fill = arrests > 10000), color = "black") +
+  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group, fill = dec), color = "black") +
   coord_map() +
-  labs(x = NULL, y = NULL) + 
-  ggtitle("Lost Voters by Tract")
+  labs(x = NULL, y = NULL) + scale_fill_manual(values = c("gray", "red"), na.translate = T, na.value = "gray") +
+  guides(fill = F)
+
+## bg
+
+block_groups$decrease <- block_groups$lost_voters > 0 & block_groups$nh_black > (2/3)
+dec <- block_groups[block_groups$lost_voters > 0 & block_groups$nh_black >= 0.65, "GEOID"]
+
+bg_shp <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
+bg_shp <- spTransform(bg_shp, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
+bg_shp@data$id <- rownames(bg_shp@data)
+temp <- fortify(bg_shp)
+bg_shp <- inner_join(temp, bg_shp@data, by = "id")
+rm(temp)
+
+bg_shp$dec <- bg_shp$GEOID %in% dec
+
+dep_to <- ggplot() +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5),
+        legend.background = element_blank(),
+        legend.key=element_blank()) +
+  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group), fill = "gray", color = "black", size = 0.01) +
+  geom_polygon(data = filter(bg_shp, GEOID %in% block_groups$GEOID), aes(x = long, y = lat, group = group, fill = dec), color = "black", size = 0.01) +
+  coord_map() +
+  labs(x = NULL, y = NULL) + scale_fill_manual(values = c("gray", "red")) +
+  guides(fill = F)
+
+saveRDS(dep_to, "./output/dep_to_map.RDS")
+ggsave("./output/depressed_turnout.png", plot = dep_to)

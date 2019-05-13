@@ -131,26 +131,6 @@ As we can see in Figure \ref{fig:citymap}, all these other observations
 
 
 #Match Output {-}
-
-```{r tract-table-chunk, echo = F}
-t <- readRDS("./temp/match_table_tract.rds")
-j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:tract-table) Results of Tract-Level Matching", linesep = "") %>% 
-  add_header_above(c(" " = 1, "Means: Unmatched Data" = 2, "Means: Matched Data" = 2, "Percent Improvement" = 4), align = "c") %>% 
-  kable_styling(latex_options = c("scale_down", "HOLD_position"))
-j
-```
-
-Reg table
-```{r tract-reg-chunk, echo = F, results = "asis"}
-stargazer(readRDS("./temp/match_reg_tract.rds"),
-          header = F,
-          type = "latex",
-          covariate.labels = c("D(Tract Lost a Voter)", "Constant"),
-          dep.var.labels = c("Turnout Rate"),
-          title = "(\\#tab:tract-reg) Census Tract Matching Regression",
-          table.placement = "H")
-```
-xxx
 ```{r block-table-chunk, echo = F}
 t <- readRDS("./temp/match_table_block_group.rds")
 j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:blockgroup-table) Results of Block Group-Level Matching", linesep = "") %>% 
@@ -159,16 +139,37 @@ j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:blockgroup-table) Results 
 j
 ```
 
+```{r tract-table-chunk, echo = F}
+t <- readRDS("./temp/match_table_tract.rds")
+j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:tract-table) Results of Tract-Level Matching", linesep = "") %>% 
+  add_header_above(c(" " = 1, "Means: Unmatched Data" = 2, "Means: Matched Data" = 2, "Percent Improvement" = 4), align = "c") %>% 
+  kable_styling(latex_options = c("scale_down", "HOLD_position"))
+j
+```
+At both the tract and block group level, matching results in an untreated group of neighborhoods that looks substantially like our treatment group. As discussed above, the types of neighborhoods targeted by felony disenfranchisement look far different than the average New York City neighborhood. They have far lower incomes and are much less White; they also have lower median ages and more residents are registered as Democrats.
+
 Reg table
-```{r block-reg-chunk, echo = F, results = "asis"}
-stargazer(readRDS("./temp/match_reg_block_group.rds"),
+```{r tract-reg-chunk, echo = F, results = "asis", message = F}
+tract_reg <- readRDS("./temp/match_reg_tract.rds")
+tract_reg_black <- readRDS("./temp/match_reg_tract_nhb.rds")
+bg_reg <- readRDS("./temp/match_reg_block_group.rds")
+bg_reg_black <- readRDS("./temp/match_reg_block_group_nhb.rds")
+
+stargazer(bg_reg, bg_reg_black, tract_reg, tract_reg_black,
+          column.separate = c(2, 2),
+          column.labels = c("Block Group Level", "Block Group Level", "Tract Level", "Tract Level"),
           header = F,
           type = "latex",
-          covariate.labels = c("D(Block Group Lost a Voter)", "Constant"),
+          covariate.labels = c("D(Neighborhood Lost a Voter)", "Share Non-Hispanic Black", "D(Lost Voter) * Share Black", "Constant"),
           dep.var.labels = c("Turnout Rate"),
-          title = "(\\#tab:blockgroup-reg) Census Block Group Matching Regression",
-          table.placement = "H")
+          title = "(\\#tab:tract-reg) Matching Regression",
+          table.placement = "H",
+          style = "ajps",
+          omit.stat = c("f", "ser"))
 ```
+Although the removal of a voter is not generally associated with decreased turnout, we *do* see an impact on turnout in the block groups and census tracts
+
+
 
 Regression Using Basic Analysis - No matching
 more text

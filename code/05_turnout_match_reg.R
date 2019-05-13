@@ -1,7 +1,7 @@
 ## this can be run locally or on NYU's HPC. Set option in next step
 ## option allowed because of how long GenMatch can take
 
-on_nyu <- T
+on_nyu <- F
 
 if(on_nyu){
   library(Matching)
@@ -48,8 +48,12 @@ for(geo in c("block_group", "tract")){
   
   save(mout, file = paste0("./temp/mout_", geo, ".RData"))
   
+  load(paste0("./temp/mout_", geo, ".RData"))
+  
+  
   matches <- data.frame("treated" = mout[["index.treated"]],
-                        "control" = mout[["index.control"]])
+                        "control" = mout[["index.control"]],
+                        "weight" = mout[["weights"]])
   
   units <- units %>% 
     mutate(id = row_number())
@@ -65,18 +69,20 @@ for(geo in c("block_group", "tract")){
   matches <- left_join(matches, treat_row, by = c("treated" = "id"))
   matches <- left_join(matches, untreat_row, by = c("control" = "id"))
   
+  matches <- dplyr::select(matches, -treated, -control)
   
-  matches_v <- as.data.frame(c(matches$GEOID, matches$control_GEOID))
-  colnames(matches_v) = "GEOID"
+  matches_v <- bind_rows(dplyr::select(matches, GEOID, weight), dplyr::select(matches, GEOID = control_GEOID, weight))
   
   match_w <- matches_v %>% 
     group_by(GEOID) %>% 
-    summarize(weight = n())
+    summarize(weight = sum(weight))
   
   reg <- inner_join(units, match_w, by = "GEOID")
   
   reg_output <- lm(to ~ treat, data = reg, weights = weight)
+  reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight)
   saveRDS(reg_output, paste0("./temp/match_reg_", geo, ".rds"))
+  saveRDS(reg_output_nhblack, paste0("./temp/match_reg_", geo, "_nhb.rds"))
   
   
   ###########

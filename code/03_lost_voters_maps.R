@@ -100,6 +100,9 @@ ggplot() +
   labs(x = NULL, y = NULL) + 
   scale_fill_gradient2() + ggtitle("Lost Voters by Tract")
 
+########
+
+
 ############### old maps below
 # 
 # ggplot() +
