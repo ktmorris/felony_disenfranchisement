@@ -42,7 +42,7 @@ for(geo in c("block_group", "tract")){
   X <- units %>% 
     dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen, share_winner)
   
-  match_count <- ifelse(geo == "tract", 10, 30)
+  match_count <- ifelse(geo == "tract", 10, 10)
   
   mout <- Match(Tr = treat, X = X, estimand = "ATT", Weight.matrix = genout, version = "fast", M = match_count)
   summary(mout)

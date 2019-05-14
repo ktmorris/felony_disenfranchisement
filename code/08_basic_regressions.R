@@ -1,19 +1,18 @@
 ### run regressions not using matching - this allows us to measure intensity
-nyc_zips <- fread("./raw_data/misc/zips_in_nyc.csv")
 
 block_groups <- readRDS("./temp/block_group_pre_match.rds")
 
 block_groups$lv2 <- block_groups$lost_voters^2
 
-bg_model <- lm(to ~ lost_voters + median_income + nh_black + nh_white + some_college + median_age + share_dem, data = block_groups)
-bg_model2 <- lm(to ~ lost_voters + lv2 + median_income + nh_black + nh_white + some_college + median_age + share_dem, data = block_groups)
-bg_model3 <- lm(to ~ arrests + median_income + nh_black + nh_white + some_college + median_age + share_dem, data = block_groups)
+bg_model  <- lm(to ~ lost_voters +       median_income + nh_black + nh_white + some_college + median_age + share_dem + share_non_citizen + share_winner, data = block_groups)
+saveRDS(bg_model, "./temp/bg_model_reg_nosquare.rds")
+bg_model2 <- lm(to ~ lost_voters + lv2 + median_income + nh_black + nh_white + some_college + median_age + share_dem + share_non_citizen + share_winner, data = block_groups)
+saveRDS(bg_model2, "./temp/bg_model_reg_square.rds")
 
 tracts <- readRDS("./temp/tract_pre_match.rds")
 tracts$lv2 <- tracts$lost_voters^2
-tract_model <- lm(to ~ lost_voters + lv2 + median_income + nh_black + nh_white + some_college + median_age + share_dem, data = tracts)
-tract_model2 <- lm(to ~ lost_voters + median_income + nh_black + nh_white + some_college + median_age + share_dem, data = tracts)
 
-zips$lv2 <- zips$lost_voters^2
-zip_model <- lm(to ~ lost_voters + lv2 + median_income + nh_black + nh_white + some_college + median_age + share_dem + share_non_citizen,
-                data = filter(zips, GEOID %in% nyc_zips$V1))
+tract_model  <- lm(to ~ lost_voters +       median_income + nh_black + nh_white + some_college + median_age + share_dem + share_non_citizen + share_winner, data = tracts)
+saveRDS(tract_model, "./temp/tract_model_reg_nosquare.rds")
+tract_model2 <- lm(to ~ lost_voters + lv2 + median_income + nh_black + nh_white + some_college + median_age + share_dem + share_non_citizen + share_winner, data = tracts)
+saveRDS(tract_model2, "./temp/tract_model_reg_square.rds")

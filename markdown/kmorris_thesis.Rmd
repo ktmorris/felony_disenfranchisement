@@ -123,7 +123,7 @@ The spatial concentration of lost is readily apparent. In some communities, such
 
 ## Testing for Neighborhood Turnout Effects {-}
 
-To test whether neighborhoods with lost voters had systematically lower turnout rates than similar neighborhoods without such disqualifications, I begin by using a matching model. Neighborhoods (defined as census tracts and block groups) are considered treated if they were home to *at least one* lost voter in the 2017 election; they are untreated if no residents were disqualified from the election because of a felony conviction. I use a genetic match to match treated to untreated census tracts and block groups. I match on a series of demographic and political indicators. Estimates of racial characteristics, median income, education, age, population, and share noncitizen^[The Census Bureau does not make noncitizen estimates available at the block group level. As such, block groups are assigned their census tract's share noncitizen for matching purposes.] come from the Census Bureau. Party affiliation rates come from the geocoded voter file. I include voteshare won by the winning city council representative in 2017 as a proxy for the competitiveness of the local race. All else equal, a more competitive race is likely to result in higher turnout.^[Where neighborhoods cross council district lines, this measure is the weighted average of the competitiveness faced by each voter in the neighborhood] These data come from the New York City Board of Elections. Each treated census tract is matched to 10 untreated census tract, while each treated block group is treated to 30 untreated block groups. Matching is done with replacement. Tables \ref{tab:blockgroup-table} and \ref{tab:tract-table} present the results of these matches.
+To test whether neighborhoods with lost voters had systematically lower turnout rates than similar neighborhoods without such disqualifications, I begin by using a matching model. Neighborhoods (defined as census tracts and block groups) are considered treated if they were home to *at least one* lost voter in the 2017 election; they are untreated if no residents were disqualified from the election because of a felony conviction. I use a genetic match to match treated to untreated census tracts and block groups. I match on a series of demographic and political indicators. Estimates of racial characteristics, median income, education, age, population, and share noncitizen^[The Census Bureau does not make noncitizen estimates available at the block group level. As such, block groups are assigned their census tract's share noncitizen for matching purposes.] come from the Census Bureau. Party affiliation rates come from the geocoded voter file. I include voteshare won by the winning city council representative in 2017 as a proxy for the competitiveness of the local race. All else equal, a more competitive race is likely to result in higher turnout.^[Where neighborhoods cross council district lines, this measure is the weighted average of the competitiveness faced by each voter in the neighborhood] These data come from the New York City Board of Elections. Each treated neighborhood is matched with 10 untreated neighborhoods. Matching is done with replacement. Tables \ref{tab:blockgroup-table} and \ref{tab:tract-table} present the results of these matches.
 
 ### Match Output {-}
 ```{r block-table-chunk, echo = F}
@@ -144,11 +144,9 @@ j
 At both the tract and block group level, matching results in an untreated group of neighborhoods that looks substantially like our treatment group. These tables also demonstrate the striking extent to which neighborhoods with lost voters differ from the average neighborhood in New York City. Neighborhoods with lost voters are substantially less white, have far lower median incomes, and a larger share of voters are registered as Democrats.
 
 
-After matching neighborhoods, I use a simple regression to test whether turnout in the 2017 mayoral election was different in areas with lost voters. Census tract and block group level turnout rates are calculated using the geocoded voter file. Each voter's record indicates whether the voter participated in the 2017 general election,^[The New York State voter file is not without errors. For instance, the voter file erroneously does not record the author as participating in the 2017 mayoral election. However, insofar as these errors are not geographically correlated, there is little reason to believe they impact the results of this analysis. Unfortunately, testing the distribution of these errors is not possible.] which are then aggregated to estimate the number of ballots cast in each neighborhood. The number of ballots cast is divided by estimated voting age population in the neighborhood as reported by the Census Bureau.^[Voting age population is of course only an approximation of the number of eligible voters; notably, its use will underestimate turnout in neighborhoods with large noncitizen populations. However, treatment and matched control neighborhoods have comparable rates of noncitizenship, lessening any potential bias.]
+After matching neighborhoods, I use a simple regression to test whether turnout in the 2017 mayoral election was different in areas with lost voters. Census tract and block group level turnout rates are calculated using the geocoded voter file. Each voter's record indicates whether the voter participated in the 2017 general election,^[The New York State voter file is not without errors. For instance, the voter file erroneously does not record the author as participating in the 2017 mayoral election. However, insofar as these errors are not geographically correlated, there is little reason to believe they impact the results of this analysis. Unfortunately, testing the distribution of these errors is not possible.] which are then aggregated to estimate the number of ballots cast in each neighborhood. The number of ballots cast is divided by estimated citizen voting age population in the neighborhood as reported by the Census Bureau.
 
-Much of the literature has discussed whether felony disenfranchisement is particularly demobilizing for eligible Black voters. I therefore include models which explore any potential difference in treatment effect in neighborhoods where a higher share of the population is Black.
-
-Table \ref{tab:match-reg} presents the results of these regression models.
+Much of the literature has discussed whether felony disenfranchisement is particularly demobilizing for eligible Black voters. I therefore include models which explore any potential difference in treatment effect in neighborhoods where a higher share of the population is Black. Table \ref{tab:match-reg} presents the results of these regression models.
 ```{r tract-reg-chunk, echo = F, results = "asis", message = F}
 tract_reg <- readRDS("./temp/match_reg_tract.rds")
 tract_reg_black <- readRDS("./temp/match_reg_tract_nhb.rds")
@@ -167,8 +165,30 @@ stargazer(bg_reg, bg_reg_black, tract_reg, tract_reg_black,
           style = "ajps",
           omit.stat = c("f", "ser"))
 ```
-Although the removal of a voter is not generally associated with decreased turnout, we *do* see an impact on turnout in the block groups and census tracts
 
+### Testing Intensity Effects {-}
+
+Matching methodologies, of course, only allow us to test the effect of being treated - here, losing a voter for the 2017 election. The model above does not allow for different effects on turnout based on *how many* voters a neighborhood lost. In Table \ref{tab:trad-reg} below, I adopt a standard regression to investigate whether lost voters are associated with lower turnout rates in the 2017 election.
+
+```{r trad-reg-chunk, echo = F, results = "asis", message = F}
+tract_reg <- readRDS("./temp/tract_model_reg_nosquare.rds")
+tract_reg_sq <- readRDS("./temp/tract_model_reg_square.rds")
+bg_reg <- readRDS("./temp/bg_model_reg_nosquare.rds")
+bg_reg_sq <- readRDS("./temp/bg_model_reg_square.rds")
+
+stargazer(bg_reg, bg_reg_sq, tract_reg, tract_reg_sq,
+          column.separate = c(2, 2),
+          column.labels = c("Block Group Level", "Tract Level"),
+          header = F,
+          type = "latex",
+          covariate.labels = c("Lost Voters", "Lost Voters\\textsuperscript{2}", "Median Income", "Percent Non-Hispanic Black", "Percent Non-Hispanic White",
+                               "Percent With Some College", "Median Age", "Percent Democrats", "Percent Noncitizen", "Percent Won by City Council Representative"),
+          dep.var.labels = c("Turnout Rate"),
+          title = "(\\#tab:trad-reg) Standard Regression",
+          table.placement = "H",
+          style = "ajps",
+          omit.stat = c("f", "ser"))
+```
 
 
 Regression Using Basic Analysis - No matching
