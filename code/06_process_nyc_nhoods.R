@@ -83,6 +83,18 @@ share_dem_zip <- nyc %>%
             lost_voters = sum(lost_voter),
             share_winner = mean(share_winner))
 
+### cvap
+cvap_bg <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/BlockGr.csv") %>% 
+  filter(lntitle == "Total") %>% 
+  dplyr::select(GEOID = geoid, cvap = CVAP_EST) %>% 
+  mutate(GEOID = sub('.*\\US', '', GEOID))
+
+cvap_tract <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/Tract.csv") %>% 
+  filter(lntitle == "Total") %>% 
+  dplyr::select(GEOID = geoid, cvap = CVAP_EST) %>% 
+  mutate(GEOID = sub('.*\\US', '', GEOID))
+
+
 #block group / tract level
 # geos <- lapply(c("tract", "block group", "zcta"), function(var) {
 #   units <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c, run = run){
@@ -137,19 +149,22 @@ load("./temp/census_data_nyc_bgs_tracts.RData")
 tracts <- left_join(geos[[1]], left_join(share_dem_tract, arrests_tract)) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
 
-block_groups <- left_join(geos[[2]], left_join(share_dem_bg, arrests_bg)) %>% 
-  mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
+tracts <- left_join(tracts, cvap_tract, by = "GEOID")
 
 tracts <- tracts[complete.cases(tracts), ] %>% 
   mutate(treat = lost_voters > 0,
-         to = v2017 / vap)
+         to = v2017 / cvap)
 
 saveRDS(tracts, "./temp/tract_pre_match.rds")
 
+block_groups <- left_join(geos[[2]], left_join(share_dem_bg, arrests_bg)) %>% 
+  mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
+
+block_groups <- left_join(block_groups, cvap_bg, by = "GEOID")
+
 block_groups <- block_groups[complete.cases(block_groups), ] %>% 
   mutate(treat = lost_voters > 0,
-         to = v2017 / vap)
-
+         to = v2017 / cvap)
 
 saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 

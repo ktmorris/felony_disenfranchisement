@@ -45,7 +45,7 @@ for(geo in c("block_group", "tract")){
   
   mout <- Match(Tr = treat, X = X, estimand = "ATT", Weight.matrix = genout, version = "fast", M = match_count)
   summary(mout)
-  
+
   save(mout, file = paste0("./temp/mout_", geo, ".RData"))
   
   load(paste0("./temp/mout_", geo, ".RData"))

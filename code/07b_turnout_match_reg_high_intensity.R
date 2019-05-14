@@ -29,7 +29,7 @@ for(geo in c("block_group", "tract")){
     filter(lost_voters == 0 | lost_voters >= 3)
   
   match_data <- units %>% 
-    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen)
+    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen, share_winner)
   
   genout <- GenMatch(Tr = units$treat, X = match_data,
                      M = 3, replace = T, pop.size = 1000, cluster = cl)
@@ -40,7 +40,7 @@ for(geo in c("block_group", "tract")){
   treat <- units$treat
   
   X <- units %>% 
-    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen)
+    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen, share_winner)
   
   match_count <- ifelse(geo == "tract", 10, 30)
   
@@ -91,7 +91,7 @@ for(geo in c("block_group", "tract")){
   order <- fread("./raw_data/misc/var_orders.csv")
   
   balance <- MatchBalance(treat ~ median_income + latino + nh_black + nh_white +
-                            some_college + median_age + vap + share_dem + share_non_citizen, match.out = mout,
+                            some_college + median_age + vap + share_dem + share_non_citizen + share_winner, match.out = mout,
                           data = units)
   TrMean <- c()
   PreMean <- c()
@@ -116,7 +116,7 @@ for(geo in c("block_group", "tract")){
     PostQQmax <- unlist(c(PostQQmax, balance$AfterMatching[[i]]$qqsummary[3]))
   }
   
-  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "vap", "share_dem", "share_non_citizen")
+  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "vap", "share_dem", "share_non_citizen", "share_winner")
   
   
   df <- data.frame("TrMean" = TrMean,
