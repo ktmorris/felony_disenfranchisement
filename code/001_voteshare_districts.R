@@ -30,6 +30,5 @@ results_ll <- results %>%
          share_winner = vote_count / total_votes) %>% ## candidate share
   filter(vote_count == max(vote_count)) %>% ## only keep whoever won
   dplyr::select(district = District_Key, share_winner) ## just keep district name, share won by winner
-  
 
 saveRDS(results_ll, "./temp/council_competitiveness.rds")
