@@ -13,14 +13,26 @@
 # nyc <- select(nyc, -a, -b, -c)
 # 
 # nyc <- left_join(nyc, readRDS("./temp/nys_0418_geocoded.rds"), by = "nys_id")
+# 
+# council_districts <- readOGR("./raw_data/shapefiles/nycc_19a", "nycc")
+# council_districts <- spTransform(council_districts, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
+# pings  <- SpatialPoints(nyc[c('longitude','latitude')], proj4string = council_districts@proj4string)
+# nyc$cc_district <- over(pings, council_districts)$CounDist
 # saveRDS(nyc, "./temp/nyc.rds")
 
 nyc <- readRDS("./temp/nyc.rds")
 
+## find lost voters
 nyc$lost_voter <- nyc$nys_id %in% readRDS("./temp/ids_of_lost_voters.rds")$nys_id
 
 lost_nyc <- sum(nyc$lost_voter)
 saveRDS(lost_nyc, "./temp/lost_count_nyc.rds")
+
+## read in city council races to control for competitiveness
+races <- readRDS("./temp/council_competitiveness.rds")
+
+nyc <- left_join(nyc, races, by = c("cc_district" = "district"))
+
 ##### 2017 ballots bg
 # read election names
 elects <- fread("./raw_data/misc/elects.csv")
@@ -52,21 +64,24 @@ share_dem_bg <- nyc %>%
   summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
             vcount = n(),
-            lost_voters = sum(lost_voter))
+            lost_voters = sum(lost_voter),
+            share_winner = mean(share_winner))
 
 share_dem_tract <- nyc %>% 
   group_by(GEOID = substring(bg, 1, 11)) %>% 
   summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
             vcount = n(),
-            lost_voters = sum(lost_voter))
+            lost_voters = sum(lost_voter),
+            share_winner = mean(share_winner))
 
 share_dem_zip <- nyc %>% 
   group_by(GEOID = zip5) %>% 
   summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
             vcount = n(),
-            lost_voters = sum(lost_voter))
+            lost_voters = sum(lost_voter),
+            share_winner = mean(share_winner))
 
 #block group / tract level
 # geos <- lapply(c("tract", "block group", "zcta"), function(var) {
@@ -142,6 +157,10 @@ saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 zips <- inner_join(mutate(geos[[3]], GEOID = as.integer(GEOID)), share_dem_zip, by = "GEOID") %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters)) %>% 
   filter(v2017 > 100)
+
+zips <- zips[complete.cases(zips), ] %>% 
+  mutate(treat = lost_voters > 0,
+         to = v2017 / vap)
 
 saveRDS(zips, "./temp/zips_pre_match.rds")
 
