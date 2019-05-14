@@ -10,14 +10,13 @@ url_4 <- "%20Council%20District%20EDLevel.csv"
 
 dists$url <- with(dists, paste0(url_1, county_num, url_2, str_pad(as.character(district), width = 2, pad = "0", side = "left"), county, url_3, district, suffix, url_4))
 
-
 results <- rbindlist(lapply(dists$url, function(url){
   j <- fread(url)
 }))
 
 colnames(results) <- gsub("[.]", "_", make.unique(make.names(colnames(results))))
 
-results <- results[grepl("\\(", results$Unit_Name), ]
+results <- results[grepl("\\(", results$Unit_Name), ] ## drop records that aren't candidates (all candidates have party in parentheses)
 
 ## get rid of party names in parentheses - don't care about party
 results$Unit_Name <- gsub("\\s*\\([^\\)]+\\)", "", results$Unit_Name)
