@@ -1,5 +1,5 @@
 ### run regressions not using matching - this allows us to measure intensity
-
+nyc_zips <- fread("./raw_data/misc/zips_in_nyc.csv")
 
 block_groups <- readRDS("./temp/block_group_pre_match.rds")
 
@@ -13,3 +13,7 @@ tracts <- readRDS("./temp/tract_pre_match.rds")
 tracts$lv2 <- tracts$lost_voters^2
 tract_model <- lm(to ~ lost_voters + lv2 + median_income + nh_black + nh_white + some_college + median_age + share_dem, data = tracts)
 tract_model2 <- lm(to ~ lost_voters + median_income + nh_black + nh_white + some_college + median_age + share_dem, data = tracts)
+
+zips$lv2 <- zips$lost_voters^2
+zip_model <- lm(to ~ lost_voters + lv2 + median_income + nh_black + nh_white + some_college + median_age + share_dem + share_non_citizen,
+                data = filter(zips, GEOID %in% nyc_zips$V1))
