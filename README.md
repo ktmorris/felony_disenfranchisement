@@ -1,4 +1,4 @@
-Felony disenfranchisement project looking at NYS and Florida
+Felony disenfranchisement project looking at NYS
 
 For access to the raw data, please contact the author at kevin.morris@nyu.edu.
 
