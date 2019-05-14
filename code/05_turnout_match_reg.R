@@ -1,7 +1,7 @@
 ## this can be run locally or on NYU's HPC. Set option in next step
 ## option allowed because of how long GenMatch can take
 
-on_nyu <- F
+on_nyu <- T
 
 if(on_nyu){
   library(Matching)
@@ -28,7 +28,7 @@ for(geo in c("block_group", "tract")){
   units <- readRDS(paste0("./temp/", geo, "_pre_match.rds"))
   
   match_data <- units %>% 
-    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem)
+    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen)
   
   genout <- GenMatch(Tr = units$treat, X = match_data,
                      M = 3, replace = T, pop.size = 1000, cluster = cl)
@@ -39,7 +39,7 @@ for(geo in c("block_group", "tract")){
   treat <- units$treat
   
   X <- units %>% 
-    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem)
+    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen)
   
   match_count <- ifelse(geo == "tract", 10, 30)
   
@@ -90,7 +90,7 @@ for(geo in c("block_group", "tract")){
   order <- fread("./raw_data/misc/var_orders.csv")
   
   balance <- MatchBalance(treat ~ median_income + latino + nh_black + nh_white +
-                            some_college + median_age + vap + share_dem, match.out = mout,
+                            some_college + median_age + vap + share_dem + share_non_citizen, match.out = mout,
                           data = units)
   TrMean <- c()
   PreMean <- c()
@@ -115,7 +115,7 @@ for(geo in c("block_group", "tract")){
     PostQQmax <- unlist(c(PostQQmax, balance$AfterMatching[[i]]$qqsummary[3]))
   }
   
-  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "vap", "share_dem")
+  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "vap", "share_dem", "share_non_citizen")
   
   
   df <- data.frame("TrMean" = TrMean,

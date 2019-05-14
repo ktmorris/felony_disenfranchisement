@@ -1,6 +1,6 @@
 ## spatial join nyc
-
-# nyc <- dbGetQuery(db, "select dob, nys_id, voter_status, history, county_code, gender, political_party, last_name
+# 
+# nyc <- dbGetQuery(db, "select dob, nys_id, voter_status, history, county_code, gender, political_party, last_name, zip5
 #                        from nys_roll_0418 where county_code in (24, 41, 31, 3, 43)")
 # 
 # nyc <- nyc %>%
@@ -61,38 +61,60 @@ share_dem_tract <- nyc %>%
             vcount = n(),
             lost_voters = sum(lost_voter))
 
-### block group / tract level
-# geos <- lapply(c("tract", "block group"), function(var) {
-#   income <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-#     income <- census_income(var, state = "NY", year = 2017, county = c) %>% 
-#       dplyr::select(-NAME)
+share_dem_zip <- nyc %>% 
+  group_by(GEOID = zip5) %>% 
+  summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
+            v2017 = sum(v2017),
+            vcount = n(),
+            lost_voters = sum(lost_voter))
+
+#block group / tract level
+# geos <- lapply(c("tract", "block group", "zcta"), function(var) {
+#   units <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c, run = run){
+#     if(var != "zcta" | c == "KINGS"){
+#       if(var == "zcta"){
+#         c = NULL
+#         s = NULL
+#       }else{
+#         s = "NY"
+#       }
+#       income <- census_income(var, state = s, year = 2017, county = c) %>%
+#         dplyr::select(-NAME)
+#   
+#       race <- census_race_ethnicity(var, state = s, year = 2017, county = c) %>%
+#         dplyr::select(-NAME)
+#   
+#       education <- census_education(var, state = s, year = 2017, county = c) %>%
+#         dplyr::select(-NAME)
+#   
+#       age <- census_median_age(var, state = s, year = 2017, county = c)
+#   
+#       vap <- census_vap(var, state = s, year = 2017, county = c)
+#       
+#       noncit <- census_non_citizen(var, state = s, year = 2017, county = c)
+#   
+#       units <- left_join(income,
+#                          left_join(race, left_join(education,
+#                                                    left_join(age,
+#                                                              left_join(vap, noncit)))))
+#       }else{
+#         units = data.frame("x" = NULL)
+#       }
+#     return(units)
 #   }))
-#   
-#   race <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-#     race <- census_race_ethnicity(var, state = "NY", year = 2017, county = c) %>% 
-#       dplyr::select(-NAME)
-#   }))
-#   
-#   education <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-#     education <- census_education(var, state = "NY", year = 2017, county = c) %>% 
-#       dplyr::select(-NAME)
-#   }))
-#   
-#   age <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-#     age <- census_median_age(var, state = "NY", year = 2017, county = c)
-#   }))
-#   
-#   vap <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-#     vap <- census_vap(var, state = "NY", year = 2017, county = c) 
-#   }))
-#   
-#   
-#   units <- left_join(income,
-#                             left_join(race, left_join(education,
-#                                                       left_join(age,vap))))
 #   return(units)
-# 
 #   })
+# 
+# #### noncit not available at block group level
+# noncit <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
+#   noncit <- census_non_citizen("tract", state = "NY", year = 2017, county = c)
+# }))
+# 
+# geos[[2]]$tract <- substring(geos[[2]]$GEOID, 1, 11)
+# geos[[2]] <- dplyr::select(geos[[2]], -share_non_citizen)
+# geos[[2]] <- left_join(geos[[2]], noncit, by = c("tract" = "GEOID"))
+# 
+# 
 # save(geos, file = "./temp/census_data_nyc_bgs_tracts.RData")
 
 load("./temp/census_data_nyc_bgs_tracts.RData")
@@ -117,10 +139,15 @@ block_groups <- block_groups[complete.cases(block_groups), ] %>%
 saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 
 
+zips <- inner_join(mutate(geos[[3]], GEOID = as.integer(GEOID)), share_dem_zip, by = "GEOID") %>% 
+  mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters)) %>% 
+  filter(v2017 > 100)
 
-
+saveRDS(zips, "./temp/zips_pre_match.rds")
 
 ###### maps
+tracts <- readRDS("./temp/tract_pre_match.rds")
+block_groups <- readRDS("./temp/block_group_pre_match.rds")
 
 tract_shp <- readOGR("./raw_data/shapefiles/nyct2010_19a", "nyct2010")
 tract_shp <- spTransform(tract_shp, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
@@ -155,9 +182,8 @@ ggplot() +
 
 ## bg
 
-block_groups$decrease <- block_groups$lost_voters > 0 & block_groups$nh_black > (2/3)
-dec <- block_groups[block_groups$lost_voters > 0 & block_groups$nh_black >= 0.65, "GEOID"]
-
+block_groups$decrease <- block_groups$lost_voters > 0
+dec <- block_groups[block_groups$lost_voters > 0, "GEOID"]
 bg_shp <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
 bg_shp <- spTransform(bg_shp, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
 bg_shp@data$id <- rownames(bg_shp@data)
