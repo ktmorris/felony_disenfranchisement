@@ -1,0 +1,51 @@
+
+###### maps
+tracts <- readRDS("./temp/tract_pre_match.rds")
+block_groups <- readRDS("./temp/block_group_pre_match.rds")
+
+tract_shp <- readOGR("./raw_data/shapefiles/nyct2010_19a", "nyct2010")
+tract_shp <- spTransform(tract_shp, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
+tract_shp@data$id <- rownames(tract_shp@data)
+temp <- fortify(tract_shp)
+tract_shp <- inner_join(temp, tract_shp@data, by = "id")
+rm(temp)
+
+codes <- data.frame("BoroCode" = as.character(c(1:5)), "cc" = c("061", "005", "047", "081", "085"))
+
+tract_shp <- left_join(tract_shp, codes, by = "BoroCode")
+
+tract_shp$GEOID <- with(tract_shp, paste0("36", cc, CT2010))
+
+tract_shp <- left_join(tract_shp, tracts, by = "GEOID")
+
+tract_shp$decrease <- -0.022 * tract_shp$lost_voters * tract_shp$nh_black
+
+
+
+bg_shp <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
+bg_shp <- spTransform(bg_shp, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
+bg_shp@data$id <- rownames(bg_shp@data)
+temp <- fortify(bg_shp)
+bg_shp <- inner_join(temp, bg_shp@data, by = "id")
+rm(temp)
+
+bg_shp <- inner_join(bg_shp, block_groups, by = "GEOID")
+
+bg_shp$decrease <- -0.027 * bg_shp$lost_voters * bg_shp$nh_black
+
+
+
+ggplot() +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5),
+        legend.background = element_blank(),
+        legend.key=element_blank()) +
+  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group), fill = "gray") +
+  geom_polygon(data = bg_shp, aes(x = long, y = lat, group = group, fill = decrease)) +
+  coord_map() +
+  labs(x = NULL, y = NULL) + scale_fill_gradient(high = "gray", low = "red") +
+  guides(fill = F)

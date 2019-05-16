@@ -26,23 +26,24 @@ if(on_nyu){
 for(geo in c("block_group", "tract")){
 
   units <- readRDS(paste0("./temp/", geo, "_pre_match.rds"))
-  
+
   match_data <- units %>% 
-    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen, share_winner)
+    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, reg_rate, share_dem, share_non_citizen, share_winner)
   
-  # genout <- GenMatch(Tr = units$treat, X = match_data,
-  #                    M = 3, replace = T, pop.size = 1000, cluster = cl)
-  # saveRDS(genout, paste0("./temp/genout_", geo, ".rds"))
+  genout <- GenMatch(Tr = units$treat, X = match_data,
+                     M = 3, replace = T, pop.size = 1000, cluster = cl)
+  saveRDS(genout, paste0("./temp/genout_", geo, ".rds"))
   
   genout <- readRDS(paste0("./temp/genout_", geo, ".rds"))
   
   treat <- units$treat
   
   X <- units %>% 
-    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, vap, share_dem, share_non_citizen, share_winner)
+    dplyr::select(median_income, latino, nh_black, nh_white, some_college,
+                  median_age, reg_rate, share_dem, share_non_citizen, share_winner)
   
-  match_count <- ifelse(geo == "tract", 10, 10)
-  
+  match_count <- ifelse(geo == "tract", 10, 30)
+
   mout <- Match(Tr = treat, X = X, estimand = "ATT", Weight.matrix = genout, version = "fast", M = match_count)
   summary(mout)
 
@@ -90,7 +91,7 @@ for(geo in c("block_group", "tract")){
   order <- fread("./raw_data/misc/var_orders.csv")
   
   balance <- MatchBalance(treat ~ median_income + latino + nh_black + nh_white +
-                            some_college + median_age + vap + share_dem + share_non_citizen + share_winner, match.out = mout,
+                            some_college + median_age + reg_rate + share_dem + share_non_citizen + share_winner, match.out = mout,
                           data = units)
   TrMean <- c()
   PreMean <- c()
@@ -115,7 +116,7 @@ for(geo in c("block_group", "tract")){
     PostQQmax <- unlist(c(PostQQmax, balance$AfterMatching[[i]]$qqsummary[3]))
   }
   
-  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "vap", "share_dem", "share_non_citizen", "share_winner")
+  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "reg_rate", "share_dem", "share_non_citizen", "share_winner")
   
   
   df <- data.frame("TrMean" = TrMean,

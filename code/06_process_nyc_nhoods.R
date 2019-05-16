@@ -20,7 +20,8 @@
 # nyc$cc_district <- over(pings, council_districts)$CounDist
 # saveRDS(nyc, "./temp/nyc.rds")
 
-nyc <- readRDS("./temp/nyc.rds")
+nyc <- readRDS("./temp/nyc.rds") %>% 
+  filter(voter_status != "PURGED")
 
 ## find lost voters
 nyc$lost_voter <- nyc$nys_id %in% readRDS("./temp/ids_of_lost_voters.rds")$nys_id
@@ -153,7 +154,8 @@ tracts <- left_join(tracts, cvap_tract, by = "GEOID")
 
 tracts <- tracts[complete.cases(tracts), ] %>% 
   mutate(treat = lost_voters > 0,
-         to = v2017 / cvap)
+         to = v2017 / vap,
+         reg_rate = vcount / vap)
 
 saveRDS(tracts, "./temp/tract_pre_match.rds")
 
@@ -164,7 +166,8 @@ block_groups <- left_join(block_groups, cvap_bg, by = "GEOID")
 
 block_groups <- block_groups[complete.cases(block_groups), ] %>% 
   mutate(treat = lost_voters > 0,
-         to = v2017 / cvap)
+         to = v2017 / vap,
+         reg_rate = vcount / vap)
 
 saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 
@@ -175,7 +178,8 @@ zips <- inner_join(mutate(geos[[3]], GEOID = as.integer(GEOID)), share_dem_zip, 
 
 zips <- zips[complete.cases(zips), ] %>% 
   mutate(treat = lost_voters > 0,
-         to = v2017 / vap)
+         to = v2017 / vap,
+         reg_rate = vcount / vap)
 
 saveRDS(zips, "./temp/zips_pre_match.rds")
 
