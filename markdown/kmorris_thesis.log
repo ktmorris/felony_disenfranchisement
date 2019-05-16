@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  16 MAY 2019 13:27
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  16 MAY 2019 15:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1002,32 +1002,36 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 File: kmorris_thesis_files/figure-latex/citywide-map-1.pdf Graphic file (type p
 df)
 <use kmorris_thesis_files/figure-latex/citywide-map-1.pdf>
-[6] [7] [8] [9] [10]
-Underfull \hbox (badness 1742) in paragraph at lines 407--409
+[6] [7] [8] [9]
+File: kmorris_thesis_files/figure-latex/postest-map-1.pdf Graphic file (type pd
+f)
+<use kmorris_thesis_files/figure-latex/postest-map-1.pdf>
+[10] [11]
+Underfull \hbox (badness 1742) in paragraph at lines 421--423
 \TU/lmr/m/it/10 ANNALS of the American Academy of Political and Social Science 
 \TU/lmr/m/n/10 651 (1): 220–49. []$[][][][][] []
  []
 
-[11]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 435.
 [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 435.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 449.
+[13]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 449.
 (./kmorris_thesis.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 435.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 435.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 449.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 449.
 Package rerunfilecheck Info: File `kmorris_thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 3E6262BE69F8D0B6F7635E7DECC1A7A6.
+(rerunfilecheck)             Checksum: 1860DDD9BD87F300A1898C674EA031D3.
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 24102 strings out of 494894
- 446782 string characters out of 6175524
- 563530 words of memory out of 5000000
- 27780 multiletter control sequences out of 15000+600000
+ 24109 strings out of 494894
+ 447038 string characters out of 6175524
+ 563806 words of memory out of 5000000
+ 27786 multiletter control sequences out of 15000+600000
  553174 words of font info for 64 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  46i,11n,68p,1980b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on kmorris_thesis.pdf (12 pages).
+Output written on kmorris_thesis.pdf (13 pages).

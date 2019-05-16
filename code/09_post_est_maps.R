@@ -35,7 +35,7 @@ bg_shp$decrease <- -0.027 * bg_shp$lost_voters * bg_shp$nh_black
 
 
 
-ggplot() +
+dec_map <- ggplot() +
   theme(axis.ticks = element_blank(),
         axis.text = element_blank(),
         panel.background = element_blank(),
@@ -43,9 +43,13 @@ ggplot() +
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5),
         legend.background = element_blank(),
-        legend.key=element_blank()) +
+        legend.key=element_blank(),
+        legend.key.width = unit(1.5, "cm")) +
   geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group), fill = "gray") +
   geom_polygon(data = bg_shp, aes(x = long, y = lat, group = group, fill = decrease)) +
   coord_map() +
-  labs(x = NULL, y = NULL) + scale_fill_gradient(high = "gray", low = "red") +
-  guides(fill = F)
+  labs(x = NULL, y = NULL) + 
+  scale_fill_gradient(high = "gray", low = "red", labels = percent) +
+  guides(fill = guide_colorbar(title.hjust = .5, title.position = "top", title = "Decreased Turnout from Disenfranchisement"))
+
+saveRDS(dec_map, "./temp/dec_block_map.rds")

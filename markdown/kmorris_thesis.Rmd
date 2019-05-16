@@ -159,7 +159,7 @@ stargazer(bg_reg, bg_reg_black, tract_reg, tract_reg_black,
           column.labels = c("Block Group Level", "Tract Level"),
           header = F,
           type = "latex",
-          covariate.labels = c("D(Neighborhood Lost a Voter)", "Share Non-Hispanic Black", "D(Lost Voter) * Share Black", "Constant"),
+          covariate.labels = c("D(Neighborhood Lost a Voter)", "Share Non-Hispanic Black", "D(Lost Voter) X Share Black", "Constant"),
           dep.var.labels = c("Turnout Rate"),
           title = "(\\#tab:match-reg) Matching Regression",
           table.placement = "H",
@@ -183,7 +183,7 @@ stargazer(bg_reg, bg_reg_sq, tract_reg, tract_reg_sq,
           column.labels = c("Block Group Level", "Tract Level"),
           header = F,
           type = "latex",
-          covariate.labels = c("Lost Voters", "Lost Voters * Share Black", "Median Income (Thousands of Dollars)", "Percent Latino", "Percent Non-Hispanic Black", "Percent Non-Hispanic White",
+          covariate.labels = c("Lost Voters", "Lost Voters X Share Black", "Median Income (Thousands of Dollars)", "Percent Latino", "Percent Non-Hispanic Black", "Percent Non-Hispanic White",
                                "Percent With Some College", "Median Age", "Registration Rate", "Percent Democrats", "Percent Noncitizen", "Percent Won by City Council Representative"),
           dep.var.labels = c("Turnout Rate"),
           title = "(\\#tab:trad-reg) Standard Regression",
@@ -192,6 +192,12 @@ stargazer(bg_reg, bg_reg_sq, tract_reg, tract_reg_sq,
           omit.stat = c("f", "ser"))
 ```
 
+The block groups where these depressive effects are not, of course, randomly distributed througout the city. They are highly spatially concentrated: in Central Brooklyn, Eastern Queens, and Harlem. Figure \ref{fig:postest} applies the coefficient on "Lost Voters * Share Black" from Model 2 in Table \ref{tab:trad-reg} to the city's block groups.
+
+```{r postest-map, echo = FALSE, message = F, warning = F, fig.width = 5, fig.height = 5, fig.cap = "\\label{fig:postest}Depressive Effect of Felony Disenfranchisement", out.extra = '', fig.pos = "H", fig.align = "center"}
+j <- readRDS("./temp/dec_block_map.rds")
+print(j)
+```
 
 \newpage
 # References {-}
