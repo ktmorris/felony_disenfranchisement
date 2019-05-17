@@ -31,9 +31,15 @@ rm(temp)
 
 bg_shp <- inner_join(bg_shp, block_groups, by = "GEOID")
 
-bg_shp$decrease <- (bg_shp$lost_voters >= 1)*-1
+load("./temp/bg_model_reg_ols.rdata")
+coef <- bg_model2[["coefficients"]][["lost_voters_black"]]
 
+bg_shp$decrease <- bg_shp$lost_voters * bg_shp$nh_black * coef
 
+## bbs 
+bbs <- readOGR("./raw_data/shapefiles/Borough Boundaries", "geo_export_14dc9d2c-e65a-48c5-ac4d-1bcd90c6758d")
+bbs <- spTransform(bbs, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
+bbs <- fortify(bbs)
 
 dec_map <- ggplot() +
   theme(axis.ticks = element_blank(),
@@ -45,11 +51,18 @@ dec_map <- ggplot() +
         legend.background = element_blank(),
         legend.key=element_blank(),
         legend.key.width = unit(1.5, "cm")) +
-  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group), fill = "gray") +
+  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
   geom_polygon(data = bg_shp, aes(x = long, y = lat, group = group, fill = decrease)) +
+  geom_path(data = bbs, aes(x = long, y = lat, group = group), color = "black") +
   coord_map() +
   labs(x = NULL, y = NULL) + 
-  scale_fill_gradient(high = "gray", low = "red", labels = percent) +
+  scale_fill_gradient(high = "#bfbfbf", low = "red", labels = percent_format(accuracy = 1), limits = c(-0.05, 0), oob = squish) +
   guides(fill = guide_colorbar(title.hjust = .5, title.position = "top", title = "Decreased Turnout from Disenfranchisement"))
 
 saveRDS(dec_map, "./temp/dec_block_map.rds")
+
+
+
+
+
+

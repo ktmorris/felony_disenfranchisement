@@ -9,8 +9,6 @@ block_groups$boro <- substring(block_groups$GEOID, 1, 5)
 
 bg_model  <- lm(to ~ lost_voters + median_income + latino + nh_black + nh_white + some_college + median_age + reg_rate + share_dem + share_non_citizen + share_winner, data = block_groups, weights = vap)
 bg_model_ses  <- data.frame(summary(lm_robust(to ~ lost_voters + median_income + latino + nh_black + nh_white + some_college + median_age + reg_rate + share_dem + share_non_citizen + share_winner, data = block_groups, weights = vap, clusters = district))$coefficients)[, 2]
-save(bg_model, bg_model_ses, file = "./temp/bg_model_reg_ols.rdata")
-
 
 bg_model2  <- lm(to ~ lost_voters + lost_voters_black + median_income + latino + nh_black + nh_white + some_college + median_age + reg_rate + share_dem + share_non_citizen + share_winner, data = block_groups, weights = vap)
 bg_model2_ses  <- data.frame(summary(lm_robust(to ~ lost_voters + lost_voters_black + median_income + latino + nh_black + nh_white + some_college + median_age + reg_rate + share_dem + share_non_citizen + share_winner, data = block_groups, weights = vap, clusters = district))$coefficients)[, 2]
