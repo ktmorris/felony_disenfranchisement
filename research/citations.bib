@@ -1,4 +1,10 @@
 % Encoding: UTF-8
+@workingpaper {Abadie2019,
+	title = {Robust Post-Matching Inference},
+	year = {2019},
+	abstract = {Nearest-neighbor matching is a popular nonparametric tool to create balance between treatment and control groups in observational studies. As a preprocessing step before regression, matching reduces the dependence on parametric modeling assumptions. In current empirical practice, however, the matching step is often ignored in the calculation of standard errors and confidence intervals. In this article, we show that ignoring the matching step results in asymptotically valid standard errors if matching is done without replacement and the regression model is correctly specified relative to the population regression function of the outcome variable on the treatment variable and all the covariates used for matching. However, standard errors that ignore the matching step are not valid if matching is conducted with replacement or, more crucially, if the second step regression model is misspecified in the sense indicated above. Moreover, correct specification of the regression model is not required for consistent estimation of treatment effects with matched data. We show that two easily implementable alternatives produce approximations to the distribution of the post-matching estimator that are robust to misspecification. A simulation study and an empirical example demonstrate the empirical relevance of our results.},
+	author = {Alberto Abadie and Jann Spiess}
+}
 
 @techreport{NBERRDT,
  title = "Regression Discontinuity in Time: Considerations for Empirical Applications",
@@ -346,6 +352,17 @@ number = "3",
   month     = {nov},
   publisher = {{SAGE} Publications},
   year      = {2013},
+}
+
+@Article{Sekhon2011,
+  author    = {Jasjeet S. Sekhon},
+  title     = {Multivariate and Propensity Score Matching Software with Automated Balance Optimization: The Matching Package for R},
+  volume    = {42},
+  number    = {7},
+  doi       = {10.18637/jss.v042.i07},
+  journal   = {Journal of Statistical Software},
+  publisher = {Foundation for Open Access Statistic},
+  year      = {2011},
 }
 
 @Comment{jabref-meta: databaseType:biblatex;}

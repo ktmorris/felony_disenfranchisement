@@ -31,7 +31,7 @@ rm(temp)
 
 bg_shp <- inner_join(bg_shp, block_groups, by = "GEOID")
 
-bg_shp$decrease <- -0.027 * bg_shp$lost_voters * bg_shp$nh_black
+bg_shp$decrease <- (bg_shp$lost_voters >= 1)*-1
 
 
 

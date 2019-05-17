@@ -72,19 +72,23 @@ for(geo in c("block_group", "tract")){
   
   matches <- dplyr::select(matches, -treated, -control)
   
-  matches_v <- bind_rows(dplyr::select(matches, GEOID, weight), dplyr::select(matches, GEOID = control_GEOID, weight))
+  matches_v <- bind_rows(matches,
+                         data.frame(GEOID = unique(matches$GEOID),
+                                    control_GEOID = unique(matches$GEOID),
+                                    weight = 1))
   
-  match_w <- matches_v %>% 
-    group_by(GEOID) %>% 
-    summarize(weight = sum(weight))
-  
-  reg <- inner_join(units, match_w, by = "GEOID")
+  reg <- left_join(matches_v, units, by = c("control_GEOID" = "GEOID"))
+  reg$boro <- substring(reg$GEOID, 1, 5)
   
   reg_output <- lm(to ~ treat, data = reg, weights = weight)
-  reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight)
-  saveRDS(reg_output, paste0("./temp/match_reg_", geo, ".rds"))
-  saveRDS(reg_output_nhblack, paste0("./temp/match_reg_", geo, "_nhb.rds"))
+  reg_output_ses <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight, cluster = GEOID))$coefficients)[, 2]
+  save(reg_output, reg_output_ses, file = paste0("./temp/match_reg_", geo, ".rdata"))
   
+  reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight)
+  reg_output_nhblack_ses <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight, cluster = GEOID))$coefficients)[, 2]
+  save(reg_output_nhblack, reg_output_nhblack_ses, file = paste0("./temp/match_reg_", geo, "_nhb.rdata"))
+  
+}
   
   ###########
   load(paste0("./temp/mout_", geo, ".RData"))

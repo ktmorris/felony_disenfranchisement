@@ -20,14 +20,25 @@
 # nyc$cc_district <- over(pings, council_districts)$CounDist
 # saveRDS(nyc, "./temp/nyc.rds")
 
-nyc <- readRDS("./temp/nyc.rds") %>% 
-  filter(voter_status != "PURGED")
+nyc <- readRDS("./temp/nyc.rds")
 
 ## find lost voters
 nyc$lost_voter <- nyc$nys_id %in% readRDS("./temp/ids_of_lost_voters.rds")$nys_id
 
 lost_nyc <- sum(nyc$lost_voter)
 saveRDS(lost_nyc, "./temp/lost_count_nyc.rds")
+
+lost_bg <- nyc %>% 
+  group_by(GEOID = bg) %>% 
+  summarize(lost_voters = sum(lost_voter))
+
+lost_tract <- nyc %>% 
+  group_by(GEOID = substring(bg, 1, 11)) %>% 
+  summarize(lost_voters = sum(lost_voter))
+
+lost_zip <- nyc %>% 
+  group_by(GEOID = zip5) %>% 
+  summarize(lost_voters = sum(lost_voter))
 
 ## read in city council races to control for competitiveness
 races <- readRDS("./temp/council_competitiveness.rds")
@@ -60,12 +71,14 @@ arrests_tract <- arrests %>%
   summarize(arrests = n())
 
 ## share dem
+nyc <- nyc %>% 
+  filter(voter_status != "PURGED")
+
 share_dem_bg <- nyc %>% 
   group_by(GEOID = bg) %>% 
   summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
             vcount = n(),
-            lost_voters = sum(lost_voter),
             share_winner = mean(share_winner))
 
 share_dem_tract <- nyc %>% 
@@ -73,7 +86,6 @@ share_dem_tract <- nyc %>%
   summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
             vcount = n(),
-            lost_voters = sum(lost_voter),
             share_winner = mean(share_winner))
 
 share_dem_zip <- nyc %>% 
@@ -81,7 +93,6 @@ share_dem_zip <- nyc %>%
   summarize(share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
             vcount = n(),
-            lost_voters = sum(lost_voter),
             share_winner = mean(share_winner))
 
 ### cvap
@@ -147,7 +158,7 @@ cvap_tract <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/Tract.csv") %>%
 
 load("./temp/census_data_nyc_bgs_tracts.RData")
 
-tracts <- left_join(geos[[1]], left_join(share_dem_tract, arrests_tract)) %>% 
+tracts <- left_join(geos[[1]], left_join(share_dem_tract, left_join(arrests_tract, lost_tract))) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
 
 tracts <- left_join(tracts, cvap_tract, by = "GEOID")
@@ -159,7 +170,7 @@ tracts <- tracts[complete.cases(tracts), ] %>%
 
 saveRDS(tracts, "./temp/tract_pre_match.rds")
 
-block_groups <- left_join(geos[[2]], left_join(share_dem_bg, arrests_bg)) %>% 
+block_groups <- left_join(geos[[2]], left_join(share_dem_bg, left_join(arrests_bg, lost_bg))) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
 
 block_groups <- left_join(block_groups, cvap_bg, by = "GEOID")
@@ -172,7 +183,7 @@ block_groups <- block_groups[complete.cases(block_groups), ] %>%
 saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 
 
-zips <- inner_join(mutate(geos[[3]], GEOID = as.integer(GEOID)), share_dem_zip, by = "GEOID") %>% 
+zips <- inner_join(mutate(geos[[3]], GEOID = as.integer(GEOID)), left_join(share_dem_zip, lost_zip)) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters)) %>% 
   filter(v2017 > 100)
 
