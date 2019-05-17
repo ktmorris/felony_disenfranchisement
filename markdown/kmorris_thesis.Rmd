@@ -109,7 +109,7 @@ The state does not make a unified database of parolees whose voting rights have 
 Most states in the United States are required to maintain files with information on all registered voters in the state. In New York, this information is publicly available from the Board of Elections. It includes information on all registered voters, including: first and last name; date of birth; home address; vote history; and other information. The New York State Voter File also includes information on voters who were previously registered but have since been purged, either because they moved, died, or were incarcerated for a felony offense. Because the voter file includes information on voters who have been purged because of a felony conviction, we are able to reconstruct the vote history of individuals who are no longer registered because of their conviction.
 
 ## Geocoding {-}
-Voters' home addresses were converted to latitudes and longitudes using a geocoder provided by SmartyStreets. These latitudes and longitudes were then converted to census block groups using the statistical program R and shapefiles available from the United States Census Bureau.
+Voters' home addresses were converted to latitudes and longitudes using a geocoder provided by SmartyStreets. These latitudes and longitudes were then converted to census block groups, census tracts, and city council districts using the statistical program R.
 
 # Effects of Felony Disenfranchisement on Neighborhood Turnout Levels {-}
 
@@ -149,7 +149,7 @@ At both the tract and block group level, matching results in an untreated group 
 
 After matching neighborhoods, I use a simple regression to test whether turnout in the 2017 mayoral election was different in areas with lost voters. Census tract and block group level turnout rates are calculated using the geocoded voter file. Each voter's record indicates whether the voter participated in the 2017 general election,^[The New York State voter file is not without errors. For instance, the voter file erroneously does not record the author as participating in the 2017 mayoral election. However, insofar as these errors are not geographically correlated, there is little reason to believe they impact the results of this analysis. Unfortunately, testing the distribution of these errors is not possible.] which are then aggregated to estimate the number of ballots cast in each neighborhood. The number of ballots cast is divided the voting age population.
 
-Much of the literature has discussed whether felony disenfranchisement is particularly demobilizing for eligible Black voters. I therefore include models which explore any potential difference in treatment effect in neighborhoods where a higher share of the population is Black. Table \ref{tab:match-reg} presents the results of these regression models, with robust standard errors clustered at the level of the match [@Abadie2019].
+Much of the literature has discussed whether felony disenfranchisement is particularly demobilizing for eligible Black voters. I therefore include models which explore any potential difference in treatment effect in neighborhoods where a higher share of the population is Black. Table \ref{tab:match-reg} presents the results of these regression models. Each neighborhood is weighted by its adult population, and robust standard errors are clustered at the level of the match [@Abadie2019].
 ```{r tract-reg-chunk, echo = F, results = "asis", message = F}
 load("./temp/match_reg_block_group.rdata")
 
@@ -187,7 +187,7 @@ When neighborhoods are measured at the block group level, a lost voter is negati
 
 ### Testing Intensity Effects {-}
 
-Matching methodologies, of course, only allow us to test the effect of being treated - here, losing a voter for the 2017 election. The model above does not allow for different effects on turnout based on *how many* voters a neighborhood lost. In Table \ref{tab:trad-reg} below, I adopt a standard ordinary least squares regression to investigate whether lost voters are associated with lower turnout rates in the 2017 election. This regression uses the same covariates that were used in the matching procedure described above.
+Matching methodologies, of course, only allow us to test the effect of being treated - here, losing a voter for the 2017 election. The model above does not allow for different effects on turnout based on *how many* voters a neighborhood lost. In Table \ref{tab:trad-reg} below, I adopt a standard ordinary least squares regression to investigate whether lost voters are associated with lower turnout rates in the 2017 election. This regression uses the same covariates that were used in the matching procedure described above. Each neighborhood is weighted by its voting age population, and robust standard errors are clustered by city council district.
 
 ```{r trad-reg-chunk, echo = F, results = "asis", message = F}
 load("./temp/tract_model_reg_ols.rdata")
@@ -206,10 +206,10 @@ stargazer(bg_model, bg_model2, tract_model, tract_model2,
           table.placement = "H",
           style = "ajps",
           omit.stat = c("f", "ser"),
-          notes = "Robust standard errors in parentheses.",
+          notes = "Robust standard errors (clustered by city council district) in parentheses.",
           omit = "boro")
 ```
-The results presented in Table \ref{tab:trad-reg} align very closely with the estimated effect from the matching model. Once again, lost voters are generally associated with lower turnout (each missing voter in a block group reduces that neighborhood's turnout by about `r round(bg_model[["coefficients"]][["lost_voters"]]*100, digits = 2)` percentage points), but Models 2 and 4 make clear that this effect is concentrated in Black neighborhoods. In neighborhoods where most residents are Black, each lost voter is associated with a turnout decrease between `r -1*round(bg_model2[["coefficients"]][["lost_voters_black"]]*100, digits = 2)` and `r -1*round(tract_model2[["coefficients"]][["lost_voters_black"]]*100, digits = 2)` percentage points (depending on neighborhood definition).
+The results presented in Table \ref{tab:trad-reg} align very closely with the estimated effect from the matching model. Once again, lost voters are generally associated with lower turnout (each missing voter in a block group reduces that neighborhood's turnout by about `r -1*round(bg_model[["coefficients"]][["lost_voters"]]*100, digits = 2)` percentage points), but Models 2 and 4 make clear that this effect is concentrated in Black neighborhoods. In neighborhoods where most residents are Black, each lost voter is associated with a turnout decrease between `r -1*round(bg_model2[["coefficients"]][["lost_voters_black"]]*100, digits = 2)` and `r -1*round(tract_model2[["coefficients"]][["lost_voters_black"]]*100, digits = 2)` percentage points (depending on neighborhood definition).
 
 The block groups where these depressive effects are not randomly distributed througout the city. They are highly spatially concentrated: in Central Brooklyn, Eastern Queens, and Harlem. Figure \ref{fig:postest} applies the coefficient on "Lost Voters * Share Black" from Model 2 in Table \ref{tab:trad-reg} to the city's block groups.
 

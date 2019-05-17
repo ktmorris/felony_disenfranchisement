@@ -80,15 +80,13 @@ for(geo in c("block_group", "tract")){
   reg <- left_join(matches_v, units, by = c("control_GEOID" = "GEOID"))
   reg$boro <- substring(reg$GEOID, 1, 5)
   
-  reg_output <- lm(to ~ treat, data = reg, weights = weight)
-  reg_output_ses <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight, cluster = GEOID))$coefficients)[, 2]
+  reg_output <- lm(to ~ treat, data = reg, weights = weight * vap)
+  reg_output_ses <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight * vap, cluster = GEOID))$coefficients)[, 2]
   save(reg_output, reg_output_ses, file = paste0("./temp/match_reg_", geo, ".rdata"))
   
-  reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight)
-  reg_output_nhblack_ses <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight, cluster = GEOID))$coefficients)[, 2]
+  reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight * vap)
+  reg_output_nhblack_ses <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight * vap, cluster = GEOID))$coefficients)[, 2]
   save(reg_output_nhblack, reg_output_nhblack_ses, file = paste0("./temp/match_reg_", geo, "_nhb.rdata"))
-  
-}
   
   ###########
   load(paste0("./temp/mout_", geo, ".RData"))
