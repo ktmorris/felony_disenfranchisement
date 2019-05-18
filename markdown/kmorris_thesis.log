@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  17 MAY 2019 18:20
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  18 MAY 2019 13:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -870,11 +870,7 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
-) (./kmorris_thesis.aux
-
-LaTeX Warning: Label `' multiply defined.
-
-)
+) (./kmorris_thesis.aux)
 \openout1 = `kmorris_thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 103.
@@ -998,40 +994,4 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 122.
 [1
 
-] [2] [3] [4] [5]
-File: kmorris_thesis_files/figure-latex/citywide-map-1.pdf Graphic file (type p
-df)
-<use kmorris_thesis_files/figure-latex/citywide-map-1.pdf>
-[6] [7] [8] [9]
-File: kmorris_thesis_files/figure-latex/postest-map-1.pdf Graphic file (type pd
-f)
-<use kmorris_thesis_files/figure-latex/postest-map-1.pdf>
-[10] [11]
-Underfull \hbox (badness 1742) in paragraph at lines 436--438
-\TU/lmr/m/it/10 ANNALS of the American Academy of Political and Social Science 
-\TU/lmr/m/n/10 651 (1): 220–49. []$[][][][][] []
- []
-
-[12]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 467.
-[13]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 467.
-(./kmorris_thesis.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 467.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 467.
-Package rerunfilecheck Info: File `kmorris_thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 7940D882A50AB4FA0F5C61172CD09071.
-
-LaTeX Warning: There were multiply-defined labels.
-
- ) 
-Here is how much of TeX's memory you used:
- 24110 strings out of 494894
- 447050 string characters out of 6175524
- 564897 words of memory out of 5000000
- 27787 multiletter control sequences out of 15000+600000
- 553174 words of font info for 64 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 46i,11n,68p,1980b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
-
-Output written on kmorris_thesis.pdf (13 pages).
+] [2

@@ -59,7 +59,8 @@ city_map <- ggplot() +
         legend.key=element_blank()) +
   geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
-  geom_point(data = filter(history, !is.na(district), voted == "Cast Ballot in Past 10 Years"), aes(x = longitude, y = latitude), shape = 21, color = "black", fill = "red") +
+  geom_point(data = filter(history, !is.na(district), voted == "Cast Ballot in Past 10 Years"),
+             aes(x = longitude, y = latitude), shape = 21, color = "black", fill = "red", alpha = 0.5) +
   coord_map() +
   labs(x = NULL, y = NULL)
 
