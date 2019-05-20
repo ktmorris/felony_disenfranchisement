@@ -48,3 +48,26 @@ small <- merge_list[[1]] %>%
   filter(!is.na(nys_id), !is.na(din))
 
 saveRDS(small, "./temp/matched_ids_in_17.rds")
+
+
+### test moving birthdays
+doccs_to_rolls_p35 <- mutate(doccs_to_rolls, dob = dob + 35)
+
+merge_list <- match_rolls_to_doc(doccs_to_rolls_p35, din, nys_roll, nys_id)
+
+small <- merge_list[[1]] %>% 
+  select(nys_id, din) %>% 
+  filter(!is.na(nys_id), !is.na(din))
+
+saveRDS(small, "./temp/matched_ids_in_17_p35.rds")
+
+##
+doccs_to_rolls_m35 <- mutate(doccs_to_rolls, dob = dob - 35)
+
+merge_list <- match_rolls_to_doc(doccs_to_rolls_m35, din, nys_roll, nys_id)
+
+small <- merge_list[[1]] %>% 
+  select(nys_id, din) %>% 
+  filter(!is.na(nys_id), !is.na(din))
+
+saveRDS(small, "./temp/matched_ids_in_17_m35.rds")
