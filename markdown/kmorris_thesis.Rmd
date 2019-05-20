@@ -126,7 +126,7 @@ Voters' home addresses were converted to latitudes and longitudes using a geocod
 ## Identification of Lost Voters {-}
 In this analysis, I offer a slightly different defintion of "lost voter" than much of the literature. Many recent papers have attempted to identify relationships between the number of *potentially* lost voters and turnout. Here, I explore whether the disenfranchisement of voters with a history of participating in elections is related to neighborhood turnout. In this analysis, "lost voters" are individuals ineligible to cast a ballot on a given election day who have cast a ballot in the previous ten years. To study the effect of felony disenfranchisement on voting at the local level (and its potential implications for the distribution of political power at the local level), I use turnout in the most recent election for city-wide office in New York --- the mayoral election which took place on November 7^th^, 2017. Lost voters, therefore, are all individuals who were incarcerated or on parole on November 7^th^, 2017, and had cast a ballot between 2007 and 2016.
 
-These individuals are identified by matching Department of Corrections and Community Supervisions data to the voter file using the methodology developed by Burch [-@Burch2010; -@Burch2011]. I use first, middle, and last names, and dates of birth, to join these two datasets.^[Matching on first and last names and dates of birth can result in false positive matches, especially in large states like New York. Following @Meredith2013, I report estimates of the potential impact of these false positives in the Appendix.] Figure \ref{fig:citymap} shows where these lost voters lived before going to prison, with city council districts also included. There were `r comma(readRDS("./temp/lost_count_nyc.rds"))` such lost voters within New York City as of the 2017 general election, and `r comma(nrow(readRDS("./temp/ids_of_lost_voters.rds")))` statewide.
+These individuals are identified by matching Department of Corrections and Community Supervisions data to the voter file using the methodology developed by Burch [-@Burch2010; -@Burch2011]. I use first, middle, and last names, and dates of birth, to join these two datasets.^[Matching on first and last names and dates of birth can result in false positive matches, especially in large states like New York. Following @Meredith2013, I report estimates of the potential impact of these false positives in Appendix XX.] Figure \ref{fig:citymap} shows where these lost voters lived before going to prison, with city council districts also included. There were `r comma(readRDS("./temp/lost_count_nyc.rds"))` such lost voters within New York City as of the 2017 general election, and `r comma(nrow(readRDS("./temp/ids_of_lost_voters.rds")))` statewide.
 
 ```{r citywide-map, echo = FALSE, message = F, warning = F, fig.width = 5, fig.height = 5, fig.cap = "\\label{fig:citymap}Lost Voters on Election Day, 2017", out.extra = '', fig.pos = "H", fig.align = "center"}
 j <- readRDS("./output/city_map.RDS")
@@ -157,7 +157,7 @@ j
 At both the tract and block group level, matching results in an untreated group of neighborhoods that looks substantially like our treatment group. These tables also demonstrate the striking extent to which neighborhoods with lost voters differ from the average neighborhood in New York City. Neighborhoods with lost voters are substantially less white, have far lower median incomes, and a larger share of voters are registered as Democrats.
 
 
-After matching neighborhoods, I use a simple regression to test whether turnout in the 2017 mayoral election was different in areas with lost voters. Census tract and block group level turnout rates are calculated using the geocoded voter file. Each voter's record indicates whether the voter participated in the 2017 general election,^[The New York State voter file is not without errors. For instance, the voter file erroneously does not record the author as participating in the 2017 primary election. However, insofar as these errors are not geographically correlated, there is little reason to believe they impact the results of this analysis. Unfortunately, testing the distribution of these errors is not possible.] which are then aggregated to estimate the number of ballots cast in each neighborhood. The number of ballots cast is divided the voting age population.
+After matching neighborhoods, I use a simple regression to test whether turnout in the 2017 mayoral election was different in areas with lost voters. Census tract and block group level turnout rates are calculated using the geocoded voter file. Each voter's record indicates whether the voter participated in the 2017 general election, which are then aggregated to estimate the number of ballots cast in each neighborhood.^[The New York registered voter file does not align exactly with results reported by the city. The voter file indicates that just XX voters cast a ballot in the 2017 mayoral election, but the Board of Elections reports that XX votes were cast. In [Appendix A], I demonstrate that there is no relationship between lost voters and underreporting of cast ballots at the precinct level, which means these reporting anamolies are unlikely to impact this analysis.] The number of ballots cast is divided the voting age population.
 
 Much of the literature has discussed whether felony disenfranchisement is particularly demobilizing for eligible Black voters. I therefore include models which explore any potential difference in treatment effect in neighborhoods where a higher share of the population is Black. Table \ref{tab:match-reg} presents the results of these regression models. Each neighborhood is weighted by its adult population, and robust standard errors are clustered at the level of the match [@Abadie2019].
 ```{r tract-reg-chunk, echo = F, results = "asis", message = F}
@@ -236,3 +236,31 @@ Felony disenfranchisement, however, reaches beyond the individuals who are incar
 
 \newpage
 # References {-}
+<div id="refs"></div>
+
+\newpage
+# Appendix A {-}
+
+As noted above, the turnout figures reported in the registered voter file do not align with the results reported by the New York City Board of Elections. According to the official results, XX ballots were cast in the 2017 mayoral election. The registered voter file reports that just XX voters cast a ballot. This is not necessarily evidence of poor management by the Board of Elections. Some voters choose not to make their voter registration information publicly available (such as domestic violence survivors and officers of the court). Where more ballots are recorded by the BOE than in the voter file, turnout calculated from the voter file will be artificially lower. If the voter file undercount rate is systematically worse in neighborhoods with lost voters, this would pose a serious challenge to the validity of the results reported in the body of this paper.
+
+To test whether there is a relationship between lost voters and voter file undercount, I examine the undercount rate at the precinct level. The voter file indicates the home precinct of each voter, and the Board of Elections publishes election results at the precinct level. Because the census does not report statistics at the precinct level, I use block group information instead. Where precincts cross block group lines, the precinct is assigned the characteristics of all block groups in which it is located weighted by the number of voters from each block group. The undercount rate is calculated as the number of votes derived from the voter file divided by the number reported in BOE results.
+
+```{r undercount-reg-chunk, echo = F, results = "asis", message = F}
+load("./temp/compare_ballots_off_results.RData")
+
+stargazer(ed_reg,
+          header = F,
+          type = "latex",
+          se = list(ed_comp_ses),
+          covariate.labels = c("Lost Voters", "Median Income (Thousands of Dollars)", "Percent Latino", "Percent Non-Hispanic Black", "Percent Non-Hispanic White",
+                               "Percent With Some College", "Median Age", "Registration Rate", "Percent Democrats", "Percent Noncitizen", "Percent Won by City Council Representative"),
+          dep.var.labels = c("Undercount Rate"),
+          title = "(\\#tab:uc-reg) Registered Voter File Ballot Undercount",
+          table.placement = "H",
+          style = "ajps",
+          omit.stat = c("f", "ser"),
+          notes = "Robust standard errors (clustered by assembly district) in parentheses.",
+          omit = "boro")
+```
+
+As Table \ref{tab:uc-reg} makes clear, there is very little relationship (p = 0.47) between the number of lost voters in a precinct and the ballot undercount rate. Although researchers should be somewhat wary using turnout rates derived from New York State's registered voter file, there is no evidence that the reporting error impact this analysis.
