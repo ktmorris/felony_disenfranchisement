@@ -57,12 +57,6 @@ dec_map <- ggplot() +
   coord_map() +
   labs(x = NULL, y = NULL) + 
   scale_fill_gradient(high = "#bfbfbf", low = "red", labels = percent_format(accuracy = 1), limits = c(-0.05, 0), oob = squish) +
-  guides(fill = guide_colorbar(title.hjust = .5, title.position = "top", title = "Decreased Turnout from Disenfranchisement"))
+  guides(fill = guide_colorbar(title.hjust = .5, title = NULL))
 
 saveRDS(dec_map, "./temp/dec_block_map.rds")
-
-
-
-
-
-
