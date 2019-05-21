@@ -34,7 +34,7 @@ bg_shp <- inner_join(bg_shp, block_groups, by = "GEOID")
 load("./temp/bg_model_reg_ols.rdata")
 coef <- bg_model2[["coefficients"]][["lost_voters_black"]]
 
-bg_shp$decrease <- bg_shp$lost_voters * bg_shp$nh_black * coef
+bg_shp$decrease <- bg_shp$lost_voters
 
 ## bbs 
 bbs <- readOGR("./raw_data/shapefiles/Borough Boundaries", "geo_export_14dc9d2c-e65a-48c5-ac4d-1bcd90c6758d")

@@ -10,7 +10,7 @@ election_districts <- election_districts %>%
 
 election_districts <- setorder(election_districts, nys_id, -a, -b, -c) ## KEEP ONE RECORD FOR EVERY VOTER
 election_districts <- election_districts[!duplicated(election_districts$nys_id),]
-election_districts <- select(election_districts, -a, -b, -c)
+election_districts <- dplyr::select(election_districts, -a, -b, -c)
 
 
 nyc <- readRDS("./temp/nyc.rds")

@@ -66,26 +66,17 @@ city_map <- ggplot() +
 
 saveRDS(city_map, "./output/city_map.RDS")
 
-#### tract map
 
-tract_shp <- readOGR("./raw_data/shapefiles/nyct2010_19a", "nyct2010")
-tract_shp <- spTransform(tract_shp, CRS("+proj=longlat +ellps=WGS84 +no_defs"))
-tract_shp@data$id <- rownames(tract_shp@data)
-temp <- fortify(tract_shp)
-tract_shp <- inner_join(temp, tract_shp@data, by = "id")
-rm(temp)
+### bg map
 
-count_by_tract <- count_by_bg %>% 
-  group_by(tract = substring(bg, 1, 11)) %>% 
-  summarize(lost_voters = sum(lost_voters, na.rm = T))
+bgs <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
 
-codes <- data.frame("BoroCode" = as.character(c(1:5)), "cc" = c("061", "005", "047", "081", "085"))
+bgs@data$id <- rownames(bgs@data)
+t <- fortify(bgs)
 
-tract_shp <- left_join(tract_shp, codes, by = "BoroCode")
+bgs <- inner_join(bgs@data, t)
 
-tract_shp$GEOID <- with(tract_shp, paste0("36", cc, CT2010))
-tract_shp <- left_join(tract_shp, count_by_tract, by = c("GEOID" = "tract"))
-tract_shp$lost_voters <- ifelse(is.na(tract_shp$lost_voters), 0, tract_shp$lost_voters)
+bgs <- filter(bgs, GEOID %in% filter(history, !is.na(district))$bg)
 
 ggplot() +
   theme(axis.ticks = element_blank(),
@@ -96,52 +87,4 @@ ggplot() +
         plot.title = element_text(hjust = 0.5),
         legend.background = element_blank(),
         legend.key=element_blank()) +
-  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group, fill = lost_voters), color = "black") +
-  coord_map() +
-  labs(x = NULL, y = NULL) + 
-  scale_fill_gradient2() + ggtitle("Lost Voters by Tract")
-
-########
-
-
-############### old maps below
-# 
-# ggplot() +
-#   theme(axis.ticks = element_blank(),
-#         axis.text = element_blank(),
-#         panel.background = element_blank(),
-#         panel.border = element_blank(),
-#         legend.position = "bottom",
-#         text = element_text(family = "Gadugi"),
-#         plot.title = element_text(hjust = 0.5),
-#         legend.background = element_blank(),
-#         legend.key=element_blank()) +
-#   geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
-#   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
-#   geom_point(data = filter(nys, !is.na(district)), aes(x = longitude, y = latitude, color = as.factor(voted_16)), size = 2) +
-#   coord_map(xlim = c(-73.975, -73.9), ylim = c(40.75, 40.83)) +
-#   labs(x = NULL, y = NULL, color = "Voted in 2016", caption = "Sources: NYSBOE, NYSDOCCS") +
-#   scale_color_manual(values = c("red", "blue")) +
-#   guides(color = guide_legend(title = "Voted in 2016?", title.position = "top", title.hjust = 0.5)) +
-#   ggtitle("2017 Prison Admissions Who Were\nRegistered to Vote in 2016")
-# ggsave("./output/harlem_bronx.png")
-# 
-# ggplot() +
-#   theme(axis.ticks = element_blank(),
-#         axis.text = element_blank(),
-#         panel.background = element_blank(),
-#         panel.border = element_blank(),
-#         legend.position = "bottom",
-#         text = element_text(family = "Gadugi"),
-#         plot.title = element_text(hjust = 0.5),
-#         legend.background = element_blank(),
-#         legend.key=element_blank()) +
-#   geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
-#   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
-#   geom_point(data = filter(nys, !is.na(district)), aes(x = longitude, y = latitude, color = as.factor(voted_16)), size = 2) +
-#   coord_map(xlim = c(-74.05, -73.93), ylim = c(40.679, 40.72)) +
-#   labs(x = NULL, y = NULL, color = "Voted in 2016", caption = "Sources: NYSBOE, NYSDOCCS") +
-#   scale_color_manual(values = c("red", "blue")) +
-#   guides(color = guide_legend(title = "Voted in 2016?", title.position = "top", title.hjust = 0.5)) +
-#   ggtitle("2017 Prison Admissions Who Were\nRegistered to Vote in 2016")
-# ggsave("./output/brooklyn_heights.png")
+  geom_polygon(data = bgs, aes(x = long, y = lat, group = group), fill = "red") 
