@@ -1,7 +1,7 @@
 #######################################################################################################################################
 # READ IN DOCCS DATA
 
-names = fread("./raw_data/doccs_data/parolee_column_names.csv")$V1 # VARIABLE NAMES SET IN CSV 'CAUSE I'M LAZY
+names <- fread("./raw_data/doccs_data/parolee_column_names.csv", header = F)$V1
 
 parolees <- read_fwf(
   file ="./raw_data/doccs_data/parolee_data/Parolee.011419.txt",
