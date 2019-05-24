@@ -67,24 +67,3 @@ city_map <- ggplot() +
 saveRDS(city_map, "./output/city_map.RDS")
 
 
-### bg map
-
-bgs <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
-
-bgs@data$id <- rownames(bgs@data)
-t <- fortify(bgs)
-
-bgs <- inner_join(bgs@data, t)
-
-bgs <- filter(bgs, GEOID %in% filter(history, !is.na(district))$bg)
-
-ggplot() +
-  theme(axis.ticks = element_blank(),
-        axis.text = element_blank(),
-        panel.background = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "bottom",
-        plot.title = element_text(hjust = 0.5),
-        legend.background = element_blank(),
-        legend.key=element_blank()) +
-  geom_polygon(data = bgs, aes(x = long, y = lat, group = group), fill = "red") 
