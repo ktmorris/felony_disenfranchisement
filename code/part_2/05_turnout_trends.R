@@ -94,7 +94,8 @@ to16_chart <- ggplot(filter(ll3, year(month_done) >= 2010, month_done < "2016-11
   geom_vline(xintercept = as.Date("2016-05-21"), color = "red") +
   scale_x_date(labels = date_format("%b-%Y")) +
   annotate(geom = "text", x = as.Date("2016-05-21"), y = 0.08, label = "May 21, 2016", hjust = 1.05, family = "LM Roman 10") +
-  theme(text = element_text(family = "LM Roman 10"))
+  theme(text = element_text(family = "LM Roman 10"),
+        panel.grid = element_blank())
 
 saveRDS(to16_chart, "./temp/to16_chart.rds")
 
@@ -105,10 +106,24 @@ to18_chart <- ggplot(filter(ll3, year(month_done) >= 2012, month_done < "2018-11
   geom_vline(xintercept = as.Date("2018-05-21"), color = "red") +
   scale_x_date(labels = date_format("%b-%Y")) +
   annotate(geom = "text", x = as.Date("2018-05-21"), y = 0.06, label = "May 21, 2018", hjust = 1.05, family = "LM Roman 10") +
-  theme(text = element_text(family = "LM Roman 10"))
+  theme(text = element_text(family = "LM Roman 10"),
+        panel.grid = element_blank())
 
 saveRDS(to18_chart, "./temp/to18_chart.rds")
+### turnout stats
 
+to_16_10 <- parolees %>% 
+  filter(parole_status == "DISCHARGED",
+         year(as.Date(parole_status_date, "%m/%d/%Y")) == 2010) %>% 
+  summarize(mean(v2016)) %>% 
+  pull()
+saveRDS(to_16_10, "./temp/turnout_in_16_finished_10.rds")
+to_16_15 <- parolees %>% 
+  filter(parole_status == "DISCHARGED",
+         year(as.Date(parole_status_date, "%m/%d/%Y")) == 2015) %>% 
+  summarize(mean(v2016)) %>% 
+  pull()
+saveRDS(to_16_15, "./temp/turnout_in_16_finished_15.rds")
 
 ### restoration
 tt <- parolees %>% 
@@ -130,3 +145,7 @@ restoration_plot <- ggplot(filter(tt, parole_status_date >= "2018-04-15", parole
   theme(text = element_text(family = "LM Roman 10"))
 
 saveRDS(restoration_plot, "./temp/restoration_plot.rds")
+
+count_early <- sum(filter(tt, parole_status_date < "2018-05-21")$count_restored)
+
+saveRDS(count_early, "./temp/count_restored_before_may21.rds")

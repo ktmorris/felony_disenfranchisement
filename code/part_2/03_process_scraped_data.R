@@ -30,7 +30,7 @@ full <- full %>%
   mutate(Release_to_parole_supervision = as.Date(Release_to_parole_supervision, "%m/%d/%Y"),
          restored = tolower(Voting_pardon_issued) == "yes") %>% 
   select(din = DIN, restored, prison_release = Release_to_parole_supervision,
-         status = Parole_status, effective_date = Effective_date, race = Race_ethnicity)
+         status = Parole_status, effective_date = Effective_date)
 
 rm(m, ids, i)
 #### READ IN PAROLEE DATA
@@ -47,9 +47,16 @@ colnames(parolees) <- names
 rm(names)
 
 parolees <- parolees %>% 
-  select(din, parole_status = status, parole_status_date = status_date,
-         release_date_parole = release_date, dob_parole = dob,
-         parole_name = name, -starts_with("filler")) %>% 
+  select(din,
+         parole_status = status,
+         parole_status_date = status_date,
+         release_date_parole = release_date,
+         dob_parole = dob,
+         parole_name = name,
+         -starts_with("filler"),
+         county,
+         sex,
+         race) %>% 
   group_by(din) %>% 
   arrange(desc(parole_status_date)) %>% 
   filter(row_number() == 1) %>% 
@@ -62,9 +69,29 @@ parolees <- cSplit(parolees, "first_name", sep = " ", direction = "wide", drop =
 parolees <- parolees[ , 1:(x+1)]
 parolees <- rename(parolees, first_name = first_name_1, middle_name = first_name_2)
 
-parolees_with_restoration <- full_join(parolees, full)
+parolees_with_restoration <- left_join(parolees, full, by = "din")
+
+
+
+##### read in parolee crimes
+
+names <- fread("./raw_data/doccs_data/parolee_crimes_column_names.csv", header = F)$V1
+
+parolee_crimes <- read_fwf(
+  file = "./raw_data/doccs_data/parolee_data/Parole.Crimes.011419.txt",
+  fwf_widths(c(1, 9, 3, 7, 2, 3, 2, 44, 3, 1, 3, 11, 2))
+)
+
+colnames(parolee_crimes) <- names
+parolee_crimes <- select(parolee_crimes, -starts_with("filler")) %>% 
+  mutate(current_felon = crime_class %in% c("1", "2", "3", "B", "C", "D", "E")) %>% 
+  group_by(din) %>% 
+  summarize(current_felon = max(current_felon),
+            counts = n())
+
+parolees_with_restoration <- inner_join(parolees_with_restoration, parolee_crimes, by = "din") %>% 
+  filter(current_felon == 1)
+
 saveRDS(parolees_with_restoration, "./temp/parolees_with_restoration.rds")
-
-
 cleanup()
 
