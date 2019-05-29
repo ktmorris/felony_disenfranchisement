@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2019.5.9)  24 MAY 2019 15:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2019.5.9)  29 MAY 2019 12:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -718,6 +718,9 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 LaTeX Warning: Label `' multiply defined.
 
 
+LaTeX Warning: Label `fig:restoration-chart' multiply defined.
+
+
 LaTeX Warning: Label `' multiply defined.
 
 )
@@ -874,7 +877,7 @@ LaTeX Font Info:    Try loading font information for TS1+lmr on input line 165.
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [5]
-<kmorris_thesis_files/figure-latex/citywide-map-1.pdf, id=188, 361.35pt x 361.3
+<kmorris_thesis_files/figure-latex/citywide-map-1.pdf, id=200, 361.35pt x 361.3
 5pt>
 File: kmorris_thesis_files/figure-latex/citywide-map-1.pdf Graphic file (type p
 df)
@@ -908,7 +911,7 @@ le.3}) has been already used, duplicate ignored
                                                   \fi \fi 
 l.364 
       ]
-<kmorris_thesis_files/figure-latex/postest-map-1.pdf, id=250, 361.35pt x 361.35
+<kmorris_thesis_files/figure-latex/postest-map-1.pdf, id=262, 361.35pt x 361.35
 pt>
 File: kmorris_thesis_files/figure-latex/postest-map-1.pdf Graphic file (type pd
 f)
@@ -927,39 +930,84 @@ gure.2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.386 \newpage
-               <./kmorris_thesis_files/figure-latex/postest-map-1.pdf>] [12] [1
-3] [14pdfTeX warning (ext4): destination with the same identifier (name{table.5
+l.391 
+       <./kmorris_thesis_files/figure-latex/postest-map-1.pdf>]
+<kmorris_thesis_files/figure-latex/restoration-chart-1.pdf, id=288, 542.025pt x
+ 289.08pt>
+File: kmorris_thesis_files/figure-latex/restoration-chart-1.pdf Graphic file (t
+ype pdf)
+<use kmorris_thesis_files/figure-latex/restoration-chart-1.pdf>
+Package pdftex.def Info: kmorris_thesis_files/figure-latex/restoration-chart-1.
+pdf  used on input line 408.
+(pdftex.def)             Requested size: 469.77148pt x 250.54478pt.
+[12] [13pdfTeX warning (ext4): destination with the same identifier (name{figur
+e.3}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.424 
+       <./kmorris_thesis_files/figure-latex/restoration-chart-1.pdf>]
+<kmorris_thesis_files/figure-latex/to-16-chart-1.pdf, id=315, 542.025pt x 289.0
+8pt>
+File: kmorris_thesis_files/figure-latex/to-16-chart-1.pdf Graphic file (type pd
+f)
+<use kmorris_thesis_files/figure-latex/to-16-chart-1.pdf>
+Package pdftex.def Info: kmorris_thesis_files/figure-latex/to-16-chart-1.pdf  u
+sed on input line 427.
+(pdftex.def)             Requested size: 469.77148pt x 250.54478pt.
+<kmorris_thesis_files/figure-latex/to-18-chart-1.pdf, id=317, 542.025pt x 289.0
+8pt>
+File: kmorris_thesis_files/figure-latex/to-18-chart-1.pdf Graphic file (type pd
+f)
+<use kmorris_thesis_files/figure-latex/to-18-chart-1.pdf>
+Package pdftex.def Info: kmorris_thesis_files/figure-latex/to-18-chart-1.pdf  u
+sed on input line 438.
+(pdftex.def)             Requested size: 469.77148pt x 250.54478pt.
+[14pdfTeX warning (ext4): destination with the same identifier (name{figure.4})
+ has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.444 
+       <./kmorris_thesis_files/figure-latex/to-16-chart-1.pdf>] [15pdfTeX warni
+ng (ext4): destination with the same identifier (name{figure.5}) has been alrea
+dy used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.447 \newpage
+               <./kmorris_thesis_files/figure-latex/to-18-chart-1.pdf>] [16] [1
+7] [18pdfTeX warning (ext4): destination with the same identifier (name{table.5
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.503 \newpage
-              ] [15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 556.
-[16pdfTeX warning (ext4): destination with the same identifier (name{table.6}) 
+l.564 \newpage
+              ] [19]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 617.
+[20pdfTeX warning (ext4): destination with the same identifier (name{table.6}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.556 \end{document}
+l.617 \end{document}
                     ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 556.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 617.
 (./kmorris_thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 556.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 556.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 617.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 617.
 Package rerunfilecheck Info: File `kmorris_thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 63AEF41A59D0739F163E052B3ADD1E01;3619.
+(rerunfilecheck)             Checksum: 5E07F94F92E909A97A3B8929FF1FBD6C;4333.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 556.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 617.
  ) 
 Here is how much of TeX's memory you used:
- 12227 strings out of 494553
- 175122 string characters out of 6175838
- 266471 words of memory out of 5000000
- 15591 multiletter control sequences out of 15000+600000
+ 12266 strings out of 494553
+ 176350 string characters out of 6175838
+ 266987 words of memory out of 5000000
+ 15614 multiletter control sequences out of 15000+600000
  67903 words of font info for 56 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  28i,17n,35p,2132b,329s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -982,10 +1030,10 @@ c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri1
 m/lmri8.pfb><c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/pu
 blic/lm/lmsy10.pfb><c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/fonts/t
 ype1/public/lm/lmsy7.pfb>
-Output written on kmorris_thesis.pdf (16 pages, 2498522 bytes).
+Output written on kmorris_thesis.pdf (20 pages, 2526589 bytes).
 PDF statistics:
- 411 PDF objects out of 1000 (max. 8388607)
- 371 compressed objects within 4 object streams
- 101 named destinations out of 1000 (max. 500000)
- 163 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 492 PDF objects out of 1000 (max. 8388607)
+ 441 compressed objects within 5 object streams
+ 117 named destinations out of 1000 (max. 500000)
+ 202 words of extra memory for PDF output out of 10000 (max. 10000000)
 

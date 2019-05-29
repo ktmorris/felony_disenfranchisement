@@ -372,6 +372,14 @@ number = "3",
   url    = {https://www.brennancenter.org/analysis/thwarting-amendment-4},
 }
 
+@Report{@Drucker2005,
+  author      = {Ernest Drucker and Ricardo Barreras},
+  title       = {Studies of Voting Behavior and Felony Disenfranchisement Among Individuals in the Criminal Justice System in New York, Connecticut, and Ohio},
+  institution = {The Sentencing Project},
+  date        = {2005-09},
+  pubstate    = {W},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
 
 @Comment{jabref-meta: grouping:
