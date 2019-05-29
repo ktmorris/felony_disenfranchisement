@@ -92,8 +92,9 @@ to16_chart <- ggplot(filter(ll3, year(month_done) >= 2010, month_done < "2016-11
   theme_minimal() + scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
   labs(x = "Month Discharged From Parole", y = "Turnout") +
   geom_vline(xintercept = as.Date("2016-05-21"), color = "red") +
-  scale_x_date(labels = date_format("%B-%Y")) +
-  annotate(geom = "text", x = as.Date("2016-05-21"), y = 0.08, label = "May 21, 2016", hjust = 1.05)
+  scale_x_date(labels = date_format("%b-%Y")) +
+  annotate(geom = "text", x = as.Date("2016-05-21"), y = 0.08, label = "May 21, 2016", hjust = 1.05, family = "LM Roman 10") +
+  theme(text = element_text(family = "LM Roman 10"))
 
 saveRDS(to16_chart, "./temp/to16_chart.rds")
 
@@ -102,8 +103,9 @@ to18_chart <- ggplot(filter(ll3, year(month_done) >= 2012, month_done < "2018-11
   theme_minimal() + scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
   labs(x = "Month Discharged From Parole", y = "Turnout") +
   geom_vline(xintercept = as.Date("2018-05-21"), color = "red") +
-  scale_x_date(labels = date_format("%B-%Y")) +
-  annotate(geom = "text", x = as.Date("2018-05-21"), y = 0.06, label = "May 21, 2018", hjust = 1.05)
+  scale_x_date(labels = date_format("%b-%Y")) +
+  annotate(geom = "text", x = as.Date("2018-05-21"), y = 0.06, label = "May 21, 2018", hjust = 1.05, family = "LM Roman 10") +
+  theme(text = element_text(family = "LM Roman 10"))
 
 saveRDS(to18_chart, "./temp/to18_chart.rds")
 
@@ -124,5 +126,7 @@ not_found <- parolees %>%
 
 restoration_plot <- ggplot(filter(tt, parole_status_date >= "2018-04-15", parole_status_date < "2018-06-16"), aes(x = parole_status_date, y = restoration_rate)) + geom_line() +
   theme_minimal() + labs(x = "Date Discharged From Parole", y = "Share Formally Restored") +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 0.1))
+  scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
+  theme(text = element_text(family = "LM Roman 10"))
+
 saveRDS(restoration_plot, "./temp/restoration_plot.rds")

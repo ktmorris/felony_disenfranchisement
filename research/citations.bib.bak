@@ -163,16 +163,16 @@ number = "3",
 }
 
 @Article{Hjalmarsson2010,
-  author    = {R. Hjalmarsson and M. Lopez},
+  author    = {Randi Hjalmarsson and Mark Lopez},
   title     = {The Voting Behavior of Young Disenfranchised Felons: Would They Vote if They Could?},
-  journal   = {American Law and Economics Review},
-  year      = {2010},
   volume    = {12},
   number    = {2},
-  month     = {apr},
   pages     = {356--393},
   doi       = {10.1093/aler/ahq004},
+  journal   = {American Law and Economics Review},
+  month     = {apr},
   publisher = {Oxford University Press ({OUP})},
+  year      = {2010},
 }
 
 @Article{Miles2004,
@@ -370,6 +370,14 @@ number = "3",
   title  = {Thwarting Amendment 4},
   date   = {2019-05-09},
   url    = {https://www.brennancenter.org/analysis/thwarting-amendment-4},
+}
+
+@Report{@Drucker2005,
+  author      = {Ernest Drucker and Ricardo Barreras},
+  title       = {Studies of Voting Behavior and Felony Disenfranchisement Among Individuals in the Criminal Justice System in New York, Connecticut, and Ohio},
+  institution = {The Sentencing Project},
+  date        = {2005-09},
+  pubstate    = {Washington, DC},
 }
 
 @Comment{jabref-meta: databaseType:biblatex;}

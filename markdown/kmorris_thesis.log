@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2019.5.9)  29 MAY 2019 12:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2019.5.9)  29 MAY 2019 15:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -932,7 +932,7 @@ gure.2}) has been already used, duplicate ignored
                                                   \fi \fi 
 l.391 
        <./kmorris_thesis_files/figure-latex/postest-map-1.pdf>]
-<kmorris_thesis_files/figure-latex/restoration-chart-1.pdf, id=288, 542.025pt x
+<kmorris_thesis_files/figure-latex/restoration-chart-1.pdf, id=289, 542.025pt x
  289.08pt>
 File: kmorris_thesis_files/figure-latex/restoration-chart-1.pdf Graphic file (t
 ype pdf)
@@ -947,7 +947,7 @@ e.3}) has been already used, duplicate ignored
                                                   \fi \fi 
 l.424 
        <./kmorris_thesis_files/figure-latex/restoration-chart-1.pdf>]
-<kmorris_thesis_files/figure-latex/to-16-chart-1.pdf, id=315, 542.025pt x 289.0
+<kmorris_thesis_files/figure-latex/to-16-chart-1.pdf, id=317, 542.025pt x 289.0
 8pt>
 File: kmorris_thesis_files/figure-latex/to-16-chart-1.pdf Graphic file (type pd
 f)
@@ -955,7 +955,7 @@ f)
 Package pdftex.def Info: kmorris_thesis_files/figure-latex/to-16-chart-1.pdf  u
 sed on input line 427.
 (pdftex.def)             Requested size: 469.77148pt x 250.54478pt.
-<kmorris_thesis_files/figure-latex/to-18-chart-1.pdf, id=317, 542.025pt x 289.0
+<kmorris_thesis_files/figure-latex/to-18-chart-1.pdf, id=319, 542.025pt x 289.0
 8pt>
 File: kmorris_thesis_files/figure-latex/to-18-chart-1.pdf Graphic file (type pd
 f)
@@ -1030,10 +1030,10 @@ c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri1
 m/lmri8.pfb><c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/pu
 blic/lm/lmsy10.pfb><c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/fonts/t
 ype1/public/lm/lmsy7.pfb>
-Output written on kmorris_thesis.pdf (20 pages, 2526589 bytes).
+Output written on kmorris_thesis.pdf (20 pages, 2527252 bytes).
 PDF statistics:
- 492 PDF objects out of 1000 (max. 8388607)
- 441 compressed objects within 5 object streams
+ 496 PDF objects out of 1000 (max. 8388607)
+ 445 compressed objects within 5 object streams
  117 named destinations out of 1000 (max. 500000)
  202 words of extra memory for PDF output out of 10000 (max. 10000000)
 
