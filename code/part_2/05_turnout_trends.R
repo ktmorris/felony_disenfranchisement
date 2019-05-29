@@ -41,37 +41,7 @@ parolees <- left_join(parolees, nys_roll, by = "din")
 parolees$v2018 <- ifelse(is.na(parolees$v2018), 0, parolees$v2018)
 parolees$v2016 <- ifelse(is.na(parolees$v2016), 0, parolees$v2016)
 
-ll <- parolees %>% 
-  filter(parole_status == "DISCHARGED") %>% 
-  mutate(parole_status_date = as.Date(parole_status_date, "%m/%d/%Y"),
-         month_done = make_date(year = year(parole_status_date), month = 4 * (ceiling(month(parole_status_date) / 4)), day = 1)) %>% 
-  group_by(month_done) %>% 
-  summarize(to = mean(v2018),
-            count = n())
-
-
-ggplot(filter(ll, year(month_done) >= 2010), aes(x = month_done, y = to)) + geom_line()
-
-ll2 <- parolees %>% 
-  filter(parole_status == "DISCHARGED") %>% 
-  mutate(parole_status_date = as.Date(parole_status_date, "%m/%d/%Y"),
-         month_done = make_date(year = 1900, month = month(parole_status_date), day = 1),
-         year = year(parole_status_date)) %>% 
-  filter(year %in% c(2016, 2018)) %>% 
-  group_by(month_done, year) %>% 
-  summarize(to16 = mean(v2016), 
-            to18 = mean(v2018),
-            count = n())
-
-ll2$to <- ifelse(ll2$year == 2016, ll2$to16, ll2$to18)
-
-ggplot(filter(ll2), aes(x = month_done, y = to, color = as.factor(year))) + geom_line() +
-  theme_minimal() + scale_y_continuous(labels = scales::percent) + labs(x = "Month Finished With Parole",
-                                                                        y = "Turnout") +
-  scale_x_date(labels = date_format("%B")) +
-  scale_color_manual(name = "Year Finished With Parole", values = c("red", "blue"))
-
-ll3 <- parolees %>% 
+low_level <- parolees %>% 
   filter(parole_status == "DISCHARGED") %>% 
   mutate(parole_status_date = as.Date(parole_status_date, "%m/%d/%Y"),
          month_done = make_date(year = year(parole_status_date), month(parole_status_date), day = 1)) %>% 
@@ -81,36 +51,45 @@ ll3 <- parolees %>%
             count = n())
 
 
-ggplot(filter(ll3, year(month_done) >= 2010, year(month_done) < 2019), aes(x = month_done)) + geom_line(aes(y = to18), color = "red") + geom_line(aes(y = to16), color = "blue") +
-  theme_minimal() + scale_y_continuous(labels = scales::percent) + labs(x = "Month Finished With Parole",
-                                                                        y = "Turnout") +
-  scale_x_date(labels = date_format("%B-%Y"))
-
-
-to16_chart <- ggplot(filter(ll3, year(month_done) >= 2010, month_done < "2016-11-01"), aes(x = month_done, y = to16, weight = count)) + geom_line() +
-  geom_smooth(data = filter(ll3, year(month_done) >= 2010, month_done < "2016-06-01"), formula = y ~ x + I(x^2), method = lm, fullrange = T) +
+to16_chart <- ggplot(filter(low_level, year(month_done) >= 2010, month_done < "2016-11-01"), aes(x = month_done, y = to16, weight = count)) + geom_line() +
+  geom_smooth(data = filter(low_level, year(month_done) >= 2010, month_done < "2016-06-01"), formula = y ~ x + I(x^2), method = lm, fullrange = T) +
   theme_minimal() + scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
   labs(x = "Month Discharged From Parole", y = "Turnout") +
   geom_vline(xintercept = as.Date("2016-05-21"), color = "red") +
   scale_x_date(labels = date_format("%b-%Y")) +
   annotate(geom = "text", x = as.Date("2016-05-21"), y = 0.08, label = "May 21, 2016", hjust = 1.05, family = "LM Roman 10") +
-  theme(text = element_text(family = "LM Roman 10"))
+  theme(text = element_text(family = "LM Roman 10"),
+        panel.grid = element_blank())
 
 saveRDS(to16_chart, "./temp/to16_chart.rds")
 
-to18_chart <- ggplot(filter(ll3, year(month_done) >= 2012, month_done < "2018-11-01"), aes(x = month_done, y = to18, weight = count)) + geom_line() +
-  geom_smooth(data = filter(ll3, year(month_done) >= 2012, month_done < "2018-06-01"), formula = y ~ x + I(x^2), method = lm, fullrange = T) +
+to18_chart <- ggplot(filter(low_level, year(month_done) >= 2012, month_done < "2018-11-01"), aes(x = month_done, y = to18, weight = count)) + geom_line() +
+  geom_smooth(data = filter(low_level, year(month_done) >= 2012, month_done < "2018-06-01"), formula = y ~ x + I(x^2), method = lm, fullrange = T) +
   theme_minimal() + scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
   labs(x = "Month Discharged From Parole", y = "Turnout") +
   geom_vline(xintercept = as.Date("2018-05-21"), color = "red") +
   scale_x_date(labels = date_format("%b-%Y")) +
   annotate(geom = "text", x = as.Date("2018-05-21"), y = 0.06, label = "May 21, 2018", hjust = 1.05, family = "LM Roman 10") +
-  theme(text = element_text(family = "LM Roman 10"))
+  theme(text = element_text(family = "LM Roman 10"),
+        panel.grid = element_blank())
 
 saveRDS(to18_chart, "./temp/to18_chart.rds")
+### turnout stats
 
+to_16_10 <- parolees %>% 
+  filter(parole_status == "DISCHARGED",
+         year(as.Date(parole_status_date, "%m/%d/%Y")) == 2010) %>% 
+  summarize(mean(v2016)) %>% 
+  pull()
+saveRDS(to_16_10, "./temp/turnout_in_16_finished_10.rds")
+to_16_15 <- parolees %>% 
+  filter(parole_status == "DISCHARGED",
+         year(as.Date(parole_status_date, "%m/%d/%Y")) == 2015) %>% 
+  summarize(mean(v2016)) %>% 
+  pull()
+saveRDS(to_16_15, "./temp/turnout_in_16_finished_15.rds")
 
-### restoration
+### restoration by day
 tt <- parolees %>% 
   filter(parole_status == "DISCHARGED",
          !is.na(restored)) %>% 
@@ -130,3 +109,7 @@ restoration_plot <- ggplot(filter(tt, parole_status_date >= "2018-04-15", parole
   theme(text = element_text(family = "LM Roman 10"))
 
 saveRDS(restoration_plot, "./temp/restoration_plot.rds")
+
+count_early <- sum(filter(tt, parole_status_date < "2018-05-21")$count_restored)
+
+saveRDS(count_early, "./temp/count_restored_before_may21.rds")
