@@ -76,6 +76,8 @@ ed_results <- results %>%
            assembly_district = AD) %>% 
   summarize(votes = sum(Tally))
 
+ballots <- sum(ed_results$votes)
+saveRDS(ballots, "./temp/mayoral_ballots.rds")
 
 ed_comp <- inner_join(ed_level, ed_results)
 

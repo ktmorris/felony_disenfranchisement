@@ -54,6 +54,10 @@ history <- cSplit(dplyr::select(nyc, nys_id, history), "history", sep = ";", dir
 history <- left_join(history, elects, by = "history")
 history <- filter(history, year == 2017, election_type == "general")
 nyc$v2017 <- nyc$nys_id %in% history$nys_id
+# count ballots in 17
+
+vf_ballots_17 <- sum(nyc$v2017)
+saveRDS(vf_ballots_17, "./temp/vf_ballots_17.rds")
 ##### arrests
 arrests <- fread("./raw_data/NYPD_Arrests_Data__Historic_.csv") %>% 
   filter(LAW_CAT_CD == "F")
