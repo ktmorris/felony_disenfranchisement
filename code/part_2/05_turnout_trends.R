@@ -40,6 +40,7 @@ parolees <- readRDS("./temp/parolees_with_restoration.rds")
 parolees <- left_join(parolees, nys_roll, by = "din")
 parolees$v2018 <- ifelse(is.na(parolees$v2018), 0, parolees$v2018)
 parolees$v2016 <- ifelse(is.na(parolees$v2016), 0, parolees$v2016)
+parolees$reg <- parolees$voter_status == "ACTIVE" & !is.na(parolees$voter_status)
 
 low_level <- parolees %>% 
   filter(parole_status == "DISCHARGED") %>% 
@@ -48,7 +49,8 @@ low_level <- parolees %>%
   group_by(month_done) %>% 
   summarize(to16 = mean(v2016),
             to18 = mean(v2018),
-            count = n())
+            count = n(),
+            share_reg = mean(reg))
 
 
 to16_chart <- ggplot(filter(low_level, year(month_done) >= 2010, month_done < "2016-11-01"), aes(x = month_done, y = to16, weight = count)) + geom_line() +
@@ -74,6 +76,18 @@ to18_chart <- ggplot(filter(low_level, year(month_done) >= 2012, month_done < "2
         panel.grid = element_blank())
 
 saveRDS(to18_chart, "./temp/to18_chart.rds")
+
+reg18_chart <- ggplot(filter(low_level, year(month_done) >= 2012, month_done < "2018-11-01"), aes(x = month_done, y = share_reg, weight = count)) + geom_line() +
+  geom_smooth(data = filter(low_level, year(month_done) >= 2012, month_done < "2018-06-01"), formula = y ~ x + I(x^2), method = lm, fullrange = T) +
+  theme_minimal() + scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
+  labs(x = "Month Discharged From Parole", y = "Share Registered") +
+  geom_vline(xintercept = as.Date("2018-05-21"), color = "red") +
+  scale_x_date(labels = date_format("%b-%Y")) +
+  annotate(geom = "text", x = as.Date("2018-05-21"), y = 0.06, label = "May 21, 2018", hjust = 1.05, family = "LM Roman 10") +
+  theme(text = element_text(family = "LM Roman 10"),
+        panel.grid = element_blank())
+
+saveRDS(reg18_chart, "./temp/reg18_chart.rds")
 ### turnout stats
 
 to_16_10 <- parolees %>% 
