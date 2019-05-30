@@ -84,10 +84,26 @@ parolee_crimes <- read_fwf(
 
 colnames(parolee_crimes) <- names
 parolee_crimes <- select(parolee_crimes, -starts_with("filler")) %>% 
-  mutate(current_felon = crime_class %in% c("1", "2", "3", "B", "C", "D", "E")) %>% 
+  mutate(current_felon = crime_class %in% c("A", "B", "C", "D", "E"),
+         crime_class = ifelse(is.na(crime_class), "NA", crime_class))
+
+nc <- ncol(parolee_crimes)
+i = 1
+for(letter in c("A", "B", "C", "D", "E")){
+  parolee_crimes <- cbind(parolee_crimes, parolee_crimes$crime_class == letter)
+  colnames(parolee_crimes)[nc + i] = paste0("felony_", tolower(letter))
+  i = i + 1
+}
+
+parolee_crimes <- parolee_crimes %>% 
   group_by(din) %>% 
-  summarize(current_felon = max(current_felon),
-            counts = n())
+  summarize(felony_a = max(felony_a, na.rm = T),
+            felony_b = max(felony_b, na.rm = T),
+            felony_c = max(felony_c, na.rm = T),
+            felony_d = max(felony_d, na.rm = T),
+            felony_e = max(felony_e, na.rm = T),
+            counts = n(),
+            current_felon = max(current_felon, na.rm = T))
 
 parolees_with_restoration <- inner_join(parolees_with_restoration, parolee_crimes, by = "din") %>% 
   filter(current_felon == 1)

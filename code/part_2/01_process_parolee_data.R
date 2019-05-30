@@ -12,6 +12,8 @@ parolees <- read_fwf(
 colnames(parolees) = names
 rm(names)
 
+count_active <- sum(parolees$status == "ACTIVE")
+
 parolees <- parolees %>% 
   filter(status == "ACTIVE" | 
            (status == "DISCHARGED" & status_date >= "2018-01-01")) %>% 
