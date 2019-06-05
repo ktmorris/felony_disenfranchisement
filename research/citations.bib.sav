@@ -433,7 +433,7 @@ number = "3",
 }
 
 @Article{Kinsella2015,
-  author    = {Chad Kinsella Colleen McTague, and Kevin N. Raleigh},
+  author    = {Chad Kinsella and Colleen McTague and Kevin N. Raleigh},
   title     = {Unmasking geographic polarization and clustering: A micro-scalar analysis of partisan voting behavior},
   volume    = {62},
   pages     = {404--419},
@@ -507,6 +507,15 @@ number = "3",
   month     = {oct},
   publisher = {{JSTOR}},
   year      = {2002},
+}
+
+@Book{Angrist2008,
+  author    = {Joshua D. Angrist and J�rn-Steffen Pischke},
+  title     = {Mostly Harmless Econometrics},
+  publisher = {Princeton University Press},
+  doi       = {10.2307/j.ctvcm4j72},
+  month     = {dec},
+  year      = {2008},
 }
 
 @Comment{jabref-meta: databaseType:biblatex;}
