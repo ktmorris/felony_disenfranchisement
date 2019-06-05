@@ -35,6 +35,23 @@ save(model1, model2, model3, file = "./temp/individual_turnout_18.rdata")
 
 #### IV approach
 
+date_to_model_notime <- glm(v2018 ~ 
+                       as.factor(county) + as.factor(race) + as.factor(sex) + age +
+                       felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+                     family = "binomial",
+                     data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-21"))
+
+date_to_model_time <- glm(v2018 ~ days_since_done + days2 +
+                              as.factor(county) + as.factor(race) + as.factor(sex) + age +
+                              felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+                            family = "binomial",
+                            data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-21"))
+
+anova(date_to_model_notime, date_to_model_time, test = "Chisq")
+
+
+save(date_to_model_notime, date_to_model_time, file = "./temp/short_term_to.rdata")
+
 iv1 <- ivreg(v2018 ~ restored | . -restored + finished_post,
              data = filter(parolees, year(parole_status_date) >= 2017))
 
