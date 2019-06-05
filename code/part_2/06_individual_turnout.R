@@ -15,7 +15,8 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
          v2018 = ifelse(is.na(v2018), 0, v2018),
          finished_post = parole_status_date >= "2018-05-21",
          days_since_done = as.numeric(as.Date("2018-11-06") - parole_status_date),
-         days2 = days_since_done^2)
+         days2 = days_since_done^2,
+         restored = ifelse(is.na(restored), F, restored))
 
 model1 <- glm(v2018 ~ finished_post + days_since_done + days2,
               family = "binomial", data = parolees)
@@ -31,6 +32,22 @@ model3 <- glm(v2018 ~ finished_post + days_since_done + days2 +
 
 save(model1, model2, model3, file = "./temp/individual_turnout_18.rdata")
 
+
+#### IV approach
+
+iv1 <- ivreg(v2018 ~ restored | . -restored + finished_post,
+             data = filter(parolees, year(parole_status_date) >= 2017))
+
+iv2 <- ivreg(v2018 ~ restored + 
+               as.factor(county) + as.factor(race) + as.factor(sex) + age | . -restored + finished_post,
+             data = filter(parolees, year(parole_status_date) >= 2017))
+
+iv3 <- ivreg(v2018 ~ restored + 
+               as.factor(county) + as.factor(race) + as.factor(sex) + age +
+               felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time | . -restored + finished_post,
+             data = filter(parolees, year(parole_status_date) >= 2017))
+
+save(iv1, iv2, iv3, file = "./temp/iv_individual_turnout_18.rdata")
 
 ### 2016
 
