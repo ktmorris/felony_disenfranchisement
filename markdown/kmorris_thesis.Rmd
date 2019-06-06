@@ -315,7 +315,7 @@ Although date of discharge from parole is not correlated with turnout in the sho
 j <- readRDS("./temp/restoration_plot.rds")
 print(j)
 ```
-There is no evidence that date of discharged influences propensity to vote through channels other than formal rights restoration in the short run. A dummy variable indicating whether an individual was discharged on or after May 21^st^ can therefore effectively be used to instrument rights restoration. Table \ref{tab:iv-models} shows the second-stage estimation results, estimated using OLS.^[Although the dependent variable remains dichotomous (as do both the independent variable of interest and the instrument), @Angrist2008 recommends using OLS in instrumental variables analyses even under such conditions.]
+There is no evidence that date of discharged influences propensity to vote through channels other than formal rights restoration in the short run. A dummy variable indicating whether an individual was discharged on or after May 21^st^ is therefore analogous to an intent-to-treat, with a dummy indicating whether one's rights were restored measuring imperfect compliance. Table \ref{tab:iv-models} shows the second-stage estimation results, estimated using OLS.^[Although the dependent variable remains dichotomous (as do both the independent variable of interest and the instrument), @Angrist2008 recommends using OLS in instrumental variables analyses even under such conditions.]
 
 ```{r iv-reg-chunk-short, echo = F, results = "asis", message = F}
 load("./temp/iv_individual_turnout_18.rdata")
