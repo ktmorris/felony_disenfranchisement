@@ -53,16 +53,20 @@ anova(date_to_model_notime, date_to_model_time, test = "Chisq")
 
 save(date_to_model_notime, date_to_model_time, file = "./temp/short_term_to.rdata")
 ##
-iv1 <- ivreg(v2018 ~ restored | . -restored + finished_post,
+s1 <- lm(restored ~ finished_post,
+         data = filter(parolees, year(parole_status_date) >= 2017))
+
+parolees$pred <- predict(s1, type = "response", newdata = parolees)
+
+iv1 <- lm(v2018 ~ pred, data = filter(parolees, year(parole_status_date) >= 2017))
+
+iv2 <- ivreg(v2018 ~ pred + 
+               as.factor(county) + as.factor(race) + as.factor(sex) + age,
              data = filter(parolees, year(parole_status_date) >= 2017))
 
-iv2 <- ivreg(v2018 ~ restored + 
-               as.factor(county) + as.factor(race) + as.factor(sex) + age | . -restored + finished_post,
-             data = filter(parolees, year(parole_status_date) >= 2017))
-
-iv3 <- ivreg(v2018 ~ restored + 
+iv3 <- ivreg(v2018 ~ pred + 
                as.factor(county) + as.factor(race) + as.factor(sex) + age +
-               felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time | . -restored + finished_post,
+               felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
              data = filter(parolees, year(parole_status_date) >= 2017))
 
 save(iv1, iv2, iv3, file = "./temp/iv_individual_turnout_18.rdata")
