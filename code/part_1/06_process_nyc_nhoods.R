@@ -74,6 +74,20 @@ arrests_tract <- arrests %>%
   group_by(GEOID = substring(bg, 1, 11)) %>% 
   summarize(arrests = n())
 
+arrests_precinct <- arrests %>% 
+  group_by(ARREST_PRECINCT) %>% 
+  filter(substring(ARREST_DATE, 7) == "2017") %>% 
+  summarize(share_black = mean(PERP_RACE == "BLACK", na.rm = T),
+            n = n()) %>% 
+  arrange(desc(n))
+
+arrests_precinct$running <- cumsum(arrests_precinct$n)
+arrests_precinct$running_share <- arrests_precinct$running / sum(arrests_precinct$n)
+
+arrests_race <- arrests %>% 
+  filter(substring(ARREST_DATE, 7) == "2017") %>% 
+  summarize(share_black = mean(PERP_RACE == "BLACK", na.rm = T))
+
 ## share dem
 nyc <- nyc %>% 
   filter(voter_status != "PURGED")
