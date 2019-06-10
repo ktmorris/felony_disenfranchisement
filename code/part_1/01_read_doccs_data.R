@@ -40,6 +40,10 @@ rm(names)
 
 saveRDS(nrow(incarcerated), "./temp/number_incarcerated.rds")
 
+share_black <- mean(incarcerated$race == "B", na.rm = T)
+
+saveRDS(share_black, "./temp/share_black_incarcerated.rds")
+
 incarcerated <- incarcerated %>%
   mutate(dob = as.Date(as.character(dob), "%Y%m%d"),
          original_reception_date = as.Date(as.character(original_reception_date), "%Y%m%d"),
