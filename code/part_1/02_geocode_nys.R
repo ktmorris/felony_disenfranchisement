@@ -5,7 +5,7 @@
 nys <- dbGetQuery(db, "select res_house_number, res_pre_street, res_street_name, res_post_street_dir, dob,
                        res_city, zip5, nys_id, voter_status
                        from nys_roll_0418") %>%
-  mutate_at(vars(res_house_number, res_pre_street, res_street_name, res_post_street_dir), funs(ifelse(is.na(.), "", .))) %>%
+  mutate_at(vars(res_house_number, res_pre_street, res_street_name, res_post_street_dir), ~ ifelse(is.na(.), "", .)) %>%
   mutate(street = paste(res_house_number, res_pre_street, res_street_name, res_post_street_dir),
          street = gsub("\\s+", " ", trimws(street)),
          city = res_city,
