@@ -509,6 +509,90 @@ number = "3",
   year      = {2002},
 }
 
+@Book{Angrist2008,
+  author    = {Joshua D. Angrist and J�rn-Steffen Pischke},
+  title     = {Mostly Harmless Econometrics},
+  publisher = {Princeton University Press},
+  doi       = {10.2307/j.ctvcm4j72},
+  month     = {dec},
+  year      = {2008},
+}
+
+@Article{Song2009,
+  author    = {Sarah Song},
+  title     = {Democracy and noncitizen voting rights},
+  volume    = {13},
+  number    = {6},
+  pages     = {607--620},
+  doi       = {10.1080/13621020903309607},
+  journal   = {Citizenship Studies},
+  month     = {dec},
+  publisher = {Informa {UK} Limited},
+  year      = {2009},
+}
+
+@Article{Guth1997,
+  author    = {Werner Güth and Hannelore Weck-Hannemann},
+  volume    = {91},
+  number    = {1},
+  pages     = {27--47},
+  doi       = {10.1023/a:1004972900845},
+  journal   = {Public Choice},
+  publisher = {Springer Nature},
+  year      = {1997},
+}
+
+@Book{Alexander2012,
+  author    = {Alexander, Michelle},
+  title     = {The New Jim Crow},
+  date      = {2012-01-01},
+  publisher = {Ingram Publisher Services},
+  isbn      = {1595586431},
+  pagetotal = {336},
+  url       = {https://www.ebook.de/de/product/13023562/michelle_alexander_the_new_jim_crow.html},
+  ean       = {9781595586438},
+  year      = {2012},
+}
+
+@Article{Sewell2016,
+  author    = {Abigail A. Sewell and Kevin A. Jefferson},
+  title     = {Collateral Damage: The Health Effects of Invasive Police Encounters in New York City},
+  volume    = {93},
+  number    = {S1},
+  pages     = {42--67},
+  doi       = {10.1007/s11524-015-0016-7},
+  journal   = {Journal of Urban Health},
+  month     = {jan},
+  publisher = {Springer Science and Business Media {LLC}},
+  year      = {2016},
+}
+
+@Article{Geller2014,
+  author    = {Amanda Geller and Jeffrey Fagan and Tom Tyler and Bruce G. Link},
+  title     = {Aggressive Policing and the Mental Health of Young Urban Men},
+  volume    = {104},
+  number    = {12},
+  pages     = {2321--2327},
+  doi       = {10.2105/ajph.2014.302046},
+  journal   = {American Journal of Public Health},
+  month     = {dec},
+  publisher = {American Public Health Association},
+  year      = {2014},
+}
+
+@Article{Clear2008,
+  author    = {Todd R. Clear},
+  title     = {The Effects of High Imprisonment Rates on Communities},
+  volume    = {37},
+  number    = {1},
+  pages     = {97--132},
+  doi       = {10.1086/522360},
+  journal   = {Crime and Justice},
+  month     = {jan},
+  publisher = {University of Chicago Press},
+  year      = {2008},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
 
 @Comment{jabref-meta: grouping:
