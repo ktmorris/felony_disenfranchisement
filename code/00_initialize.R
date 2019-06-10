@@ -24,3 +24,4 @@ cleanup <- function(...){
 }
 
 db <- dbConnect(SQLite(), "D:/rolls.db")
+
