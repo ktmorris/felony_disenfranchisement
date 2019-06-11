@@ -593,6 +593,20 @@ number = "3",
   year      = {2008},
 }
 
+@Article{Lerman2013,
+  author    = {Amy E. Lerman and Vesla Weaver},
+  title     = {Staying out of Sight? Concentrated Policing and Local Political Action},
+  editor    = {Christopher Wildeman and Jacob S. Hacker and Vesla M. Weaver},
+  volume    = {651},
+  number    = {1},
+  pages     = {202--219},
+  doi       = {10.1177/0002716213503085},
+  journal   = {The {ANNALS} of the American Academy of Political and Social Science},
+  month     = {nov},
+  publisher = {{SAGE} Publications},
+  year      = {2013},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
 
 @Comment{jabref-meta: grouping:
