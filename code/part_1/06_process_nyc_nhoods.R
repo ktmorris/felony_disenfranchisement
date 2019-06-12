@@ -217,6 +217,26 @@ zips <- zips[complete.cases(zips), ] %>%
 
 saveRDS(zips, "./temp/zips_pre_match.rds")
 
+### distributions
+block_groups <- readRDS("./temp/block_group_pre_match.rds") %>% 
+  group_by(lost_voters = as.character(lost_voters)) %>% 
+  summarize(count_bg = n())
+
+tracts <- readRDS("./temp/tract_pre_match.rds") %>% 
+  group_by(lost_voters = as.character(lost_voters)) %>% 
+  summarize(count_tract = n())
+
+combined <- full_join(block_groups, tracts, by = "lost_voters") %>% 
+  arrange(as.integer(lost_voters))
+
+col_sum <- c("Total", sum(combined$count_bg, na.rm = T), sum(combined$count_tract, na.rm = T))
+
+combined <- rbind(combined, col_sum) %>% 
+  mutate(count_bg = as.numeric(count_bg),
+         count_tract = as.numeric(count_tract))
+
+colnames(combined) <- c("Number of Lost Voters", "Count of Block Groups", "Count of Tracts")
+saveRDS(combined, "./temp/distribution_of_lost_voters.rds")
 ###### maps
 tracts <- readRDS("./temp/tract_pre_match.rds")
 block_groups <- readRDS("./temp/block_group_pre_match.rds")
@@ -247,9 +267,9 @@ ggplot() +
         plot.title = element_text(hjust = 0.5),
         legend.background = element_blank(),
         legend.key=element_blank()) +
-  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group, fill = dec), color = "black") +
+  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group, fill = arrests), color = "black") +
   coord_map() +
-  labs(x = NULL, y = NULL) + scale_fill_manual(values = c("gray", "red"), na.translate = T, na.value = "gray") +
+  labs(x = NULL, y = NULL) + 
   guides(fill = F)
 
 ## bg
