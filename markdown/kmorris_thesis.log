@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  12 JUN 2019 16:13
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  17 JUN 2019 15:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -8,8 +8,8 @@ LaTeX2e <2018-12-01>
 
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
-(c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size10.clo
-File: size10.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
+(c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
 )
 \c@part=\count80
 \c@section=\count81
@@ -940,12 +940,12 @@ LaTeX Font Info:    ... okay on input line 105.
 * \topmargin=-37.0pt
 * \headheight=12.0pt
 * \headsep=25.0pt
-* \topskip=10.0pt
+* \topskip=12.0pt
 * \footskip=30.0pt
-* \marginparwidth=65.0pt
-* \marginparsep=11.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
 * \columnsep=10.0pt
-* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
 * \hoffset=0.0pt
 * \voffset=0.0pt
 * \mag=1000
@@ -993,11 +993,11 @@ LaTeX Font Info:    Try loading font information for OMX+lmex on input line 5.
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 5.
+(Font)              <12> on input line 5.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 5.
+(Font)              <8> on input line 5.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 5.
+(Font)              <6> on input line 5.
 LaTeX Font Info:    Try loading font information for U+msa on input line 5.
 
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1013,49 +1013,77 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write4
 \openout4 = `kmorris_thesis.toc'.
 
-[1] [1]
+[1] [1] [2]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 136.
+(Font)              <10> on input line 137.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 136.
-[2] [3] [4] [5] [6] [7] [8] [9] [10] [11]
+(Font)              <7> on input line 137.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 137.
+[3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15]
 File: kmorris_thesis_files/figure-latex/citywide-map-1.pdf Graphic file (type p
 df)
 <use kmorris_thesis_files/figure-latex/citywide-map-1.pdf>
-[12] [13] [14] [15] [16] [17]
+[16] [17] [18] [19]
+Overfull \hbox (16.43114pt too wide) in paragraph at lines 352--383
+ [][] 
+ []
+
+[20] [21]
+Overfull \hbox (16.79948pt too wide) in paragraph at lines 396--454
+ [][] 
+ []
+
+[22]
+Overfull \vbox (124.70988pt too high) has occurred while \output is active []
+
+[23]
 File: kmorris_thesis_files/figure-latex/postest-map-1.pdf Graphic file (type pd
 f)
 <use kmorris_thesis_files/figure-latex/postest-map-1.pdf>
-[18] [19] [20]
+[24] [25] [26] [27]
 File: kmorris_thesis_files/figure-latex/to-16-chart-1.pdf Graphic file (type pd
 f)
 <use kmorris_thesis_files/figure-latex/to-16-chart-1.pdf>
+[28]
 File: kmorris_thesis_files/figure-latex/to-18-chart-1.pdf Graphic file (type pd
 f)
 <use kmorris_thesis_files/figure-latex/to-18-chart-1.pdf>
-[21] [22] [23]
+[29] [30] [31] [32]
 File: kmorris_thesis_files/figure-latex/to-18-recent-chart-1.pdf Graphic file (
 type pdf)
 <use kmorris_thesis_files/figure-latex/to-18-recent-chart-1.pdf>
-[24] [25]
+[33] [34]
 File: kmorris_thesis_files/figure-latex/restoration-chart-chunk-1.pdf Graphic f
 ile (type pdf)
 <use kmorris_thesis_files/figure-latex/restoration-chart-chunk-1.pdf>
-[26] [27] [28] [29]
-Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
-[30] [31]
-Underfull \hbox (badness 1742) in paragraph at lines 807--809
-\TU/lmr/m/it/10 ANNALS of the American Academy of Political and Social Science 
-\TU/lmr/m/n/10 651 (1): 220–49. []$[][][][][] []
+[35] [36] [37] [38] [39]
+Missing character: There is no � in font [lmroman12-regular]:mapping=tex-text;!
+
+Overfull \hbox (22.81859pt too wide) in paragraph at lines 744--746
+\TU/lmr/m/n/12 States.” []$[][][][][] [] [] [] [][][] [] [][][][][][][][][][][]
+[][] [] [][][] [] [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][]$[]. 
  []
 
-[32] [33] [34] [35] [36] [37] [38]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1010.
-[39]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1010.
+[40] [41] [42] [43]
+Overfull \hbox (170.6014pt too wide) in paragraph at lines 849--851
+[]$[][][][][] [] [] [] [][][] [] [][][][][][][][][][][][][][][][][] [] [][][] [
+] [][][][][][][][][][][][] [] [][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][]$[]\TU/lmr/m/n/12 . 
+ []
+
+[44] [45] [46] [47] [48]
+Overfull \vbox (46.89958pt too high) has occurred while \output is active []
+
+[49] [50] [51] [52]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1022.
+[53]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1022.
 (./kmorris_thesis.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1010.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1010.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1022.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1022.
 
 Package rerunfilecheck Info: File `kmorris_thesis.out' has not changed.
 (rerunfilecheck)             Checksum: E424670F49A800FAB0BBF16C4A171A5F.
@@ -1064,12 +1092,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 24195 strings out of 494894
- 449275 string characters out of 6175524
- 563298 words of memory out of 5000000
- 27859 multiletter control sequences out of 15000+600000
- 553182 words of font info for 65 fonts, out of 8000000 for 9000
+ 24200 strings out of 494894
+ 449279 string characters out of 6175524
+ 562344 words of memory out of 5000000
+ 27865 multiletter control sequences out of 15000+600000
+ 557199 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 46i,17n,68p,2124b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 46i,17n,68p,2100b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on kmorris_thesis.pdf (41 pages).
+Output written on kmorris_thesis.pdf (55 pages).
