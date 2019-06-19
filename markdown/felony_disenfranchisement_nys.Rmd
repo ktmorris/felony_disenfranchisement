@@ -4,13 +4,12 @@ author: "Kevin Morris"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   bookdown::pdf_document2:
-    toc: yes
+    toc: no
     fig_caption: yes
     latex_engine: xelatex
 bibliography: "../research/citations.bib"
-biblio-style: chicago
+biblio-style: apalike
 link-citations: yes
-fontsize: 12pt
 header-includes:
     - \usepackage{setspace}\doublespacing
 ---
@@ -23,7 +22,9 @@ header-includes:
 <!-- link-citations: yes -->
 <!-- always_allow_html: yes -->
 <!-- --- -->
-
+\pagenumbering{gobble}
+\tableofcontents
+\pagebreak
 ```{r setup, echo = F, message = F, warning = F}
 knitr::opts_knit$set(root.dir = "..", dev = "cairo_pdf")
 library(systemfit)
@@ -37,9 +38,6 @@ library(kableExtra)
 library(stargazer)
 loadfonts()
 ```
-\pagenumbering{gobble}
-\pagenumbering{gobble}
-\newpage
 \pagenumbering{arabic}
 # Introduction {-}
 
@@ -255,6 +253,8 @@ During the 2017 mayoral election, felony disenfranchisement laws were responsibl
 
 As this analysis makes clear, however, felony disenfranchisement reaches beyond the individuals who are incarcerated. Previous literature has established that felony disenfranchisement likely impacts Black turnout at the state level. This analysis demonstrates that these demobilizing effects intersect with geographical space to systematically depress the vote in neighborhoods where voters are being sent to prison. These communities are already home to some of the poorest and most marginalized voters in the city; they are home to residents who have the least ability to influence policy through other means such as large campaign contributions. The fact that felony disenfranchisement policies appear to be disincentivizing participation on election day --- that these policies are further weakening the ability of these neighborhoods to participate in the democratic process --- is cause for alarm.
 
+\pagebreak
+
 # Executive Order 181 and Turnout in 2018 {-}
 
 Prior to 2018, New Yorkers convicted of felony offenses and sentenced to prison were disenfranchised until they had completed all terms of their sentence --- their period of incarceration as well as any parole term. For New Yorkers on life parole or sentenced to life in prison, this law resulted in effective lifetime disenfranchisement. New Yorkers sentenced to felony probation, on the other hand, did not lose their voting rights.
@@ -345,9 +345,9 @@ stargazer(date_to_model_notime, date_to_model_time,
           table.layout = "-dm#-t-a-s-n")
 ```
 
-Adding controls for time in Table \ref{tab:to-18-logit-short} increases the AIC, indicating that the inclusion of these variables is not warranted. A Chi-squared test confirms that the model is not improved when controls for time are included.^[[Appendix C] provides further corroboration that being discharged from parole in the months before an election is uncorrelated with propensity to vote by exploring turnout rates in the 2016 presidential election.]
+The inclusion of time controls in Table \ref{tab:to-18-logit-short} increases the AIC. A Chi-squared test confirms that the model is not improved when controls for time are included.^[[Appendix C] provides further corroboration that being discharged from parole in the months before an election is uncorrelated with propensity to vote by exploring turnout rates in the 2016 presidential election.] Over the short term, the length of time an individual has been off parole is not associated with his propensity to vote.
 
-Because the date of parole discharge is not correlated with turnout, we can conceptualize the timing of Executive Order 181 as a randomly assigned treatment variable. An individual who was released after the EO was signed is part of the intend-to-treat group, and individuals who actually had their rights restored comply with the treatment. As with true randomized control trials, compliance (restoration) is correlated with the outcome of interest (turnout) and therefore must be controlled for.
+Because the date of parole discharge is not correlated with turnout, we can conceptualize the timing of Executive Order 181 as a randomly assigned treatment. An individual who was released after the Executive Order went into effect is part of the intend-to-treat group, and individuals who actually had their rights restored "comply" with the treatment. As with many true randomized control trials, compliance (restoration) is correlated with the outcome of interest (turnout) and therefore must be controlled for.
 
 Governor Cuomo signed Executive Order 181 in April of 2018, but an examination of the individuals whose rights were ultimately restored indicates that the program did not go into full effect until later in May. As Figure \ref{fig:restoration-chart} demonstrates, individuals who finished their parole supervision in early May did not have their voting rights restored before they finished their term of supervision. It is not until May 21^st^ that the majority of parolees had their voting rights restored prior to their discharge.
 ```{r restoration-chart-chunk, echo = FALSE, message = F, warning = F, fig.width = 7.5, fig.height = 4, fig.cap = "\\label{fig:restoration-chart}Share of Discharged Parolees Whose Voting Rights Were Restored Prior to Discharge", fig.pos = "H", fig.align = "center"}
