@@ -8,7 +8,6 @@ output:
     fig_caption: yes
     latex_engine: xelatex
 bibliography: "../research/citations.bib"
-biblio-style: apalike
 link-citations: yes
 header-includes:
     - \usepackage{setspace}\doublespacing
