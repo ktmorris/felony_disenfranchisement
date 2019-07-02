@@ -1,5 +1,6 @@
 #### individual level regressions
 
+## this is the treated group
 nys_roll <- readRDS("./temp/parolee_to_18.rds")
 parolees <- readRDS("./temp/parolees_with_restoration.rds")
 
@@ -32,6 +33,22 @@ model3 <- glm(v2018 ~ restored + days_since_done + days2 +
               family = "binomial", data = parolees)
 
 save(model1, model2, model3, file = "./temp/individual_turnout_18.rdata")
+
+## intend-to-treat models
+
+model1 <- glm(v2018 ~ finished_post,
+              family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017))
+
+model2 <- glm(v2018 ~ finished_post +
+                as.factor(county) + as.factor(race) + as.factor(sex) + age,
+              family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017))
+
+model3 <- glm(v2018 ~ finished_post +
+                as.factor(county) + as.factor(race) + as.factor(sex) + age +
+                felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+              family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017))
+
+save(model1, model2, model3, file = "./temp/individual_turnout_18_itt.rdata")
 
 
 #### IV approach
@@ -78,6 +95,16 @@ ivrace <- ivreg(v2018 ~ restored * sex +
 to_restored <- mean(filter(parolees, restored)$v2018)
 
 saveRDS(to_restored, "./temp/to_restored.rds")
+
+### does office matter?
+model3 <- glm(v2018 ~ as.factor(county) + as.factor(race) + as.factor(sex) + age +
+                felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+              family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017, restored == T))
+
+model4 <- glm(v2018 ~ as.factor(county) + as.factor(race) + as.factor(sex) + age +
+                felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time + as.factor(parole_office),
+              family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017, restored == T))
+
 
 ######################
 ### 2016
