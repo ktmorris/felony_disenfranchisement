@@ -108,6 +108,23 @@ parolee_crimes <- parolee_crimes %>%
 parolees_with_restoration <- inner_join(parolees_with_restoration, parolee_crimes, by = "din") %>% 
   filter(current_felon == 1)
 
+######## read in parole officer info
+names <- fread("./raw_data/doccs_data/parole_officer_column_names.csv", header = F)$V1
+
+parole_officers <- read_fwf(
+  file = "./raw_data/doccs_data/parolee_data/Parole.Supervision.011419.txt",
+  fwf_widths(c(1, 9, 3, 30, 3, 30, 3, 39, 3, 29, 3, 23, 3, 12, 3, 7, 2))
+)
+
+colnames(parole_officers) <- names
+
+parole_officers <- select(parole_officers, parole_office, din) %>% 
+  group_by(din) %>% 
+  filter(row_number() == 1)
+
+parolees_with_restoration <- left_join(parolees_with_restoration, parole_officers)
+
+
 saveRDS(parolees_with_restoration, "./temp/parolees_with_restoration.rds")
 cleanup()
 
