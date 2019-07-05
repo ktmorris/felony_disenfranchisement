@@ -281,48 +281,18 @@ Figure \ref{fig:to-18} plots month of parole discharge and turnout in the 2018 m
 j <- readRDS("./temp/to18_chart.rds")
 print(j)
 ```
-Figure \ref{fig:to-16} does not indicate that individuals who were discharged from parole shortly before the 2016 presidential election were more likely to cast a ballot than individuals discharged earlier in the year. Figure \ref{fig:to-18}, on the other hand, indicates that New Yorkers discharged from parole in the months leading up to the 2018 election --- many of whom had their rights restored while they were still on parole --- were more likely to participate than those discharged earlier in the year. However, Figures \ref{fig:to-16} and \ref{fig:to-18} are noisy. In the section that follows, I develop a logit model to explore whether, after controlling for the available characteristics, individuals whose rights were restored prior to being discharged were more likely to cast a ballot in the 2018 midterm elections.
+Figure \ref{fig:to-16} does not indicate that individuals who were discharged from parole shortly before the 2016 presidential election were more likely to cast a ballot than individuals discharged earlier in the year. Figure \ref{fig:to-18}, on the other hand, indicates that New Yorkers discharged from parole in the months leading up to the 2018 election --- many of whom had their rights restored while they were still on parole --- were more likely to participate than those discharged earlier in the year. However, Figures \ref{fig:to-16} and \ref{fig:to-18} are noisy and do not prove that Executive Order increased turnout.
 
 ## Individual-Level Turnout Regressions {-}
 
-Figure \ref{fig:to-18} displays the share of individuals who were discharged from parole in each month and cast a ballot in the 2018 elections. It does not control for any sort of individual level characterisitcs. In Table \ref{tab:to-18-logit}, I present the results of an individual-level logistic regression exploring turnout in 2018 among individuals whose rights were restored. It includes all individuals discharged from parole between January 1^st^, 2012, through October 10^th^, 2018 (the registration deadline in New York State).
+When considered over a multi-year period, the enactment of Executive Order 181 cannot be understood as a natural experiment. The longer an individual has been off of parole, the more likely she is to cast a ballot, but only individuals recently discharged from parole were eligible to have their voting rights restored prior to discharge. For a true natural experiment to hold, an individual's probability of being "assigned" to treatment (here, discharged from parole after the Executive Order went into effect) must be uncorrelated with the outcome of interest (propensity to vote). Figures \ref{fig:to-16} and \ref{fig:to-18} indicate that this is not the case when considering individuals discharged from parole over multiple years.
 
-```{r logit-reg-chunk, echo = F, results = "asis", message = F}
-load("./temp/individual_turnout_18.rdata")
-
-stargazer(model1, model2, model3,
-          header = F,
-          type = "latex",
-          covariate.labels = c("D(Rights Restored)", "Days Since Discharged",
-                               "Days Since Discharged\\textsuperscript{2}", "D(Male)", "Age (Years)", "Counts in Most Recent Sentence",
-                               "Time Spent on Parole (Years)"),
-          dep.var.labels = c("Cast Ballot in 2018 Election"),
-          title = "(\\#tab:to-18-logit) Individual-Level Logit Model",
-          table.placement = "H",
-          omit = c("county", "race", "felony"),
-          add.lines=list(c("County Fixed Effects", "", "X", "X"),
-                         c("Race / Ethnicity Fixed Effects", "", "X", "X"),
-                         c("Felony Class Fixed Effects", "", "", "X")),
-          table.layout = "-dm#-t-a-s-n")
-```
-
-Model 1 in Table \ref{tab:to-18-logit} formalizes the trend presented in Figure \ref{fig:to-18} by controlling only for whether an individual had his rights restored before being discharged from parole, and the number of days between the individual's discharge date and November 6^th^, 2018. Model 2 also controls for individual-level characteristics: sex, age on November 6^th^, 2018, county of incarceration, and race. Model 3 adds sentence-specific information to Model 2: the number of counts in the individual's most recent sentence, the amount of time they spent on parole, and the class(es) of felony for which they were convicted. In each successive model, the AIC decreases substantially, indicating that these controls are warranted. Table \ref{tab:to-18-logit} makes clear that formerly incarcerated men were far less likely to vote than formerly incarcerated women; that older formerly incarcerated individuals were more likely to cast a ballot; and individuals who spent longer on parole were more likely to participate in the midterm election.
-
-Each model also indicates that individuals whose rights were restored prior to discharge were more likely to cast a ballot than those whose rights were not restored. Exponentiating the coefficients on D(Rights Restored) indicates that individuals whose rights were restored due to Executive Order 181 were between `r round((exp(model1[["coefficients"]][["restoredTRUE"]]) - 1) * 100, digits = 1)` and `r round((exp(model3[["coefficients"]][["restoredTRUE"]]) - 1) * 100, digits = 1)` percent more likely to vote than those whose rights were not.
-
-Table \ref{tab:to-18-logit} provides some indication that Executive Order 181 was successful, but does not establish causality. There is reason to believe that individuals who had their rights restored were more likely to vote even had they not been "treated" by EO 181. In the section that follows, I employ an instrumental variables approach to control for this possibility.
-
-## Instrumenting Rights Restoration {-}
-
-In the previous section, I explored whether individuals who had their rights formally restored prior to parole discharge were more likely to vote in the 2018 midterm election. There is reason to believe that whether an individual received the treatment (had their rights restored) is correlated with their propensity to vote. For instance, parolees who were arrested while on parole did not have their rights restored; a recent arrest is also likely to impact turnout. Similarly, noncitizens did not have voting rights restored / granted; such citizenship status is also of course correlated with propensity to vote. Because the treatment was not randomly assigned, direct comparison of turnout rates among individuals who did and did not have their rights restored is not probitive to the causal effect of Executive Order 181. This calls for an instrumental variables approach.
-
-The timing of Executive Order 181 serves as a useful instrument for formal rights restoration. Although Figure \ref{fig:to-18} shows that there is a relationship between how long an individual has been off parole and their propensity to vote over the long run, this relationship is nonsignficant in the short run. Figure \ref{fig:to-18-recent} shows that, for individuals discharged from parole in 2017 and 2018, there does not appear to be a relationship between time off parole and turnout rates.
+However, the relationship between time-off-parole and propensity to vote is far weaker in the short term. Figure \ref{fig:to-18-recent} indicates that parole discharge date and turnout rates in the 2018 midterm election are not correlated when we limit the analysis to individuals discharged in 2017 or 2018.
 
 ```{r to-18-recent-chart, echo = FALSE, message = F, warning = F, fig.width = 7.5, fig.height = 4, fig.cap = "\\label{fig:to-18-recent}Turnout in 2018 Presidential Election", fig.pos = "H", fig.align = "center"}
 j <- readRDS("./temp/to18_chart_recent.rds")
 print(j)
 ```
-
 Formalizing this chart into an individual-level logit model demonstrates that time since discharge is not correlated with turnout in the short run. The models in Table \ref{tab:to-18-logit-short} include individuals last discharged from parole between January 1^st^, 2017, and April 17^th^, 2018.
 
 ```{r logit-reg-chunk-short, echo = F, results = "asis", message = F}
@@ -332,7 +302,7 @@ stargazer(date_to_model_notime, date_to_model_time,
           header = F,
           type = "latex",
           covariate.labels = c("Days Since Discharged",
-                               "Days Since Discharged\\textsuperscript{2}", "D(Male)", "Age (Years)", "Counts in Most Recent Sentence",
+                               "Days Since Discharged\\textsuperscript{2}", "D(Male)", "Age (Years)",
                                "Time Spent on Parole (Years)"),
           dep.var.labels = c("Cast Ballot in 2018 Election"),
           title = "(\\#tab:to-18-logit-short) Individual-Level Logit Model",
@@ -344,16 +314,53 @@ stargazer(date_to_model_notime, date_to_model_time,
           table.layout = "-dm#-t-a-s-n")
 ```
 
-The inclusion of time controls in Table \ref{tab:to-18-logit-short} increases the AIC. A Chi-squared test confirms that the model is not improved when controls for time are included.^[[Appendix C] provides further corroboration that being discharged from parole in the months before an election is uncorrelated with propensity to vote by exploring turnout rates in the 2016 presidential election.] Over the short term, the length of time an individual has been off parole is not associated with his propensity to vote.
+The inclusion of time controls in Table \ref{tab:to-18-logit-short} increases the AIC. A Chi-squared test confirms that the model is not improved when controls for time are included.^[[Appendix A] provides further corroboration that being discharged from parole in the months before an election is uncorrelated with propensity to vote by exploring turnout rates in the 2016 presidential election.] When we look only at individuals recently discharged from parole, the length of time an individual has been off parole is not associated with his propensity to vote.
 
-Because the date of parole discharge is not correlated with turnout, we can conceptualize the timing of Executive Order 181 as a randomly assigned treatment. An individual who was released after the Executive Order went into effect is part of the intend-to-treat group, and individuals who actually had their rights restored "comply" with the treatment. As with many true randomized control trials, compliance (restoration) is correlated with the outcome of interest (turnout) and therefore must be controlled for.
-
-Governor Cuomo signed Executive Order 181 in April of 2018, but an examination of the individuals whose rights were ultimately restored indicates that the program did not go into full effect until later in May. As Figure \ref{fig:restoration-chart} demonstrates, individuals who finished their parole supervision in early May did not have their voting rights restored before they finished their term of supervision. It is not until May 21^st^ that the majority of parolees had their voting rights restored prior to their discharge.
+Although Governor Cuomo signed the Executive Order on April 18, 2018, an examination of the individuals whose rights were ultimately restored indicates that the program did not go into full effect until later in May. Figure \ref{fig:restoration-chart} plots the share of individuals discharged from parole each day in the spring of 2018. It is not until May 21^st^ that the majority of discharged parolees had their voting rights restored prior to their discharge.
 ```{r restoration-chart-chunk, echo = FALSE, message = F, warning = F, fig.width = 7.5, fig.height = 4, fig.cap = "\\label{fig:restoration-chart}Share of Discharged Parolees Whose Voting Rights Were Restored Prior to Discharge", fig.pos = "H", fig.align = "center"}
 j <- readRDS("./temp/restoration_plot.rds")
 print(j)
 ```
-There is no evidence that date of discharged influences propensity to vote through channels other than formal rights restoration in the short run. A dummy variable indicating whether an individual was discharged on or after May 21^st^ is therefore analogous to an intent-to-treat, with a dummy indicating whether one's rights were restored measuring imperfect compliance. Table \ref{tab:iv-models} shows the second-stage estimation results, estimated using an OLS sepcification.^[Although the dependent variable remains dichotomous (as do both the independent variable of interest and the instrument), @Angrist2008 recommends using OLS in instrumental variables analyses even under such conditions.]
+
+Although it perhaps seems counterintuitive to throw out many of our observations, ignoring all individuals last discharged from parole prior to 2017 give us an important asset: it allows us to conceptualize Executive Order 181 as a natural experiment. Whether an individual was discharged from parole before or after May 21^st^, 2018, is akin to a randomly assigned treatment. Any observed difference in turnout between individuals discharged before and after late May can therefore be attributed to the Executive Order.
+
+In Table \ref{tab:to-18-logit}, I present the results of an individual-level logistic regression exploring whether individuals who were discharged on or after May 21^st^, 2018, turned out at higher rates than those discharged earlier. The models include all individuals discharged from parole between January 1^st^, 2017, through October 10^th^, 2018 (the registration deadline in New York State).
+
+```{r logit-reg-chunk, echo = F, results = "asis", message = F}
+load("./temp/individual_turnout_18_itt.rdata")
+
+stargazer(model1, model2, model3,
+          header = F,
+          type = "latex",
+          covariate.labels = c("D(Discharged After EO 181)", "D(Male)", "Age (Years)",
+                               "Time Spent on Parole (Years)"),
+          dep.var.labels = c("Cast Ballot in 2018 Election"),
+          title = "(\\#tab:to-18-logit) Individual-Level Logit Model",
+          table.placement = "H",
+          omit = c("county", "race", "felony"),
+          add.lines=list(c("County Fixed Effects", "", "X", "X"),
+                         c("Race / Ethnicity Fixed Effects", "", "X", "X"),
+                         c("Felony Class Fixed Effects", "", "", "X")),
+          table.layout = "-dm#-t-a-s-n")
+```
+
+Model 1 in Table \ref{tab:to-18-logit} formalizes the trend presented in Figure \ref{fig:to-18-recent-chart} by controlling only for whether an individual was discharged after Executive Order 181 went into effect. Model 2 also controls for individual-level characteristics: sex, age on November 6^th^, 2018, county of incarceration, and race. Model 3 adds sentence-specific information to Model 2: the number of counts in the individual's most recent sentence, the amount of time they spent on parole, and the class(es) of felony for which they were convicted. Table \ref{tab:to-18-logit} makes clear that formerly incarcerated men were far less likely to vote than formerly incarcerated women; that older formerly incarcerated individuals were more likely to cast a ballot; and individuals who spent longer on parole were more likely to participate in the midterm election.
+
+Each model also indicates that individuals discharged from parole after the Executive Order went into effect were more likely to cast a ballot than those discharged earlier. Exponentiating the coefficients on D(Discharged After EO 181) indicates that Executive Order 181 raised the turnout rate among formerly disenfranchised individuals by between `r round((exp(model1[["coefficients"]][["finished_postTRUE"]]) - 1) * 100, digits = 1)` and `r round((exp(model3[["coefficients"]][["finished_postTRUE"]]) - 1) * 100, digits = 1)` percent.
+
+## Instrumental Variables Approach {-}
+
+Table \ref{tab:to-18-logit} indicates that Executive Order was successful at increasing turnout among all formerly disenfranchised individuals. Although this is important information for policymakers and advocates hoping to increase the political representation of formerly incarcerated individuals as a whole, it does not shed light on the extent to which having one's voting rights restored prior to discharge from parole impacts one's propensity to vote. To answer that question, we must specifically control for whether an individual did have his rights restored before he was discharged from parole.
+
+An individual's propensity to vote can be expressed using the following equation:
+$$ Y_i =  b_0 + b_{1}X_{1i} + b_{2}X_{2i} + \epsilon_{i} $$
+Where *Y~i~* is 1 if individual *i* cast a ballot, *X~1i~* is the probability that individual *i* was eligible to have his rights restored prior to discharge from parole, and *X~2i~* is 1 if individual *i* actually had his rights restored prior to discharge from parole. Given that we cannot observe *X~1i~*, we could simply choose to ignore it. Doing so, however, will result in consistent regression coefficients only if *X~1i~* and *X~2i~* are uncorrelated or if *b~1~* is uncorrelated with an individual's propensity to vote. Neither of these assumptions are valid: an individual's eligibility to have her rights restored is almost certainly correlated with whether or not they actually were restored. Moreover, eligiblity for rights restoration is likely correlated with propensity to vote. Non-citizens, for instance, were not eligible for rights restoration under EO181 because non-citizens cannot vote in New York State. Similarly, individuals who were re-arrested while on parole were not eligible to have their rights restored. Citizenship status and recency of arrest are both highly correlated with propensity to vote.
+
+Our variable of interest, therefore, is likely correlated with our regression error. Such a correlation inhibits our ability to simply regress turnout on a dummy indicating whether an individual's rights were restored. The standard way of dealing with such a problem is an instrumental variables approach. Such an approach has been widely used in the context of voter turnout [e.g. @Gerber2000; @Green2012]. A valid instrumental variable must satisfy two criteria: it must be correlated with the right-hand-side (endogenous) variable of interest, and it must be uncorrelated with the error of the regression.
+
+In this case, such a variable is readily at hand. The likelihood that an individual had his voting rights restored is a function of whether he was discharged from parole after Executive Order 181 took effect. As demonstrated above, date of discharge from parole is not correlated with propensity to vote when we limit our analysis to individuals discharged from parole in 2017 or 2018. A dummy variable indicating whether an individual was discharged after the Executive Order, therefore, satisfies the criteria for an instrumental variable.
+
+Table \ref{tab:iv-models} presents the two-stage least-squares regression estimates exploring the turnout impact of rights restoration. As discussed above, the instrumental variable used in these regressions measure whether an individual was discharged from parole after Executive Order 181 went into effect. These models are estimated using an OLS sepcification. Although the dependent variable remains dichotomous (as do both the independent variable of interest and the instrument), @Angrist2008 recommends using OLS in instrumental variables analyses even under such conditions.
 
 ```{r iv-reg-chunk-short, echo = F, results = "asis", message = F}
 load("./temp/iv_individual_turnout_18.rdata")
@@ -366,7 +373,7 @@ stargazer(iv1, iv2, iv3,
           header = F,
           type = "latex",
           covariate.labels = c("D(Rights Restored)", 
-                               "D(Male)", "Age (Years)", "Counts in Most Recent Sentence",
+                               "D(Male)", "Age (Years)",
                                "Time Spent on Parole (Years)"),
           dep.var.labels = c("Cast Ballot in 2018 Election"),
           title = "(\\#tab:iv-models) Second-Stage Regression",
@@ -388,13 +395,16 @@ stargazer(iv1, iv2, iv3,
           table.layout = "-dm#-t-as-n",
           notes = c("Table reports p-values for Weak Instruments",
                     "and Wu-Hausman tests.",
-                    "D(Discharged from Parole on or after May",
-                    "21, 2018) instrument for D(Rights Restored)."))
+                    "First-stage equations use dummy indicating",
+                    "whether individual was discharged after the",
+                    "Exectutive Order went into effect. The",
+                    "first-stage equations also include",
+                    "covariates in models 2 and 3."))
 ```
 
-Table \ref{tab:iv-models} indicates that using discharge date of before or after May 21^st^ as an instrument for rights restoration is warranted. The p-values of the Wu-Hausman tests hover around 0.05, while the Weak Instruments test is highly significant in each model.
+Table \ref{tab:iv-models} indicates that using discharge date of on or after May 21^st^ as an instrument for rights restoration is warranted. The p-values of the Wu-Hausman tests hover just below 0.05, while the Weak Instruments test is highly significant in each model.
 
-Model 3 in Table \ref{tab:iv-models} indicates that having one's rights restored caused an individual's propensity to vote to increase by `r round(summary(iv3)[["coefficients"]][2,1] * 100, digits = 2)` percentage points. Approximately `r round(readRDS("./temp/to_restored.rds") * 100, digits = 2)` percent of individuals who had their rights restored cast a ballot in 2018, indicating that Executive Order 181 increased the propensity to vote by around `r round(summary(iv3)[["coefficients"]][2,1] / (readRDS("./temp/to_restored.rds") - summary(iv3)[["coefficients"]][2,1]) * 100, digits = 1)` percent. This estimate is much lower than the estimates reported in Table \ref{tab:to-18-logit}, but that is not surprising; as discussed above, individuals whose rights were restored were more likely to vote whether or not they received restoration before discharge. The `r round(summary(iv3)[["coefficients"]][2,1] * 100, digits = 2)` percentage point increase reported in Table \ref{tab:iv-models} accounts only for the extent to which rights restoration prior to discharge from parole caused higher turnout.
+Model 3 in Table \ref{tab:iv-models} indicates that having one's rights restored caused an individual's propensity to vote to increase by `r round(summary(iv3)[["coefficients"]][2,1] * 100, digits = 2)` percentage points. Approximately `r round(readRDS("./temp/to_restored.rds") * 100, digits = 2)` percent of individuals who had their rights restored cast a ballot in 2018, indicating that Executive Order 181 increased the propensity to vote by around `r round(summary(iv3)[["coefficients"]][2,1] / (readRDS("./temp/to_restored.rds") - summary(iv3)[["coefficients"]][2,1]) * 100, digits = 1)` percent. Unsurprisingly, this estimate is higher than the estimates reported in Table \ref{tab:to-18-logit}. Because Executive Order 181 theoretically only impacts individuals whose rights were actually restored prior to discharge, the magnitude of the estimated effect on this subgroup must be larger than the group taken as a whole.
 
 ## Discussion {-}
 As discussed above, the effect of incarceration on individuals' propensity to vote is an open question for the literature. What is known, however, is that individuals who have been to prison were likely to vote at very low rates prior to incarceration, and continue to vote at very low rates after incarceration. Whether incarceration reduces political participation or not, increasing the propensity to vote of individuals who have been to prison is a laudable goal. Prisoners overwhelmingly come from marginalized communities with much to gain from policy. Executive Order 181 appears to have substantially boosted turnout among formerly incarcerated individuals through two mechanisms. The first is obvious: parolees who would not have been eligible to vote absent the Executive Order were allowed to cast ballots in the midterm elections. The second mechanism is less obvious. Individuals who finished parole between May 21^st^, 2018, and  October 10^th^, 2018, would have been eligible to participate in the election even if the governor had not signed the Executive Order. The EO 181, however, appears to have boosted turnout even among individuals whose eligibility to vote was not directly impacted by the rules change. The increase in turnout was substantial: Executive Order 181 increased turnout among individuals who had their rights restored by more than 40 percent.

@@ -29,7 +29,7 @@ model2 <- glm(v2018 ~ restored + days_since_done + days2 +
 
 model3 <- glm(v2018 ~ restored + days_since_done + days2 +
                 as.factor(county) + as.factor(race) + as.factor(sex) + age +
-                felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
               family = "binomial", data = parolees)
 
 save(model1, model2, model3, file = "./temp/individual_turnout_18.rdata")
@@ -45,7 +45,7 @@ model2 <- glm(v2018 ~ finished_post +
 
 model3 <- glm(v2018 ~ finished_post +
                 as.factor(county) + as.factor(race) + as.factor(sex) + age +
-                felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
               family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017))
 
 save(model1, model2, model3, file = "./temp/individual_turnout_18_itt.rdata")
@@ -55,13 +55,13 @@ save(model1, model2, model3, file = "./temp/individual_turnout_18_itt.rdata")
 
 date_to_model_notime <- glm(v2018 ~ 
                        as.factor(county) + as.factor(race) + as.factor(sex) + age +
-                       felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+                       felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
                      family = "binomial",
                      data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-04-18"))
 
 date_to_model_time <- glm(v2018 ~ days_since_done + days2 +
                               as.factor(county) + as.factor(race) + as.factor(sex) + age +
-                              felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+                              felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
                             family = "binomial",
                             data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-04-18"))
 
@@ -80,15 +80,16 @@ iv2 <- ivreg(v2018 ~ restored +
 
 iv3 <- ivreg(v2018 ~ restored + 
                as.factor(county) + as.factor(race) + as.factor(sex) + age +
-               felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time | . -restored + finished_post,
+               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
              data = filter(parolees, year(parole_status_date) >= 2017))
+
 
 save(iv1, iv2, iv3, file = "./temp/iv_individual_turnout_18.rdata")
 
 
 ivrace <- ivreg(v2018 ~ restored * sex + 
                   as.factor(county) + as.factor(race) + as.factor(sex) + age +
-                  felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time | . -restored + finished_post,
+                  felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
                 data = filter(parolees, year(parole_status_date) >= 2017))
 
 
@@ -98,11 +99,11 @@ saveRDS(to_restored, "./temp/to_restored.rds")
 
 ### does office matter?
 model3 <- glm(v2018 ~ as.factor(county) + as.factor(race) + as.factor(sex) + age +
-                felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
               family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017, restored == T))
 
 model4 <- glm(v2018 ~ as.factor(county) + as.factor(race) + as.factor(sex) + age +
-                felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time + as.factor(parole_office),
+                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + as.factor(parole_office),
               family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017, restored == T))
 
 
@@ -135,7 +136,7 @@ model2 <- glm(v2016 ~ finished_post + days_since_done + days2 +
 
 model3 <- glm(v2016 ~ finished_post + days_since_done + days2 +
                 as.factor(county) + as.factor(race) + as.factor(sex) + age +
-                felony_a + felony_b + felony_c + felony_d + felony_e + counts + parole_time,
+                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
               family = "binomial", data = parolees)
 
 save(model1, model2, model3, file = "./temp/individual_turnout_16.rdata")

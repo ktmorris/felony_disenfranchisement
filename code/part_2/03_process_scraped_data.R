@@ -118,7 +118,7 @@ parole_officers <- read_fwf(
 
 colnames(parole_officers) <- names
 
-parole_officers <- select(parole_officers, parole_office, din) %>% 
+parole_officers <- select(parole_officers, parole_office, din, parole_officer_name) %>% 
   group_by(din) %>% 
   filter(row_number() == 1)
 
