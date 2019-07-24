@@ -9,7 +9,7 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
   select(-history, -year, -election_type) %>% 
   filter(parole_status == "DISCHARGED",
          parole_status_date >= "2012-01-01",
-         parole_status_date <= "2018-10-16",
+         parole_status_date <= "2018-10-12",
          !is.na(dob_parole)) %>% 
   mutate(age = as.numeric((as.Date("2018-11-06") - dob_parole) / 365.25),
          parole_time = as.numeric((parole_status_date - release_date_parole) / 365.25),
