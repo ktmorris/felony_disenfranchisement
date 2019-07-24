@@ -1,7 +1,5 @@
 ### GEOCODE WHOLE STATE
 ### APRIL 2018 voter file to start
-
-
 nys <- dbGetQuery(db, "select res_house_number, res_pre_street, res_street_name, res_post_street_dir, dob,
                        res_city, zip5, nys_id, voter_status
                        from nys_roll_0418") %>%
@@ -29,6 +27,6 @@ pings  <- SpatialPoints(nys[c('longitude','latitude')], proj4string = bg_shp@pro
 nys$bg <- over(pings, bg_shp)$GEOID
 
 nys <- nys %>% 
-  select(nys_id, longitude, latitude, bg)
+  select(nys_id, longitude, latitude, bg, match)
 
 saveRDS(nys, "./temp/nys_0418_geocoded.rds")
