@@ -1,5 +1,6 @@
 library(AER)
 library(lubridate)
+library(RStata)
 library(estimatr)
 library(Matching)
 library(tidyverse)
@@ -25,3 +26,5 @@ cleanup <- function(...){
 
 db <- dbConnect(SQLite(), "D:/rolls.db")
 
+options("RStata.StataVersion" = 15)
+options("RStata.StataPath" = "\"C:\\Program Files (x86)\\Stata15\\StataSE-64\"")
