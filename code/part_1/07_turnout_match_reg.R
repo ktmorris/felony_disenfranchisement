@@ -30,9 +30,9 @@ for(geo in c("block_group", "tract")){
   match_data <- units %>% 
     dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, reg_rate, share_dem, share_non_citizen, share_winner)
   
-  genout <- GenMatch(Tr = units$treat, X = match_data,
-                     M = 3, replace = T, pop.size = 1000, cluster = cl)
-  saveRDS(genout, paste0("./temp/genout_", geo, ".rds"))
+  # genout <- GenMatch(Tr = units$treat, X = match_data,
+  #                    M = 3, replace = T, pop.size = 1000, cluster = cl)
+  # saveRDS(genout, paste0("./temp/genout_", geo, ".rds"))
   
   genout <- readRDS(paste0("./temp/genout_", geo, ".rds"))
   
@@ -80,12 +80,12 @@ for(geo in c("block_group", "tract")){
   reg <- left_join(matches_v, units, by = c("control_GEOID" = "GEOID"))
   reg$boro <- substring(reg$GEOID, 1, 5)
   
-  reg_output <- lm(to ~ treat, data = reg, weights = weight * vap)
-  reg_output_ses <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight * vap, cluster = GEOID))$coefficients)[, 2]
+  reg_output <- lm(to ~ treat, data = reg, weights = weight)
+  reg_output_ses <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
   save(reg_output, reg_output_ses, file = paste0("./temp/match_reg_", geo, ".rdata"))
   
-  reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight * vap)
-  reg_output_nhblack_ses <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight * vap, cluster = GEOID))$coefficients)[, 2]
+  reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight)
+  reg_output_nhblack_ses <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
   save(reg_output_nhblack, reg_output_nhblack_ses, file = paste0("./temp/match_reg_", geo, "_nhb.rdata"))
   
   ###########
