@@ -707,6 +707,97 @@ number = "3",
   url          = {https://www.washingtonpost.com/news/morning-mix/wp/2018/03/30/texas-woman-sentenced-to-5-years-in-prison-for-voting-while-on-probation},
 }
 
+@Article{Gerber2000,
+  author    = {Alan S. Gerber and Donald P. Green},
+  title     = {The Effects of Canvassing, Telephone Calls, and Direct Mail on Voter Turnout: A Field Experiment},
+  volume    = {94},
+  number    = {3},
+  pages     = {653--663},
+  doi       = {10.2307/2585837},
+  journal   = {American Political Science Review},
+  month     = {sep},
+  publisher = {Cambridge University Press ({CUP})},
+  year      = {2000},
+}
+
+@Article{Green2012,
+  author    = {Donald P. Green and Mary C. McGrath and Peter M. Aronow},
+  title     = {Field Experiments and the Study of Voter Turnout},
+  volume    = {23},
+  number    = {1},
+  pages     = {27--48},
+  doi       = {10.1080/17457289.2012.728223},
+  journal   = {Journal of Elections, Public Opinion and Parties},
+  month     = {oct},
+  publisher = {Informa {UK} Limited},
+  year      = {2012},
+}
+
+@Article{Browning1992,
+  author    = {Sandra Lee Browning and Liqun Cao},
+  title     = {The impact of race on criminal justice ideology},
+  volume    = {9},
+  number    = {4},
+  pages     = {685--701},
+  doi       = {10.1080/07418829200091611},
+  journal   = {Justice Quarterly},
+  month     = {dec},
+  publisher = {Informa {UK} Limited},
+  year      = {1992},
+}
+
+@Article{Henderson1997,
+  author    = {Martha L. Henderson and Francis T. Cullen and Liqun Cao and Sandra Lee Browning and Renee Kopache},
+  title     = {The impact of race on perceptions of criminal injustice},
+  volume    = {25},
+  number    = {6},
+  pages     = {447--462},
+  doi       = {10.1016/s0047-2352(97)00032-9},
+  journal   = {Journal of Criminal Justice},
+  month     = {nov},
+  publisher = {Elsevier {BV}},
+  year      = {1997},
+}
+
+@Article{Wu2009,
+  author    = {Yuning Wu and Ivan Y. Sun and Ruth A. Triplett},
+  title     = {Race, Class or Neighborhood Context: Which Matters More in Measuring Satisfaction with Police?},
+  volume    = {26},
+  number    = {1},
+  pages     = {125--156},
+  doi       = {10.1080/07418820802119950},
+  journal   = {Justice Quarterly},
+  month     = {mar},
+  publisher = {Informa {UK} Limited},
+  year      = {2009},
+}
+
+@Article{Ansolabehere1999,
+  author    = {Stephen D. Ansolabehere and Shanto Iyengar and Adam Simon},
+  title     = {Replicating Experiments Using Aggregate and Survey Data: The Case of Negative Advertising and Turnout},
+  volume    = {93},
+  number    = {4},
+  pages     = {901--909},
+  doi       = {10.2307/2586120},
+  journal   = {American Political Science Review},
+  month     = {dec},
+  publisher = {Cambridge University Press ({CUP})},
+  year      = {1999},
+}
+
+@Article{Milligan2004,
+  author    = {Kevin Milligan and Enrico Moretti and Philip Oreopoulos},
+  title     = {Does education improve citizenship? Evidence from the United States and the United Kingdom},
+  volume    = {88},
+  number    = {9-10},
+  pages     = {1667--1695},
+  doi       = {10.1016/j.jpubeco.2003.10.005},
+  journal   = {Journal of Public Economics},
+  month     = {aug},
+  publisher = {Elsevier {BV}},
+  year      = {2004},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
 
 @Comment{jabref-meta: grouping:
