@@ -76,6 +76,7 @@ save(date_to_model_notime, date_to_model_time, file = "./temp/short_term_to.rdat
 ##### THIS CREATES A TEX FILE THAT NEEDS TO BE MANUALLY CHANGED TO MATCH FORMATTING
 parolees$restored2 <- 1 * parolees$restored
 parolees$finished_post2 <- 1 * parolees$finished_post
+parolees$male = 1 * (parolees$sex == "MALE")
 parolees$nyc = (parolees$county %in% c("KINGS", "NEW YORK", "QUEENS", "BRONX", "RICHMOND"))*1
 
 fwrite(filter(parolees, year(parole_status_date) >= 2017), "./temp/iv_data.csv")
