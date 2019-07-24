@@ -40,7 +40,7 @@ rm(names)
 
 saveRDS(nrow(incarcerated), "./temp/number_incarcerated.rds")
 
-share_black <- mean(incarcerated$race == "B", na.rm = T)
+share_black <- mean((incarcerated$race == "B") * (incarcerated$ethnicity != "H"), na.rm = T)
 
 saveRDS(share_black, "./temp/share_black_incarcerated.rds")
 
