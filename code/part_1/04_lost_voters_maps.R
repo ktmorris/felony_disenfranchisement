@@ -3,13 +3,9 @@
 matches <- readRDS("./temp/matched_ids_in_17.rds")
 elects <- fread("./raw_data/misc/elects.csv")
 
-### grab lats and longs
-
-locs <- readRDS("./temp/nys_0418_geocoded.rds")
-
 ###
 
-history <- left_join(dbGetQuery(db, "select nys_id, history from nys_roll_0418"),
+history <- left_join(dbGetQuery(db, "select nys_id, history, county_code from nys_roll_0418"),
                      readRDS("./temp/nys_0418_geocoded.rds"), by = "nys_id") %>%  
   filter(nys_id %in% matches$nys_id) # just keep formerly incarcerated, registered folks
 
@@ -24,11 +20,18 @@ history <- left_join(history, elects, by = "history") %>%
 
 history$voted <- ifelse(history$voted == 1, "Cast Ballot in Past 10 Years", "Didn't Cast Ballot in Past 10 Years")
 
-lost_ids <- history[history$voted == "Cast Ballot in Past 10 Years", c("nys_id")]
+bad_geocode <- mean(filter(history, voted == "Cast Ballot in Past 10 Years",
+                           county_code %in% c(3, 24, 31, 41, 43))$match
+                           %in% c("No Match", "No Match - PO Box Only"))
+
+saveRDS(bad_geocode, "./temp/bad_geo_lost_voters.rds")
+
+lost_ids <- history[history$voted == "Cast Ballot in Past 10 Years", c("nys_id", "match")]
 saveRDS(lost_ids, "./temp/ids_of_lost_voters.rds")
 
 count_by_bg <- history %>% 
-  filter(voted == "Cast Ballot in Past 10 Years") %>% 
+  filter(voted == "Cast Ballot in Past 10 Years",
+         !(match %in% c("No Match", "No Match - PO Box Only"))) %>% 
   group_by(bg) %>% 
   tally() %>% 
   rename(lost_voters = n)
@@ -59,7 +62,8 @@ city_map <- ggplot() +
         legend.key=element_blank()) +
   geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
-  geom_point(data = filter(history, !is.na(district), voted == "Cast Ballot in Past 10 Years"),
+  geom_point(data = filter(history, !is.na(district), voted == "Cast Ballot in Past 10 Years",
+                           !(match %in% c("No Match", "No Match - PO Box Only"))),
              aes(x = longitude, y = latitude), shape = 21, color = "black", fill = "red", alpha = 0.5) +
   coord_map() +
   labs(x = NULL, y = NULL)
