@@ -28,6 +28,11 @@ nyc$lost_voter <- nyc$nys_id %in% readRDS("./temp/ids_of_lost_voters.rds")$nys_i
 lost_nyc <- sum(nyc$lost_voter)
 saveRDS(lost_nyc, "./temp/lost_count_nyc.rds")
 
+bad_geocode_nyc <- mean(filter(nyc, voter_status != "PURGED")$match %in% c("No Match", "No Match - PO Box Only"))
+saveRDS(bad_geocode_nyc, "./temp/bad_geocode_nyc.rds")
+
+nyc <- filter(nyc, !(match %in% c("No Match", "No Match - PO Box Only")))
+
 lost_bg <- nyc %>% 
   group_by(GEOID = bg) %>% 
   summarize(lost_voters = sum(lost_voter))
