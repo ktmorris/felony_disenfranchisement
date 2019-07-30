@@ -798,6 +798,58 @@ number = "3",
   year      = {2004},
 }
 
+@Article{Angrist2001,
+  author    = {Joshua D Angrist},
+  title     = {Estimation of Limited Dependent Variable Models With Dummy Endogenous Regressors},
+  volume    = {19},
+  number    = {1},
+  pages     = {2--28},
+  doi       = {10.1198/07350010152472571},
+  journal   = {Journal of Business {\&} Economic Statistics},
+  month     = {jan},
+  publisher = {Informa {UK} Limited},
+  year      = {2001},
+}
+
+@Article{Angrist1996,
+  author    = {Joshua D. Angrist and Guido W. Imbens and Donald B. Rubin},
+  title     = {Identification of Causal Effects Using Instrumental Variables},
+  volume    = {91},
+  number    = {434},
+  pages     = {444--455},
+  doi       = {10.1080/01621459.1996.10476902},
+  journal   = {Journal of the American Statistical Association},
+  month     = {jun},
+  publisher = {Informa {UK} Limited},
+  year      = {1996},
+}
+
+@Article{Sondheimer2010,
+  author    = {Rachel Milstein Sondheimer and Donald P. Green},
+  title     = {Using Experiments to Estimate the Effects of Education on Voter Turnout},
+  volume    = {54},
+  number    = {1},
+  pages     = {174--189},
+  doi       = {10.1111/j.1540-5907.2009.00425.x},
+  journal   = {American Journal of Political Science},
+  month     = {jan},
+  publisher = {Wiley},
+  year      = {2010},
+}
+
+@Article{Green2000,
+  author    = {Donald P. Green and Ron Shachar},
+  title     = {Habit Formation and Political Behaviour: Evidence of Consuetude in Voter Turnout},
+  volume    = {30},
+  number    = {4},
+  pages     = {561--573},
+  doi       = {10.1017/s0007123400000247},
+  journal   = {British Journal of Political Science},
+  month     = {oct},
+  publisher = {Cambridge University Press ({CUP})},
+  year      = {2000},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
 
 @Comment{jabref-meta: grouping:
