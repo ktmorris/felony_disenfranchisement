@@ -14,7 +14,7 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
   mutate(age = as.numeric((as.Date("2018-11-06") - dob_parole) / 365.25),
          parole_time = as.numeric((parole_status_date - release_date_parole) / 365.25),
          v2018 = ifelse(is.na(v2018), 0, v2018),
-         finished_post = parole_status_date >= "2018-05-16",
+         finished_post = parole_status_date >= "2018-05-18",
          days_since_done = as.numeric(as.Date("2018-11-06") - parole_status_date),
          days2 = days_since_done^2,
          restored = ifelse(is.na(restored), F, restored),
@@ -25,11 +25,11 @@ model1 <- glm(v2018 ~ restored + days_since_done + days2,
               family = "binomial", data = parolees)
 
 model2 <- glm(v2018 ~ restored + days_since_done + days2 +
-                as.factor(county) + as.factor(race) + as.factor(sex) + age,
+                as.factor(race) + as.factor(sex) + age,
               family = "binomial", data = parolees)
 
 model3 <- glm(v2018 ~ restored + days_since_done + days2 +
-                as.factor(county) + as.factor(race) + as.factor(sex) + age +
+                as.factor(race) + as.factor(sex) + age +
                 felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
               family = "binomial", data = parolees)
 
@@ -40,12 +40,12 @@ save(model1, model2, model3, file = "./temp/individual_turnout_18.rdata")
 model1 <- glm(v2018 ~ finished_post,
               family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017))
 
-model2 <- glm(v2018 ~ finished_post + v2016 +
-                as.factor(county) + as.factor(race) + as.factor(sex) + age,
+model2 <- glm(v2018 ~ finished_post + 
+                as.factor(race) + as.factor(sex) + age,
               family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017))
 
-model3 <- glm(v2018 ~ finished_post + v2016 +
-                as.factor(county) + as.factor(race) + as.factor(sex) + age +
+model3 <- glm(v2018 ~ finished_post + 
+                as.factor(race) + as.factor(sex) + age +
                 felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
               family = "binomial", data = filter(parolees, year(parole_status_date) >= 2017))
 
@@ -54,14 +54,14 @@ save(model1, model2, model3, file = "./temp/individual_turnout_18_itt.rdata")
 
 #### IV approach
 
-date_to_model_notime <- glm(v2018 ~ v2016 +
-                       as.factor(county) + as.factor(race) + as.factor(sex) + age +
+date_to_model_notime <- glm(v2018 ~ 
+                       as.factor(race) + as.factor(sex) + age +
                        felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
                      family = "binomial",
                      data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-04-18"))
 
-date_to_model_time <- glm(v2018 ~ days_since_done + days2 + v2016 +
-                              as.factor(county) + as.factor(race) + as.factor(sex) + age +
+date_to_model_time <- glm(v2018 ~ days_since_done + days2 + 
+                              as.factor(race) + as.factor(sex) + age +
                               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
                             family = "binomial",
                             data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-04-18"))
@@ -95,50 +95,147 @@ label var restored2 \"D(Rights Restored)\"
 label var v2016 \"D(Voted in 2016)\"
 label var male \"D(Male)\"
 label var age \"Age (Years)\"
-label var parole_time \"Time Spent on Parole (Years)\"
+label var parole_time \"Years on Parole\"
 
 * simple 2sls regression
 ivregress 2sls v2018 ///
-	(restored2 = finished_post2)
+	(restored2 = finished_post2), vce(robust)
 	
 outreg2 using temp/iv_tables, replace lab dec(4) adjr2
-	
-* add in demographics
-ivregress 2sls v2018 v2016 i.race male age i.county ///
-	(restored2 = finished_post2)
-	
-outreg2 using temp/iv_tables, append drop(i.race i.county felony*) lab ///
-	addtext(Race / Ethnicity FE, X, County FE, X) dec(4) adjr2
 
 * add in sentence info
-ivregress 2sls v2018 v2016 i.race male age i.county felony_a felony_b ///
-	felony_c felony_d felony_e parole_time (restored2 = finished_post2)
+ivregress 2sls v2018 i.race male age felony_a felony_b ///
+	felony_c felony_d felony_e parole_time (restored2 = finished_post2), vce(robust)
 	
-outreg2 using temp/iv_tables, append drop(i.race i.county felony*) lab ///
-	addtext(Race / Ethnicity FE, X, County FE, X, Felony Class FE, X) dec(4) adjr2
+outreg2 using temp/iv_tables, append drop(i.race felony*) lab ///
+	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4) adjr2
 
 * ivprobit with all of the covariates
-ivprobit v2018 v2016 i.race male age nyc felony_a felony_b ///
-	felony_c felony_d felony_e parole_time (restored2 = finished_post2)
+ivprobit v2018 i.race male age felony_a felony_b ///
+	felony_c felony_d felony_e parole_time (restored2 = finished_post2), vce(robust)
+	
+local chisq `e(chi2)'
+
 *predict marginal effects
 margins, dydx(*) predict(pr) post
 	
-outreg2 using temp/iv_tables, append drop(i.race nyc felony*) lab ///
-	addtext(Race / Ethnicity FE, X, NYC FE, X, Felony Class FE, X) dec(4)	
+outreg2 using temp/iv_tables, append drop(i.race felony*) lab ///
+  adds(\"Wald $\\chi^2$\", `chisq') ///
+	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4)
 
-*bivariate probit model with all covariates
-biprobit (v2018 = restored2 v2016 i.race male age i.county felony_a felony_b ///
-	felony_c felony_d felony_e parole_time) ///
-	(restored2 = finished_post2 v2016 i.race male age i.county felony_a felony_b ///
-	felony_c felony_d felony_e parole_time)
+*bivariate probit model no covariates
+biprobit (v2018 = restored2) ///
+	(restored2 = finished_post2), vce(robust)
+	
+local chisq `e(chi2)'
+local rho `e(rho)'
 * predict marginal effects
 margins, dydx(*) predict(pmarg1) post
 
-outreg2 using temp/iv_tables, tex(frag) drop(i.race i.county felony*) lab ///
-	addtext(Race / Ethnicity FE, X, County FE, X, Felony Class FE, X) dec(4)
+outreg2 using temp/iv_tables, append drop(i.race felony*) lab ///
+  adds(\"Wald $\\chi^2$\", `chisq', \"$\\rho$\", `rho') dec(4)
+	
+
+*bivariate probit model with all covariates
+biprobit (v2018 = restored2 i.race male age felony_a felony_b ///
+	felony_c felony_d felony_e parole_time) ///
+	(restored2 = finished_post2 i.race male age felony_a felony_b ///
+	felony_c felony_d felony_e parole_time), vce(robust)
+local chisq `e(chi2)'
+local rho `e(rho)'	
+
+* predict marginal effects
+margins, dydx(*) predict(pmarg1) post
+
+outreg2 using temp/iv_tables, append tex(frag) drop(i.race felony*) lab ///
+  adds(\"Wald $\\chi^2$\", `chisq', \"$\\rho$\", `rho') ///
+	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4)
 	
 ")
 
+iv3 <- ivreg(v2018 ~ restored + 
+               as.factor(race) + as.factor(sex) + age +
+               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
+             data = filter(parolees, year(parole_status_date) >= 2017))
+
+save(iv3, file = "./temp/iv_individual_turnout_18.rdata")
+
+## rerun for nonwhite
+
+stata("
+
+insheet using \"temp/iv_data.csv\", clear
+
+capture erase \"temp/iv_tables_nw.tex\"
+capture erase \"temp/iv_tables_nw.txt\"
+
+foreach var in sex county{
+	encode `var', gen(x)
+	drop `var'
+	rename x `var'
+}
+
+label var restored2 \"D(Rights Restored)\"
+label var v2016 \"D(Voted in 2016)\"
+label var male \"D(Male)\"
+label var age \"Age (Years)\"
+label var parole_time \"Years on Parole\"
+preserve
+
+foreach race in WHITE NONWHITE BLACK{
+  restore, preserve
+  di \"STEP A\"
+  if \"`race'\" == \"WHITE\" | \"`race'\" == \"BLACK\"{
+    keep if race == \"`race'\"
+  }
+  else{
+    keep if race != \"WHITE\"
+  }
+  
+  encode race, gen(x)
+  drop race
+  rename x race
+  
+  * 2sls w/ covariates
+  ivregress 2sls v2018 male age felony_a felony_b ///
+  	felony_c felony_d felony_e parole_time (restored2 = finished_post2), vce(robust)
+  	
+  outreg2 using temp/iv_tables_nw, append tex(frag) drop(felony*) lab ///
+  	addtext(Felony Class FE, X) dec(4) adjr2
+}
+
+foreach race in WHITE NONWHITE BLACK{
+  restore, preserve
+  
+  if \"`race'\" == \"WHITE\" | \"`race'\" == \"BLACK\"{
+      keep if race == \"`race'\"
+    }
+    else{
+      keep if race != \"WHITE\"
+    }
+  *bivariate probit model with all covariates
+  biprobit (v2018 = restored2 male age felony_a felony_b ///
+  	felony_c felony_d felony_e parole_time) ///
+  	(restored2 = finished_post2 male age felony_a felony_b ///
+  	felony_c felony_d felony_e parole_time), vce(robust)
+  local chisq `e(chi2)'
+  local rho `e(rho)'
+  
+  * predict marginal effects
+  margins, dydx(*) predict(pmarg1) post
+  
+  outreg2 using temp/iv_tables_nw, append tex(frag) drop(felony*) lab ///
+    adds(\"Wald $\\chi^2$\", `chisq', \"$\\rho$\", `rho') ///
+  	addtext(Felony Class FE, X) dec(4)
+}
+")
+
+source("./code/misc/clean_tex_tables.R")
+
+summary(glm(v2018 ~ finished_post + 
+               as.factor(race) + as.factor(sex) + age +
+               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time ,
+             data = filter(parolees, year(parole_status_date) >= 2017, race != "WHITE"), family = "binomial"))
 
 ######################
 ### 2016
@@ -156,7 +253,7 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
   mutate(age = as.numeric((as.Date("2016-11-08") - dob_parole) / 365.25),
          parole_time = as.numeric((parole_status_date - release_date_parole) / 365.25),
          v2016 = ifelse(is.na(v2016), 0, v2016),
-         finished_post = parole_status_date >= "2016-05-16",
+         finished_post = parole_status_date >= "2016-05-18",
          days_since_done = as.numeric(as.Date("2016-11-08") - parole_status_date),
          days2 = days_since_done^2)
 
@@ -164,12 +261,47 @@ model1 <- glm(v2016 ~ finished_post,
               family = "binomial", data = parolees)
 
 model2 <- glm(v2016 ~ finished_post +
-                as.factor(county) + as.factor(race) + as.factor(sex) + age,
+                as.factor(race) + as.factor(sex) + age,
               family = "binomial", data = parolees)
 
 model3 <- glm(v2016 ~ finished_post +
-                as.factor(county) + as.factor(race) + as.factor(sex) + age +
+                as.factor(race) + as.factor(sex) + age +
                 felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
               family = "binomial", data = parolees)
 
 save(model1, model2, model3, file = "./temp/individual_turnout_16.rdata")
+
+
+##### black turnout prior to executive order
+
+black_to1 <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               !finished_post), family = "binomial")
+
+black_to2 <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               race != "HISPANIC",
+                               !finished_post), family = "binomial")
+
+black_to3 <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               restored), family = "binomial")
+
+black_to4 <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               race != "HISPANIC",
+                               restored), family = "binomial")
+
+save(black_to1, black_to2, black_to3, black_to4, file = "./temp/black_to.rdata")
