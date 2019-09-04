@@ -91,11 +91,14 @@ foreach var in race sex county{
 	rename x `var'
 }
 
+gen months_past = ceil((date(parole_status_date, \"YMD\") - date(\"2018-5-18\", \"YMD\")) / 30.5) * restored2
+
 label var restored2 \"D(Rights Restored)\"
 label var v2016 \"D(Voted in 2016)\"
 label var male \"D(Male)\"
 label var age \"Age (Years)\"
 label var parole_time \"Years on Parole\"
+label var months_past \"Months Restored\"
 
 * simple 2sls regression
 ivregress 2sls v2018 ///
@@ -109,6 +112,7 @@ ivregress 2sls v2018 i.race male age felony_a felony_b ///
 	
 outreg2 using temp/iv_tables, append drop(i.race felony*) lab ///
 	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4) adjr2
+	
 
 * ivprobit with all of the covariates
 ivprobit v2018 i.race male age felony_a felony_b ///
@@ -159,6 +163,53 @@ iv3 <- ivreg(v2018 ~ restored +
              data = filter(parolees, year(parole_status_date) >= 2017))
 
 save(iv3, file = "./temp/iv_individual_turnout_18.rdata")
+
+### variable treatment effect
+stata("
+
+capture erase \"temp/iv_tables_months.tex\"
+capture erase \"temp/iv_tables_months.txt\"
+
+insheet using \"temp/iv_data.csv\", clear
+
+foreach var in race sex county{
+	encode `var', gen(x)
+	drop `var'
+	rename x `var'
+}
+
+gen months_past = ceil((date(parole_status_date, \"YMD\") - date(\"2018-5-17\", \"YMD\")) / 30.5) * restored2
+
+label var restored2 \"D(Rights Restored)\"
+label var v2016 \"D(Voted in 2016)\"
+label var male \"D(Male)\"
+label var age \"Age (Years)\"
+label var parole_time \"Years on Parole\"
+label var months_past \"Months Restored\"
+
+
+* add in sentence info
+ivregress 2sls v2018 i.race male age felony_a felony_b ///
+	felony_c felony_d felony_e parole_time (months_past = finished_post2), vce(robust)
+	
+outreg2 using temp/iv_tables_months, replace drop(i.race felony*) lab ///
+	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4) adjr2
+
+
+* ivprobit with all of the covariates
+ivprobit v2018 i.race male age felony_a felony_b ///
+	felony_c felony_d felony_e parole_time (months_past = finished_post2), vce(robust)
+	
+local chisq `e(chi2)'
+
+*predict marginal effects
+margins, dydx(*) predict(pr) post
+	
+outreg2 using temp/iv_tables_months, append tex(frag) drop(i.race felony*) lab ///
+  adds(\"Wald $\\chi^2$\", `chisq') ///
+	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4)
+
+")
 
 ## rerun for nonwhite
 
