@@ -20,9 +20,9 @@ history <- left_join(history, elects, by = "history") %>%
 
 history$voted <- ifelse(history$voted == 1, "Cast Ballot in Past 10 Years", "Didn't Cast Ballot in Past 10 Years")
 
-bad_geocode <- mean(filter(history, voted == "Cast Ballot in Past 10 Years",
+bad_geocode <- mean(!(filter(history, voted == "Cast Ballot in Past 10 Years",
                            county_code %in% c(3, 24, 31, 41, 43))$match
-                           %in% c("No Match", "No Match - PO Box Only"))
+                           %in% c("Zip8", "Zip9")))
 
 saveRDS(bad_geocode, "./temp/bad_geo_lost_voters.rds")
 
@@ -31,7 +31,7 @@ saveRDS(lost_ids, "./temp/ids_of_lost_voters.rds")
 
 count_by_bg <- history %>% 
   filter(voted == "Cast Ballot in Past 10 Years",
-         !(match %in% c("No Match", "No Match - PO Box Only"))) %>% 
+         match %in% c("Zip8", "Zip9")) %>% 
   group_by(bg) %>% 
   tally() %>% 
   rename(lost_voters = n)
@@ -63,7 +63,7 @@ city_map <- ggplot() +
   geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
   geom_point(data = filter(history, !is.na(district), voted == "Cast Ballot in Past 10 Years",
-                           !(match %in% c("No Match", "No Match - PO Box Only"))),
+                           match %in% c("Zip8", "Zip9")),
              aes(x = longitude, y = latitude), shape = 21, color = "black", fill = "red", alpha = 0.5) +
   coord_map() +
   labs(x = NULL, y = NULL)
