@@ -60,7 +60,7 @@ city_map <- ggplot() +
         plot.title = element_text(hjust = 0.5),
         legend.background = element_blank(),
         legend.key=element_blank()) +
-  geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#bfbfbf") +
+  geom_polygon(data = dists, aes(x = long, y = lat, group = group), fill = "#DCDCDC") +
   geom_path(data = dists, aes(x = long, y = lat, group = group), color = "black") +
   geom_point(data = filter(history, !is.na(district), voted == "Cast Ballot in Past 10 Years",
                            match %in% c("Zip8", "Zip9")),
