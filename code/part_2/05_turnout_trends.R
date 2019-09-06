@@ -3,7 +3,7 @@ elects <- fread("./raw_data/misc/elects.csv")
 
 ############# READ IN NYS VOTER FILES #############
 db <- dbConnect(SQLite(), "D:/rolls.db")
-nys_roll <- dbGetQuery(db, "select history, voter_status, nys_id from nys_roll_0319")
+nys_roll <- dbGetQuery(db, "select history, voter_status, nys_id, political_party from nys_roll_0319")
 
 nys_roll <- nys_roll[nys_roll$nys_id %in% readRDS("./temp/din_nys_parolees.rds")$nys_id, ]
 
