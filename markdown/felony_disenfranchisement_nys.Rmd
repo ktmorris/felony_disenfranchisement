@@ -4,12 +4,13 @@ author: "Kevin Morris"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   bookdown::pdf_document2:
+    keep_tex: true
     toc: no
     fig_caption: yes
     latex_engine: xelatex
 bibliography: "../research/citations.bib"
 link-citations: yes
-fontsize: 12pt
+# fontsize: 12pt
 header-includes:
     - \usepackage{setspace}\doublespacing
     - \usepackage{rotating}
@@ -37,6 +38,7 @@ library(tidyverse)
 library(extrafont)
 library(kableExtra)
 library(stargazer)
+library(data.table)
 loadfonts()
 ```
 \pagenumbering{arabic}
@@ -62,7 +64,7 @@ The rest of this paper is structured as follows. **Section 2** discusses the his
 
 In all but two states (Maine and Vermont), felony disenfranchisement laws ensure that American citizens convicted of felony offenses lose the right to vote for at least some period of time. In some states, such as Oregon and Massachusetts, individuals lose that right only for the period in which they are actively incarcerated. In other states, notably Kentucky and Iowa, felony convictions result in lifelong disenfranchisement unless a returned citizen receives an individual pardon from the state's governor [@bcj_laws]. This variation in laws flows directly from language in the Fourteenth Amendment which allows states to revoke individuals' voting rights "for participation in rebellion, or other crime." The definition of "other crime," left so vague in the Constitution, is now generally used by states to disenfranchise citizens for any felony offense. The Supreme Court, in cases such as *Richardson v. Ramirez* (1974), has upheld states' right to do just that. Collectively, these laws disenfranchise as many as `r 6.1 - 1.4` million American citizens. Of these, the majority are no longer incarcerated, but are living and working in their communities [@sentencing_2016].^[The figures reported in @sentencing_2016 have been adjusted to reflect the impact of Amendment 4 in Florida.]
 
-Any discussion of felony disenfranchisement in the United States must center the role played by race. As Traci Burch has explained, "If policies restricting the voting rights of offenders disparately affect one racial group or party, it is because such policies were *intended* to" (Burch 2010, 4; emphasis in the original). Previous research has established that the presence of nonwhite potential voters is associated with the implementation of felony disenfranchisement policies and that these policies were often adopted during Jim Crow to reduce the political power of Black Americans [@Behrens2003]. In Florida, for instance, felony disenfranchisement was added to the state constitution in 1868. Afterwards, a lawmaker boasted that the amendment had been added to prevent the state from being "niggerized" [@florida_1868, p. 374].
+Any discussion of felony disenfranchisement in the United States must center the role played by race. As Traci Burch has explained, "If policies restricting the voting rights of offenders disparately affect one racial group or party, it is because such policies were *intended* to" [@Burch2010, 4; emphasis in the original]. Previous research has established that the presence of nonwhite potential voters is associated with the implementation of felony disenfranchisement policies and that these policies were often adopted during Jim Crow to reduce the political power of Black Americans [@Behrens2003]. In Florida, for instance, felony disenfranchisement was added to the state constitution in 1868. Afterwards, a lawmaker boasted that the amendment had been added to prevent the state from being "niggerized" [@florida_1868, 374].
 
 The racially unbalanced effects of felony disenfranchisement laws were not confined to the 19th century. Although the Voting Rights Act of 1965 did much to improve access to the ballot box for minorities, it did nothing to undermine the explicitly racialized system of disenfranchisement. Indeed, as the United States has increased the reach of the carceral system in the post-Civil Rights era, the implications of felony disenfranchisement have only grown. As of 2016, more than 10 percent of Black Americans were disenfranchised in 9 states. In Kentucky, the state with the highest level of disenfranchised Black residents, more than one in four Black adults are barred from casting a ballot. Although Black adults made up just `r percent(29932674 / 247219588, accuracy = 0.1)` of the voting age population in 2016, they accounted for `r percent(2228118 / 6106327, accuracy = 0.1)` of the disenfranchised population [@sentencing_2016].
 
@@ -74,13 +76,15 @@ In the aftermath of the 2000 presidential election, academic interest in the pol
 
 In a series of papers between 2009 and 2011, researchers developed methods for directly estimating the turnout of formerly disenfranchised individuals. @Haselswerdt2009 matched release data and voter registration data from Erie County, NY, to estimate turnout among a small group of formerly incarcerated individuals. Traci Burch [-@Burch2010; -@Burch2011] expanded upon this matching methodology to estimate the voting patterns of formerly disenfranchised individuals in a range of states. She used release data from states' Departments of Corrections and their registered voter files to identify formerly incarcerated individuals who went on to register to vote. Using the registered voter files, she was also able to estimate the party affiliation of formerly incarcerated individuals (in states with party registration) and their turnout rates. Her methodology has been used to investigate other questions surrounding the voting patterns of formerly incarcerated individuals under different circumstances and to examine the impact of changes in disenfranchisement policy [@Meredith2013; @Meredith2015].
 
-A number of papers have also explored the impact felony disenfranchisement policies have on turnout among non-disenfranchised residents. @King2016, for instance, leverages state-level variation in disenfranchisement laws to estimate the impact that felony disenfranchisement has on turnout among Black Americans. They use data from the 2004 Current Population Survey Voting and Registration Supplement to calculate statewide turnout rates. They include estimates of the share of Black Americans who are disenfranchised in each state from @locked_out to explore the impact of these policies on eligible voters. They conclude that disenfranchisement has large spillover effects for Black voters: where more Black residents are disenfranchised, eligible Black voters are less likely to cast a ballot. These findings are in line with other research that has explored whether the effects of disenfranchisement extend beyond those whose voting rights are directly suspended [@Bowers2009; @Ochs2006; @Walker2014]. As @Bowers2009 sums up: "[I]t is not solely the direct vote of ex-felons that is denied through these laws. [Felony disenfranchisement] impacts the political power of communities that extends beyond felons' collateral penalty" (724).
+A number of papers have also explored the impact felony disenfranchisement policies have on turnout among non-disenfranchised residents. @King2016, for instance, leverages state-level variation in disenfranchisement laws to estimate the impact that felony disenfranchisement has on turnout among Black Americans. They use data from the 2004 Current Population Survey Voting and Registration Supplement to calculate statewide turnout rates. They include estimates of the share of Black Americans who are disenfranchised in each state from @locked_out to explore the impact of these policies on eligible voters. They conclude that disenfranchisement has large spillover effects for Black voters: where more Black residents are disenfranchised, eligible Black voters are less likely to cast a ballot. These findings are in line with other research that has explored whether the effects of disenfranchisement extend beyond those whose voting rights are directly suspended [@Bowers2009; @Ochs2006]. As @Bowers2009 sums up: "[I]t is not solely the direct vote of ex-felons that is denied through these laws. [Felony disenfranchisement] impacts the political power of communities that extends beyond felons' collateral penalty" (724).
 
 Although scholars have established that felony disenfranchisement decreases turnout among Black voters at the *state* level, relatively little research has been done on how felony disenfranchisement operates at the sub-state level. Though we know that Black voters are generally less likely to cast a ballot when they live in a state with strict disenfranchisement laws, less work has been done exploring the impact these laws might have at the local level. @Burch2013 is an exception to this. Burch explores the depressive effect of disenfranchisement laws at the local level in North Carolina by examining census block-group level turnout and involvement with the criminal justice system, determining that "at high concentrations, imprisonment and community supervision have an unequivocally demobilizing effect of neighborhoods" (185). This paper seeks to expand on her work by replicating her findings in New York City; by using a different estimation technique; and by using a different definition of "lost voters."
 
 # What This Paper Examines
 
-This paper begins by exploring the effect of felony disenfranchisement on neighborhood turnout in the New York City Mayoral election of 2017 using individual-level administrative data. Policing and incarceration patterns have historically targeted communities of color, wreaking havoc on the social fabric of these neighborhoods [e.g. @Sewell2016; @Clear2008; @Lerman2013]. It is possible, however, that these effects run deeper than the direct focus on policing and incarceration has acknowledged. We know that felony disenfranchisement systematically removes voters from certain neighborhoods, but it is not clear whether enough voters are removed relative to the electorate to meaningfully distort neighborhood representation. To the extent that felony disenfranchisement has a spatially-concentrated depressive effect on *eligible* voters, it is possible that these policies are powerful enough to materially reduce the representation of certain parts of the city.
+This paper begins by exploring the effect of felony disenfranchisement on neighborhood turnout in the New York City Mayoral election of 2017 using individual-level administrative data. Policing and incarceration patterns have historically targeted communities of color, damaging the social fabric of these neighborhoods [e.g. @Sewell2016; @Clear2008; @Lerman2013]. It is possible, however, that these effects run deeper than the direct focus on policing and incarceration has acknowledged. We know that felony disenfranchisement systematically removes individuals from certain neighborhoods, but it is not clear whether enough would-be voters are removed relative to the electorate to meaningfully distort neighborhood representation. To the extent that felony disenfranchisement has a spatially-concentrated depressive effect on eligible voters, it is possible that these policies are powerful enough to materially reduce the representation of certain parts of the city.
+
+I also offer a refinement of our understanding of who lost voters are. Previous studies exploring the relationship between felony disenfranchisement and spill-over effects have not adequately accounted for the fact that many of the disenfranchised are low-propensity voters to begin with. In this analysis, I use administrative data to identify neighborhoods where individuals with a demonstrated history of participation are disenfranchised.
 
 After examining the effect of felony disenfranchisement on voter turnout at the neighborhood level, I consider the efficacy of a program intended to undo one piece of the felony disenfranchisement apparatus. In April, 2018, Governor Andrew Cuomo signed Executive Order 181 which restored voting rights to New Yorkers on parole.^[Prior to Executive Order 181, residents convicted of felonies in prison and on parole were barred from voting, while individuals sentenced to probation did not have their voting rights revoked. Today, only those in prison for felony offenses are disenfranchised.] Parole officers were required to provide registration forms to the parolees under their supervision and inform them of their voting rights. In theory, such a policy could increase turnout and registration for parolees. To test whether the policy was successful, I use administrative data to explore whether turnout rates in the 2018 midterm elections among individuals discharged from parole were impacted by the implementation of Executive Order 181.
 
@@ -88,40 +92,45 @@ The first part of this project seeks to refine how we think about felony disenfr
 
 ## Framing for Turnout Effects {-}
 
-As discussed above, it has been widely established that felony disenfranchisement reduces turnout even among eligible voters, particularly in the Black community [e.g. @King2016; @Bowers2009]. With the exception of @Burch2013, however, there has been little investigation into whether these depressive effects are narrowly concentrated in the neighborhoods home to disenfranchised individuals or are more widely dispersed. For instance, if neighborhoods home to disenfranchised individuals display different candidate preferences than the rest of the city, these demobilizing effects will undermine these neighborhoods' political representation. There is some evidence that spatial segregation leads to unique voting preferences by neighborhoods: @Kinsella2015, for instance, examines political clustering in the Greater Cincinnati Metropolitan Area from 1976 through 2008. Over this three-decade period, precinct-level presidential election results show trends toward increased polarization.
+Despite over-incarceration in some neighborhoods, the number of incarcerated individuals is relatively low compared to the number of voters. In New York, for instance, `r comma(readRDS("./temp/number_incarcerated.rds"))` individuals were imprisoned in New York State in early 2019, compared with `r round(readRDS("./temp/active_voters_0319.rds")/1000000, digits = 1)` million actively registered voters. Despite the low share of residents who are directly disenfranchised, there is reason to believe the policy impacts more individuals than just those imprisoned. As discussed above, previous research has demonstrated that felony disenfranchisement reduces turnout even among Black voters whose rights are not stripped. This research has found, in particular, that eligible Black voters are less likely to cast a ballot in states where felony disenfranchisement policies are harsher, an effect often referred to as *de facto* disenfranchisement.
 
-Even if neighborhoods to not have unique preferences for presidential candidates, lower turnout in impacted communities may reduce their allocation of public goods. At the Congressional level, for instance, representatives direct resources to areas within their districts that provide the greatest political benefit --- that is to say, areas that will reward them with more votes [@Martin2003]. Congressional representatives are also more responsive to the policy preferences of higher-turnout areas. "[H]igher citizen participation is rewarded," @Martin2013 concludes, "with enhanced policy responsiveness" (59). @Griffin2005 finds similar effects in the United States Senate, reporting that "voter preferences predict the aggregate roll-call behavior of Senators while nonvoter preferences do not" (1206). If the neighborhoods most impacted by felony disenfranchisement turn out at lower rates, they may find that their elected representatives are less likely to support their needs and support their calls for greater public investment for amenities such as schools and parks.
+Though previous studies have focused largely on the state-level spill-over effects of felony disenfranchisement, there is reason to believe that this *de facto* disenfranchisement is concentrated within the neighborhoods home to formally disenfranchised residents. @Burch2013, for one, demonstrates that neighborhoods in North Carolina with higher levels of incarceration had lower turnout. Moreover, voting is a social act, and social networks play an important role in predicting political participation [e.g. @Foladare1968; @Huckfeldt1979; @Kenny1992; @Mutz2002]. Literature from urban sociology has established that social networks are largely spatially bounded, and that local social ties are more important in lower-income neighborhoods [@Guest1999; @Dawkins2006]. It should be no surprise, then, that neighborhoods have been shown to mobilize and demobilize voters through mechanisms above-and-beyond individual characteristics [Gimpel2004; @Cho2006]. To the extent that felony disenfranchisement policies have depressive effects on turnout in the social and filial networks of the imprisoned and paroled, these effects are likely to be closely concentrated in the neighborhoods where the disenfranchised live.
 
-Although research on the impact of local turnout on city-wide policy is scarce, @Anzia2019 examines the impact of senior turnout on "senior-friendly" policy at the city level. Anzia does not find that senior turnout in general increases the likelihood of senior-friendly policies, but that elected officials *are* responsive to senior turnout when seniors "are a more cohesive, meaningful group." American cities are highly segregated by race and by class, but less so by age. As such, Anzia's study does not speak directly to the impact of *neighborhood* turnout rates on city policy. An extension of her paper, however, implies that what she finds might be probitive to the effect of neighborhood turnout rates. Insofar as neighborhoods vote as a bloc, their relative turnout rates may influence city policy. If felony disenfranchisement has a depressive effect on turnout, politicians are likely less responsive to the particular preferences of voters in these neighborhoods  --- some of the most neglected neighborhoods to begin with.
+Recent work from Hannah Walker and others, however, leads me to moderate my hypothesis about the neighborhood spill-over effects of lost voters. @Walker2014 and @Walker2017, for instance, demonstrate that individuals who have proximal contact with the criminal justice system (defined as "as having a loved one who is a custodial citizen without yourself having had contact", [@Walker2017, 542]) were not less likely to vote, but *were* more likely to participate in nonelectoral political events (such as signing a petition, attending a community meeting, or writing to an elected official). These effects are particularly pronounced for women of color.
 
-It should be noted that, despite over-incarceration in some neighborhoods, the number of incarcerated individuals is relatively low compared to the number of voters. In New York, for instance, `r comma(readRDS("./temp/number_incarcerated.rds"))` individuals were imprisoned in New York State in early 2019, compared with `r round(readRDS("./temp/active_voters_0319.rds")/1000000, digits = 1)` million actively registered voters. Despite the low share of residents who are directly disenfranchised, there is reason to believe the policy impacts more individuals than just those imprisoned. As discussed above, previous research has demonstrated that felony disenfranchisement reduces turnout even among Black voters whose rights are not stripped. This research has found, in particular, that eligible Black voters are less likely to cast a ballot in states where felony disenfranchisement policies are harsher, an effect often referred to as *de facto* disenfranchisement.
+### Theoretical Implications for Reduced Turnout {-}
 
-This *de facto* disenfranchisement is likely to be concentrated within the neighborhoods home to formally disenfranchised residents. Voting is a social act, and social networks play an important role in predicting political participation [e.g. @Foladare1968; @Huckfeldt1979; @Kenny1992; @Mutz2002]. Literature from urban sociology has established that social networks are largely spatially bounded, and that local social ties are more important in lower-income neighborhoods [@Guest1999; @Dawkins2006]. It should be no surprise, then, that neighborhoods have been shown to mobilize and demobilize voters through mechanisms above-and-beyond individual characteristics [Gimpel2004; @Cho2006]. To the extent that felony disenfranchisement policies have depressive effects on turnout in the social and filial networks of the imprisoned and paroled, these effects are likely to be closely concentrated in the neighborhoods where the disenfranchised live.
+As discussed above, it has been widely established that felony disenfranchisement reduces turnout even among eligible voters, particularly in the Black community [e.g. @King2016; @Bowers2009]. With the exception of @Burch2013, however, there has been little investigation into whether these depressive effects are narrowly concentrated in the neighborhoods home to disenfranchised individuals or are more widely dispersed. For instance, if neighborhoods home to disenfranchised individuals display different candidate preferences than the rest of the city, these demobilizing effects will undermine these neighborhoods' political representation. There is some evidence that spatial segregation leads to unique voting preferences among neighborhoods: @Kinsella2015, for instance, examines political clustering in the Greater Cincinnati Metropolitan Area from 1976 through 2008. Over this three-decade period, precinct-level presidential election results show trends toward increased polarization.
+
+Even if neighborhoods to not have unique preferences for presidential candidates, lower turnout in impacted communities may reduce their allocation of public goods. At the Congressional level representatives direct resources to areas within their districts that provide the greatest political benefit --- that is to say, areas that will reward them with more votes [@Martin2003]. Congressional representatives are also more responsive to the policy preferences of higher-turnout areas. "[H]igher citizen participation is rewarded," @Martin2013 concludes, "with enhanced policy responsiveness" (59). @Griffin2005 finds similar effects in the United States Senate, demonstrating that "voter preferences predict the aggregate roll-call behavior of Senators while nonvoter preferences do not" (1206). If the neighborhoods most impacted by felony disenfranchisement turn out at lower rates, they may find that their elected representatives are less likely to support their needs and support their calls for greater public investment for amenities such as schools and parks. This may be true even if they support the same candidates as neighborhoods not touched by felony disenfranchisement.
+
+Although research on the impact of local turnout on city-wide policy is scarce, @Anzia2019 examines the impact of senior turnout on "senior-friendly" policy at the city level. Anzia does not find that senior turnout in general increases the likelihood of senior-friendly policies, but that elected officials *are* responsive to senior turnout when seniors "are a more cohesive, meaningful group" (1). American cities are highly segregated by race and by class, but less so by age. As such, Anzia's study does not speak directly to the impact of *neighborhood* turnout rates on city policy. An extension of her paper, however, implies that what she finds might be probitive to the effect of neighborhood turnout rates. Insofar as neighborhoods vote as a "cohesive" bloc, their relative turnout rates may influence city policy. If felony disenfranchisement has a depressive effect on turnout, politicians are likely less responsive to the particular preferences of voters in these neighborhoods --- some of the most neglected neighborhoods to begin with.
+
 
 ## Turnout Among Formerly Disenfranchised Individuals {-}
 
-Much of the literature discussed above has established that formerly incarcerated individuals rarely vote, even when they are no longer formally barred from doing so [@Haselswerdt2009; @Burch2011; @Meredith2015]. The causal effect of incarceration on participation is the subject of some debate within the field. Individuals who go to prison share many characteristics with lower propensity voters generally. Less educated citizens, for instance, turnout at low rates whether they have been to prison or not. In an attempt to disentangle sociodemographic characteristics from the experience of imprisonment, @Gerber2017 uses administrative data from Pennsylvania to estimate turnout rates prior to and after incarceration. They argue that the vast majority of low turnout among formerly incarcerated individuals can be explained by observable characteristics, concluding that "it appears that spending time in prison does not have large negative effects on subsequent participation" (p. 1144).
+Much of the literature discussed above has established that formerly incarcerated individuals rarely vote, even when they are no longer formally barred from doing so [@Haselswerdt2009; @Burch2011; @Meredith2015]. The causal effect of incarceration on participation is the subject of some debate within the field. Individuals who go to prison share many characteristics with lower propensity voters generally. Less educated citizens, for instance, turnout at low rates whether they have been to prison or not. In an attempt to disentangle sociodemographic characteristics from the experience of imprisonment, @Gerber2017 uses administrative data from Pennsylvania to estimate turnout rates prior to and after incarceration. They argue that the vast majority of low turnout among formerly incarcerated individuals can be explained by observable characteristics, concluding that "it appears that spending time in prison does not have large negative effects on subsequent participation" (1144).
 
-@White2019, however, indicates that interaction with the criminal justice system for individuals in the context of arrests for misdemeanor charges may have depressive effects on turnout. This finding does not necessarily conflict with @Gerber2017; as the earlier paper explains, incarceration often occurs after many other interactions with the criminal justice system. Individuals arrested for misdemeanors, on the other hand, likely reflect a much broader swath of the population --- and, therefore, individuals who may have had fewer interactions with the criminal justice system. The findings in @White2019 agree with much previous research which shows that individuals who have negative interactions with the state are less likely to participate in civic life [@Pierson1993]. @Weaver2010 argues that "contact with the institutions of criminal justice is important in structuring patterns of participation long assumed in the dominant literature to stem primarily from aspects of the individual" (p. 829).
+@White2019, however, comes to a different conclusion. Using administrative court and voter file records from Harris County, Texas, she finds that individuals assigned jail time for misdemeanor offenses are less likely to participate in future elections than similarly-situated misdemeanants who do not go to jail. This finding does not necessarily conflict with @Gerber2017; as the earlier paper explains, incarceration often occurs after many other interactions with the criminal justice system. Individuals arrested for misdemeanors, on the other hand, likely reflect a much broader swath of the population --- and, therefore, individuals who may have had fewer interactions with the criminal justice system. The findings in @White2019 agree with previous research which shows that individuals who have negative interactions with the state are less likely to participate in civic life [@Pierson1993]. @Weaver2010 argues that "contact with the institutions of criminal justice is important in structuring patterns of participation long assumed in the dominant literature to stem primarily from aspects of the individual" (829).
 
 Regardless of the precise mechanism, the low turnout among formerly incarcerated individuals is cause for concern, particularly given the racialized aspects of the criminal justice system. A criminal justice system that inflicts dire consequences on a population that has relatively little political voice is problematic. Whether or not incarceration *causes* low turnout, however, the state has a unique opportunity to craft policies that will impact individuals under formal supervision. Even if incarceration does not lead to lower turnout, policies targeting individuals caught up in the criminal justice system might still be effective at increasing turnout for this population.
 
 Some research has been done in this area. @Meredith2015 examines the impact of ending permanent disenfranchisement in Iowa. They find that individuals who received letters explicitly informing them of their re-enfranchisement were more likely to cast ballots in the next election than those who did not. @Meredith2013, however, examines states where so-called notification laws went into effect. Although rules about eligibility did not change in these states, new policies required Departments of Corrections to notify formerly disenfranchised individuals of their re-instated voting rights. @Meredith2013 finds no effect from notification in the absence of eligibility changes.
 
-@Gerber2014 conducted a field experiment in Connecticut in advance of the 2012 presidential election, finding that sending mailers to individuals to remind them of their voting rights was successful at increasing turnout among this population. "Whatever the participatory consequences of incarceration," they conclude, "they are not in large part impossible to overcome" (p. 924). It is not clear whether this increase in turnout is *undoing* the depressive effect of incarceration or boosting the participation of individuals whose (low) propensity to vote was unaffected by incarceration.
+@Gerber2014 conducted a field experiment in Connecticut in advance of the 2012 presidential election, finding that sending mailers to individuals to remind them of their voting rights was successful at increasing turnout among this population. "Whatever the participatory consequences of incarceration," they conclude, "they are not in large part impossible to overcome" (924). It is not clear whether this increase in turnout is *undoing* the depressive effect of incarceration or boosting the participation of individuals whose (low) propensity to vote was unaffected by incarceration.
 
 Executive Order 181 is expected to have increased turnout among formerly incarcerated individuals through two primary mechanisms. The first addresses the impact of negative experiences with the state. To the extent that parole officers are accurately informing their parolees of their newly restored voting rights, Executive Order 181 is likely to bring about a positive interaction between the parolee and the government. Rather than simply have one's rights restored upon completion of sentence, Executive Order 181 may lead parolees to feel explicitly invited back into the democratic process --- an invitation that may be successful at repairing some of the negative associations created through incarceration.
 
-Secondly, Executive Order 181 is expected to dispel confusion about eligibility and serve as a reminder to vote. As @Drucker2005 and others have detailed, many formerly incarcerated individuals are misinformed about their eligibility to cast a ballot. If confusion about eligibility leads to lower turnout, parole officers informing their parolees of their rights is likely to increase turnout. Even if confusion does not lead to lower turnout, there is some reason to believe that reminding formerly incarcerated individuals of their rights is a successful intervention for boosting turnout [@Meredith2015; @Gerber2014].
+Secondly, Executive Order 181 is expected to dispel confusion about eligibility and serve as a reminder to vote. Many formerly incarcerated individuals are misinformed about their eligibility to cast a ballot [@Drucker2005; @locked_out]. If confusion about eligibility leads to lower turnout, parole officers informing their parolees of their rights is likely to increase turnout. Even if confusion does not lead to lower turnout, there is some reason to believe that reminding formerly incarcerated individuals of their rights is a successful intervention for boosting turnout [@Meredith2015; @Gerber2014].
 
 # Data
 ## Criminal Justice Data {-}
 
-The primary criminal justice dataset comes from a public records request filed by the author to obtain individual-level incarceration and parole records for individuals who have been incarcerated in New York State since 1990. The data includes a host of information, including: first, middle, and last name; date of birth; class of offense; incarceration start and end dates; dates of parole; sex; race; and others. These data come from the New York State Department of Corrections and Community Supervision (NYSDOCCS) and are used to determine when individuals were incarcerated or on parole, and when they finished their parole supervision.
+The primary criminal justice dataset comes from a public records request filed with the New York State Department of Corrections and Community Supervision (NYSDOCCS). They include individual-level incarceration and parole records for individuals who have been incarcerated in New York State since 1990. The data includes a host of information, including: first, middle, and last name; date of birth; class of offense; incarceration start and end dates; dates of parole; sex; race; and others. These data are used to determine when individuals were incarcerated or on parole, the class of crimes for which they were incarcerated, and when they finished their parole supervision.
 
 The state makes records available only for individuals who have been incarcerated for felony offenses. It does not make information about individuals sentenced to probation or incarcerated for misdemeanors. Thus, while the data covers all individuals subject to felony disenfranchisement rules (only individuals incarcerated for felony offenses lose their voting rights), it limits the availability of a potentially helpful control group. It also only includes individuals who are held in state prisons.
 
-The state does not make a unified database of parolees whose voting rights have been restored available to the public. However, the NYSDOCCS Parolee Lookup website includes a flag indicating whether someone's voting rights have been restored. By using identification numbers from the parolee data obtained from the state, I constructed a list of the individuals who were on parole and had their rights restored.^[This list was compiled by using a webscraper written in the Python language.]
+The state does not make a unified database of parolees whose voting rights have been restored available to the public. However, the NYSDOCCS Parolee Lookup website includes a flag indicating whether someone's voting rights have been restored. By using identification numbers from the parolee data obtained from the public records request, I constructed a list of individuals who have had their rights restored.^[This list was compiled by using a webscraper written in the Python language.]
 
 ## Voter File Data {-}
 Most states in the United States are required to maintain files with information on all registered voters. In New York, this information is publicly available from the Board of Elections. It includes information on all registered voters, including: first, middle, and last name; date of birth; home address; vote history; and other information. The first section of this paper uses a snapshot of the registered voter file from April 30^th^, 2018. The second section of this paper uses a snapshot from March 3^rd^, 2019.
@@ -169,9 +178,9 @@ Testing for false negatives is more challenging. If an individual marries and ch
 ## Identification of Lost Voters {-}
 In this analysis, I offer a different definition of "lost voter" than much of the literature. Many recent papers have attempted to identify relationships between the number of disenfranchised residents --- *potentially* lost voters --- and turnout. Such an approach is informative for understanding the impact of disenfranchisement. Many young men, for instance, are admitted to prison each year. If someone is incarcerated shortly after they turn 18 in an odd-numbered year, they may be incarcerated before they even have the opportunity to cast a ballot. This analytical approach is also often taken due to data constraints: most states' registered voter files provide only a snapshot of currently registered voters, making it impossible to determine voting history for individuals who are currently disenfranchised (and therefore not currently registered). Similarly, state-level data does not report the number of incarcerated individuals with a history of voting; therefore, studies that leverage variation in laws between states to estimate the effect of felony disenfranchisement rely on estimates of the total disenfranchised population, not the number of disenfranchised individuals with a history of voting.
 
-Examining the impact of all disenfranchised voters, however, limits our ability to understand the true effects of felony disenfranchisement. As previous research has detailed, turnout rates among individuals who are incarcerated are very low even prior to incarceration. If incarcerated individuals would not have cast a ballot if they were not incarcerated, any effect of their incarceration on neighborhood turnout cannot be attributed to felony disenfranchisement *per se* but rather to their incarceration. At the local level where felony disenfranchisement rules do not vary from neighborhood to neighborhood, such a definition provides insight only into the effect of incarceration on turnout, not felony disenfranchisement.
+Examining the impact of all disenfranchised voters, however, limits our ability to understand the true effects of felony disenfranchisement. As previous research has detailed, turnout rates among individuals who are incarcerated are very low even prior to incarceration [e.g. @Gerber2017]. If incarcerated individuals would not have cast a ballot if they were not incarcerated, any effect of their incarceration on neighborhood turnout cannot be attributed to felony disenfranchisement *per se* but rather to their incarceration. At the local level where felony disenfranchisement rules do not vary from neighborhood to neighborhood, such a definition provides insight only into the effect of incarceration on turnout, not felony disenfranchisement.
 
-Here, I explore whether the disenfranchisement of residents with a history of participating in elections is related to neighborhood turnout. In this analysis, "lost voters" are individuals ineligible to cast a ballot on a given election day who have cast a ballot in the previous ten years. Although not all lost voters would have participated if they had not been disenfranchised, past participation is an extremely strong predictor of propensity to vote [@Gerber2003]. As such, these are the individuals most likely to have been impacted not only by incarceration but specifically by felony disenfranchisement. Identifying the effects of felony disenfranchisement in neighborhoods that lost individuals with a record of voting --- individuals who would likely have cast a ballot had they been allowed --- provides insight into whether felony disenfranchisement reduces neighborhood turnout through socialization mechanisms. Because New York State's voter file includes information on individuals who have been purged for felony convictions, I can reconstruct the vote history even for voters who are no longer eligible to vote. 
+Here, I explore whether the disenfranchisement of residents with a history of participating in elections is related to neighborhood turnout. In this analysis, "lost voters" are individuals ineligible to cast a ballot on a given election day who have cast a ballot in the previous ten years. Although not all lost voters would have participated if they had not been disenfranchised, past participation is an extremely strong predictor of propensity to vote [@Gerber2003]. As such, these are the individuals most likely to have been impacted not only by incarceration but specifically by felony disenfranchisement. Identifying the effects of felony disenfranchisement in neighborhoods that lost individuals with a record of voting --- individuals who would likely have cast a ballot had they been allowed --- provides insight into whether felony disenfranchisement reduces neighborhood turnout through socialization mechanisms. Because New York State's voter file includes information on individuals who have been purged for felony convictions, I can reconstruct the vote history even for voters who are no longer eligible to vote.
 
 To study the effect of felony disenfranchisement on voting at the local level (and its potential implications for the distribution of political power at the local level), I use turnout in the most recent non-special election for city-wide office in New York --- the mayoral election which took place on November 7^th^, 2017. Lost voters, therefore, are all individuals who were incarcerated or on parole on November 7^th^, 2017, and had cast a ballot between 2007 and 2016.
 
@@ -195,7 +204,7 @@ t <- readRDS("./temp/distribution_of_lost_voters.rds") %>%
 
 j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:nhood-dist) Distribution of Lost Voters", linesep = "",
                   align = "c") %>% 
-  row_spec(15, hline_after = T) %>% 
+  row_spec(14, hline_after = T) %>% 
   kable_styling(latex_options = c("HOLD_position"))
 j
 ```
@@ -220,10 +229,10 @@ j
 ```
 At both the tract and block group level, matching results in an untreated group of neighborhoods that looks substantially like the treatment group. These tables also demonstrate the striking extent to which neighborhoods with lost voters differ from the average neighborhood in New York City. Neighborhoods with lost voters are far less white, have much lower median incomes, and a larger share of voters are registered as Democrats.
 
-After matching neighborhoods, I use a simple regression to test whether turnout in the 2017 mayoral election was different in areas with lost voters. Census tract and block group level turnout rates are calculated using the geocoded voter file. Each voter's record indicates whether the voter participated in the 2017 general election, which are then aggregated to estimate the number of ballots cast in each neighborhood.^[The New York registered voter file does not align exactly with results reported by the city. The voter file indicates that just `r comma(readRDS("./temp/vf_ballots_17.rds"))` voters cast a ballot in the 2017 mayoral election, but the Board of Elections reports that `r comma(readRDS("./temp/mayoral_ballots.rds"))` votes were cast. In [Appendix A], I demonstrate that there is no relationship between lost voters and underreporting of cast ballots at the precinct level. These reporting anomalies are unlikely to impact this analysis.] The number of ballots cast is divided by the neighborhood's voting age population.
+After matching neighborhoods, I use a simple regression to test whether turnout in the 2017 mayoral election was different in areas with lost voters. Census tract and block group level turnout rates are calculated using the geocoded voter file. Each voter's record indicates whether the voter participated in the 2017 general election, which are then aggregated to estimate the number of ballots cast in each neighborhood. The number of ballots cast is divided by the neighborhood's voting age population.
 
 Much of the literature has discussed whether felony disenfranchisement is particularly demobilizing for eligible Black voters. I therefore include models which explore any potential difference in treatment effect in neighborhoods where a higher share of the population is Black. Table \ref{tab:match-reg} presents the results of these regression models. Robust standard errors are clustered at the level of the match [@Abadie2019].^[The observations in these models are not weighted by voting age population. Such weighting materially impacts neither the size or statistical significance of the coefficients of interest.]
-```{r tract-reg-chunk, echo = F, results = "asis", message = F}
+```{r tract-reg-chunk, echo = F, results = "hide", message = F, warning = F}
 load("./temp/match_reg_block_group.rdata")
 
 load("./temp/match_reg_block_group_nhb.rdata")
@@ -247,21 +256,46 @@ stargazer(bg_reg, bg_reg_black, tract_reg, tract_reg_black,
           column.labels = c("Block Group Level", "Tract Level"),
           header = F,
           se = list(bg_reg_ses, bg_reg_black_ses, tract_reg_ses, tract_reg_black_ses),
-          notes = c("Robust standard errors (clustered at", "match level) in parentheses."),
+          notes = c("TO REPLACE"),
           type = "latex", notes.align = "l",
+          notes.append = T,
           covariate.labels = c("D(Neighborhood Lost a Voter)", "Share Non-Hispanic Black", "D(Lost Voter) $\\times$ Share Non-Hispanic Black", "Constant"),
-          dep.var.labels = c("Turnout Rate"),
-          title = "(\\#tab:match-reg) Matching Regression",
+          dep.var.labels = c("Turnout Rate in 2017 General Election"),
+          title = "\\label{tab:match-reg} Matching Regression",
           table.placement = "H",
-          omit.stat = c("f", "ser"))
+          omit.stat = c("f", "ser"),
+          table.layout = "-dcm#-t-a-s-n",
+          out = "./temp/test.tex",
+          out.header = F)
+
+j <- fread("./temp/test.tex", header = F, sep = "+")
+
+note.latex <- "\\multicolumn{5}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors (clustered at match level) in parentheses.}}}"
+
+j <- j %>% 
+  mutate(n = row_number(),
+         V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
+         V1 = ifelse(grepl("\\\\#tab", V1), gsub("\\\\#", "", V1), V1)) %>% 
+  filter(!grepl("Note:", V1))
+
+insert <- "\\cmidrule(l{3pt}r{3pt}){2-3} \\cmidrule(l{3pt}r{3pt}){4-5}"
+
+j <- bind_rows(j, data.frame(V1 = c(insert), n = 7.5)) %>% 
+  arrange(n) %>% 
+  select(-n)
+
+write.table(j, "./temp/table1.tex", quote = F, col.names = F,
+            row.names = F)
 ```
+\input{"../temp/table1.tex"}
+
 When neighborhoods are measured at the block group level, a lost voter is negatively associated with turnout in the 2017 election. In block groups with lost voters, turnout was on average `r -1*round(bg_reg[["coefficients"]][["treatTRUE"]]*100, digits = 1)` percentage points lower than in comparable block groups without lost voters. This decrease, however, appears to be entirely concentrated within Black neighborhoods. When the dummy identifying neighborhoods with lost voters is interacted with the share of the neighborhood that is Non-Hispanic Black, the basic treatment dummy becomes nonsignificant. The coefficient on the interaction between treatment and share Black indicates that treated neighborhoods that are largely Black saw turnout that was as much as `r -1*round(bg_reg_black[["coefficients"]][["treatTRUE:nh_black"]]*100, digits = 1)` percentage points lower than similar neighborhoods without lost voters. Considering that the overall turnout rate in block groups with a lost voter was just `r round((sum(filter(readRDS("./temp/block_group_pre_match.rds"), treat == T)$v2017) / sum(filter(readRDS("./temp/block_group_pre_match.rds"), treat == T)$vap))*100, digits = 1)` percent, this effect is alarmingly high. For every 100 votes cast in an entirely Black block group with a lost voter, as many as `r round(100 - ((100 * ((sum(filter(readRDS("./temp/block_group_pre_match.rds"), treat == T)$v2017) / sum(filter(readRDS("./temp/block_group_pre_match.rds"), treat == T)$vap)) + bg_reg_black[["coefficients"]][["treatTRUE:nh_black"]])) / (sum(filter(readRDS("./temp/block_group_pre_match.rds"), treat == T)$v2017) / sum(filter(readRDS("./temp/block_group_pre_match.rds"), treat == T)$vap))), digits = 1)` votes went uncast. The effects are slightly larger when neighborhoods are measured as block groups than as census tracts. This is not surprising --- because the spillover effects are likely to operate through social networks, smaller geographical units are likely to be more effected.
 
 ### Testing Intensity Effects {-}
 
 Matching methodologies, of course, only allow us to test the effect of being treated --- here, losing any voter for the 2017 election. The models above do not allow for different effects on turnout based on *how many* voters a neighborhood lost, potentially understating the impact of felony disenfranchisement in the most hard-hit communities. In Table \ref{tab:trad-reg} below, I adopt a standard ordinary least squares regression to investigate whether lost voters are associated with lower turnout rates in the 2017 election. This regression uses the same covariates used in the matching procedure described above. Robust standard errors are clustered by city council district.^[Where neighborhoods cross city council district lines, they are assigned the district in which most of their voters live for clustering purposes. The observations in these models are not weighted by voting age population. Such weighting materially impacts neither the size or statistical significance of the coefficients of interest.]
 
-```{r trad-reg-chunk, echo = F, results = "asis", message = F}
+```{r trad-reg-chunk, echo = F, results = "hide", message = F, warning = F}
 load("./temp/tract_model_reg_ols.rdata")
 load("./temp/bg_model_reg_ols.rdata")
 
@@ -269,17 +303,43 @@ stargazer(bg_model, bg_model2, tract_model, tract_model2,
           column.separate = c(2, 2),
           column.labels = c("Block Group Level", "Tract Level"),
           header = F,
-          type = "latex", notes.align = "l",
+          type = "latex",
+          notes.align = "l",
+          notes.append = T,
           se = list(bg_model_ses, bg_model2_ses, tract_model_ses, tract_model2_ses),
           covariate.labels = c("Lost Voters", "Lost Voters $\\times$ Share Non-Hispanic Black", "Median Income (Thousands of Dollars)", "Percent Latino", "Percent Non-Hispanic Black", "Percent Non-Hispanic White",
                                "Percent With Some College", "Median Age", "Registration Rate", "Percent Democrats", "Percent Noncitizen", "Percent Won by City Council Representative"),
-          dep.var.labels = c("Turnout Rate"),
-          title = "(\\#tab:trad-reg) Standard Regression",
+          dep.var.labels = c("Turnout Rate in 2017 General Election"),
+          title = "\\label{tab:trad-reg} Standard Regression",
           table.placement = "H",
           omit.stat = c("f", "ser"),
-          notes = c("Robust standard errors (clustered by city",  "council district) in parentheses."),
-          omit = "boro")
+          notes = "TO REPLACE",
+          omit = "boro",
+          table.layout = "-dcm#-t-a-s-n",
+          out = "./temp/test.tex",
+          out.header = F)
+
+j <- fread("./temp/test.tex", header = F, sep = "+")
+
+note.latex <- "\\multicolumn{5}{l}{\\scriptsize{\\parbox{.7\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors (clustered by city council district) in parentheses.}}}"
+
+j <- j %>% 
+  mutate(n = row_number(),
+         V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
+         V1 = ifelse(grepl("\\\\#tab", V1), gsub("\\\\#", "", V1), V1)) %>% 
+  filter(!grepl("Note:", V1))
+
+insert <- "\\cmidrule(l{3pt}r{3pt}){2-3} \\cmidrule(l{3pt}r{3pt}){4-5}"
+
+j <- bind_rows(j, data.frame(V1 = c(insert), n = 7.5)) %>% 
+  arrange(n) %>% 
+  select(-n)
+
+write.table(j, "./temp/table2.tex", quote = F, col.names = F,
+            row.names = F)
 ```
+\input{"../temp/table2.tex"}
+
 The results presented in Table \ref{tab:trad-reg} align closely with the estimated effect from the matching model. Lost voters are generally associated with lower turnout (each missing voter in a block group reduces that neighborhood's turnout by about `r -1*round(bg_model[["coefficients"]][["lost_voters"]]*100, digits = 2)` percentage points), but Models 2 and 4 again make clear that this effect is concentrated in Black neighborhoods. In neighborhoods where most residents are Black, each lost voter is associated with a turnout decrease of up to `r -1*round(bg_model2[["coefficients"]][["lost_voters_black"]]*100, digits = 2)` percentage points. The neighborhoods most affected by felony disenfranchisement are neighborhoods where incarceration patterns overlap with Black communities.
 
 The block groups where these depressive effects are not randomly distributed throughout the city. They are highly spatially concentrated in Central Brooklyn, Eastern Queens, and Harlem. Figure \ref{fig:postest} applies the coefficient on $Lost\ Voters \times Share\ Black$ from Model 2 in Table \ref{tab:trad-reg} to the city's block groups. The estimated depressive effect is $-0.018\times Lost\ Voters \times Share\ Black$.
@@ -289,12 +349,11 @@ j <- readRDS("./temp/dec_block_map.rds")
 print(j)
 ```
 
-
 ## Discussion {-}
 
 During the 2017 mayoral election, felony disenfranchisement laws were responsible for removing an estimated `r comma(readRDS("./temp/lost_count_nyc.rds"))` from New York City neighborhoods. The spatial concentration of these lost voters is striking, as demonstrated in \ref{fig:citywide-map}. The systematic removal of voters from these neighborhoods is troubling. However, more than one million votes were cast in the general election of 2017. Although felony disenfranchisement rules have enormous implications for the individuals targeted by them, the removal of such a small number of voters --- concentrated though they are --- is unlikely to have large implications on its own.
 
-As this analysis makes clear, however, felony disenfranchisement reaches beyond the individuals who are incarcerated. Previous literature has established that felony disenfranchisement likely impacts Black turnout at the state level. This analysis demonstrates that these demobilizing effects intersect with geographical space to systematically depress the vote in neighborhoods where voters are being sent to prison. As discussed above, these neighborhoods have far lower incomes than the rest of the city. The median income of a block groups without lost voters is more than 40 percent higher than the median income of block groups with lost voters. Similarly, just 17 percent of individuals in the average block group with a lost voter were white, compared with 40 percent of the population in other block groups. Felony disenfranchisement has spillover effects on neighborhood turnout, and these neighborhoods systematically differ from the rest of the city's population. The effects are concentrated in neighborhoods where the most marginalized members of society live. These highly concentrated spillover effects are cause for major concern.
+As this analysis makes clear, however, felony disenfranchisement reaches beyond the individuals who are incarcerated. Previous literature has established that felony disenfranchisement impacts Black turnout at the state level. This analysis demonstrates that these demobilizing effects intersect with geographical space to systematically depress the vote in neighborhoods where voters are being sent to prison. As discussed above, these neighborhoods have far lower incomes than the rest of the city. The median income of a block groups without lost voters is more than 40 percent higher than the median income of block groups with lost voters. Similarly, just 17 percent of individuals in the average block group with a lost voter were white, compared with 40 percent of the population in other block groups. Felony disenfranchisement has spillover effects on neighborhood turnout, and these neighborhoods systematically differ from the rest of the city's population. The effects are concentrated in neighborhoods where the most marginalized members of society live. These highly concentrated spillover effects are cause for major concern.
 
 Of equal concern is the apparent concentration of these effects in Black neighborhoods. Both Tables \ref{tab:match-reg} and \ref{tab:trad-reg} indicate that once the lost voter indicator is interacted with the share of a neighborhood that is Non-Hispanic Black, the lost voter indicator is either insignificant or significant and positive. This means that lost voters have no spillover effects in neighborhoods with small Black populations. Understanding the magnitude of this finding is important. In New York City, there are `r readRDS("./temp/count_gt_90_black")` block groups where the Black community makes up more than 90 percent of the population. On average, the voting age population in these neighborhoods was `r round(readRDS("./temp/vap_gt_90_black"))`. Model 2 of Table \ref{tab:match-reg} indicates that, in a block group that is 90 percent Black with a voting-age population of `r round(readRDS("./temp/vap_gt_90_black"))`, having any lost voter reduced turnout by `r round(0.9 * -1*bg_reg_black[["coefficients"]][["treatTRUE:nh_black"]] * readRDS("./temp/vap_gt_90_black"), digits = 1)` ballots. Conversely, in a block group with the same voting age population that is just 10 percent Black, the loss of any voter decreased turnout by just `r round(0.1 * -1*bg_reg_black[["coefficients"]][["treatTRUE:nh_black"]] * readRDS("./temp/vap_gt_90_black"), digits = 1)` ballots.
 
@@ -302,13 +361,15 @@ The standard OLS regression results tell a similar story: in our average block g
 
 Why do lost voters in Black neighborhoods have such large spillover effects, when lost voters in predominantly non-Black neighborhoods do not? Much of the previous literature in this space establishes that individuals who have negative interactions with the government are less likely to choose to interact with the state in the future. @Lerman2013, for instance, shows that neighborhoods where there are many police stops that involve searches or use of force use 311 services less frequently. @Weaver2010 argues that interactions with the criminal justice system changes how individuals understand both their governments and their identities as citizens. It is possible that Black communities understand the loss of voters differently than non-Black communities, and therefore respond differently.
 
-Individuals who live in neighborhoods where police activity is relatively limited may interpret the incarceration of a neighbor as a largely individual phenomenon. If it is understood as an isolated or individual event, voters in these neighborhoods who are not incarcerated are not likely to update their view of the state. They may draw no connections between their neighbor's imprisonment and their own efficacy as a voter.
+Individuals who live in neighborhoods where police activity is relatively limited may interpret the incarceration of a neighbor as a largely individual phenomenon. If it is understood as an isolated or individual event, voters in these neighborhoods who are not incarcerated are not likely to update their view of the state. They may draw no connections between their neighbor's imprisonment and their own efficacy as a voter. In the neighborhoods where policing is most prevalent --- often, lower-income Black communities --- the incarceration of a neighbor might not be interpreted so individualistically. It may, rather, be interpreted as another reminder of the government's unfairness. If a would-be voter finds herself soured on political participation because of her neighbor's incarceration, she may be less likely to cast a ballot.
 
-In the neighborhoods where policing is most prevalent --- often, lower-income Black communities --- the incarceration of a neighbor might not be interpreted so individualistically. It may, rather, be interpreted as another reminder of the government's unfairness. If a would-be voter finds herself soured on political participation because of her neighbor's incarceration, she may be less likely to cast a ballot.
+This finding mirrors @White2019, which finds that brief jail spells decrease future participation more for Black individuals than for White individuals. This is perhaps unsurprising. A large body of research indicates that, even after controlling for various sociodemographic characteristics and interactions with the police, Black Americans have far more negative views of the criminal justice system than White Americans [e.g. @Browning1992; @Hurwitz2005; @Henderson1997; @Wu2009]. Experience with the criminal justice system less likely to be viewed in isolation (and therefore more likely to effect voting patterns) in Black neighborhoods.
 
-Interestingly, this finding mirrors @White2019, which finds that brief jail spells decrease future participation more for Black individuals than for White individuals. This is perhaps unsurprising. A large body of research indicates that, even after controlling for various sociodemographic characteristics and interactions with the police, Black Americans have far more negative views of the criminal justice system than White Americans [e.g. @Browning1992; @Henderson1997; @Wu2009]. It should come as no surprise that experience with the criminal justice system less likely to be viewed in isolation (and therefore more likely to effect voting patterns) in Black neighborhoods.
+For decades, scholars have detailed the problems associated with poor and segregated urban neighborhoods [@Wilson1990]. More recent work has begun to interrogate the ways in which the increasing reach of the carceral state shapes the economic and political behavior of individuals caught up in the criminal justice system and their community members. Much of this work, however, has focused on either the impacts of living in marginalized communities (by measuring health and economic impacts) or has not accounted for the importance of physical space (by focusing only on proximal social, and not geographic, contact with directly impacted individuals). This analysis allows us to understand the implications for living in a neighborhood where individuals likely to cast a ballot are not allowed to because of a felony conviction. I find that neighborhoods that are home to lost voters --- and particularly neighborhoods with large Black populations --- systematically turn out for local elections at lower rates than otherwise similar neighborhoods.
 
-Whether this finding is surprising or not, it is troubling. Build8 this out more
+This has major ramifications for how we understand the political positioning of the minority neighborhoods most impacted by overpolicing and incarceration. In the case of the 2017, there were likely no electoral consequences: Bill de Blasio won reelection handily, and neighborhoods with lost voters overwhelmingly supported his candidacy. This does not mean, however, that the depressed turnout in these neighborhoods had no impact on their representation. City council members representing these neighborhoods, for instance, may determine that pushing for policies popular with these constituents (such as stricter police oversight) will not garner enough votes to make such a fight worthwhile.
+
+Felony disenfranchisement laws, originally adopted during Jim Crow, have taken on a new life in the era of mass incarceration. Abundant research has demonstrated the pernicious ways in which overincarceration dogs the lives of poor and nonwhite Americans. As this study shows, however, the neighborhoods bearing the brunt of felony disenfranchisement are also seeing their political power diminished through reduced turnout.
 
 \pagebreak
 
@@ -353,7 +414,7 @@ print(j)
 ```
 Formalizing this chart into an individual-level logit model demonstrates that time since discharge is not correlated with turnout in the short run. The models in Table \ref{tab:to-18-logit-short} include individuals last discharged from parole between January 1^st^, 2017, and April 17^th^, 2018.
 
-```{r logit-reg-chunk-short, echo = F, results = "asis", message = F}
+```{r logit-reg-chunk-short, echo = F, results = "hide", message = F}
 load("./temp/short_term_to.rdata")
 
 stargazer(date_to_model_notime, date_to_model_time,
@@ -363,15 +424,35 @@ stargazer(date_to_model_notime, date_to_model_time,
                                "D(Male)", "Age (Years)",
                                "Years on Parole"),
           dep.var.labels = c("Cast Ballot in 2018 Election"),
-          title = "(\\#tab:to-18-logit-short) Individual-Level Logit Model",
+          title = "\\label{tab:to-18-logit-short} Individual-Level Logit Models",
           table.placement = "H",
           omit = c("race", "felony"),
           add.lines=list(c("Race / Ethnicity FE", "X", "X"),
                          c("Felony Class FE", "X", "X")),
-          table.layout = "-dm#-t-a-s-n")
-```
+          table.layout = "-dm#-t-a-s-n",
+          out = "./temp/test.tex",
+          notes = "TO REPLACE",
+          out.header = F,
+          se = list(
+            sqrt(diag(vcovHC(date_to_model_notime, type = "HC0"))),
+            sqrt(diag(vcovHC(date_to_model_time, type = "HC0"))))
+          )
 
-The inclusion of time controls in Table \ref{tab:to-18-logit-short} increases the AIC. A Chi-squared test confirms that the model is not improved when controls for time are included.^[[Appendix B] provides further corroboration that being discharged from parole in the months before an election is uncorrelated with propensity to vote by exploring turnout rates in the 2016 presidential election.] When we look only at individuals recently discharged from parole, the length of time an individual has been off parole is not associated with his propensity to vote.
+j <- fread("./temp/test.tex", header = F, sep = "+")
+
+note.latex <- "\\multicolumn{3}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.}}}"
+
+j <- j %>% 
+  mutate(V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
+         V1 = ifelse(grepl("\\\\#tab", V1), gsub("\\\\#", "", V1), V1)) %>% 
+  filter(!grepl("Note:", V1))
+
+write.table(j, "./temp/table3.tex", quote = F, col.names = F,
+            row.names = F)
+
+```
+\input{"../temp/table3.tex"}
+The inclusion of time controls in Table \ref{tab:to-18-logit-short} increases the AIC. A Chi-squared test confirms that the model is not improved when controls for time are included.^[[Appendix A] provides further corroboration that being discharged from parole in the months before an election is uncorrelated with propensity to vote by exploring turnout rates in the 2016 presidential election.] When we look only at individuals recently discharged from parole, the length of time an individual has been off parole is not associated with his propensity to vote.
 
 Although Governor Cuomo signed the Executive Order on April 18, 2018, an examination of the individuals whose rights were ultimately restored indicates that the program did not go into full effect until later in May. Figure \ref{fig:restoration-chart} plots the share of individuals discharged from parole each day in the spring of 2018. It is not until May 18^th^ that there were consistently parolees who had their voting rights restored prior to discharge.
 ```{r restoration-chart-chunk, echo = FALSE, message = F, warning = F, fig.width = 7.5, fig.height = 4, fig.cap = "\\label{fig:restoration-chart}Share of Discharged Parolees Whose Voting Rights Were Restored Prior to Discharge", fig.pos = "H", fig.align = "center"}
@@ -383,7 +464,7 @@ Although it perhaps seems counterintuitive to throw out many of our observations
 
 In Table \ref{tab:to-18-logit}, I present the results of an individual-level logistic regression exploring whether individuals who were discharged on or after May 18^th^, 2018, turned out at higher rates than those discharged earlier. The models include all individuals discharged from parole between January 1^st^, 2017, through October 10^th^, 2018 (the registration deadline in New York State).
 
-```{r logit-reg-chunk, echo = F, results = "asis", message = F}
+```{r logit-reg-chunk, echo = F, results = "hide", message = F}
 load("./temp/individual_turnout_18_itt.rdata")
 
 stargazer(model1, model2, model3,
@@ -392,13 +473,33 @@ stargazer(model1, model2, model3,
           covariate.labels = c("D(Discharged After EO 181)", "D(Male)", "Age (Years)",
                                "Years on Parole"),
           dep.var.labels = c("Cast Ballot in 2018 Election"),
-          title = "(\\#tab:to-18-logit) Individual-Level Logit Model",
+          title = "\\label{tab:to-18-logit} Individual-Level Logit Models",
           table.placement = "H",
           omit = c("race", "felony"),
           add.lines=list(c("Race / Ethnicity FE", "", "X", "X"),
                          c("Felony Class FE", "", "", "X")),
-          table.layout = "-dm#-t-a-s-n")
+          table.layout = "-dm#-t-a-s-n",
+          out = "./temp/test.tex",
+          notes = "TO REPLACE",
+          out.header = F,
+          se = list(
+            sqrt(diag(vcovHC(model1, type = "HC0"))),
+            sqrt(diag(vcovHC(model2, type = "HC0"))),
+            sqrt(diag(vcovHC(model3, type = "HC0")))))
+j <- fread("./temp/test.tex", header = F, sep = "+")
+
+note.latex <- "\\multicolumn{4}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.}}}"
+
+j <- j %>% 
+  mutate(V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
+         V1 = ifelse(grepl("\\\\#tab", V1), gsub("\\\\#", "", V1), V1)) %>% 
+  filter(!grepl("Note:", V1))
+
+write.table(j, "./temp/table4.tex", quote = F, col.names = F,
+            row.names = F)
+
 ```
+\input{"../temp/table4.tex"}
 
 Model 1 in Table \ref{tab:to-18-logit} formalizes the trend presented in Figure \ref{fig:to-18-recent-chart} by controlling only for whether an individual was discharged after Executive Order 181 went into effect. Model 2 also controls for individual-level characteristics: sex, age on November 6^th^, 2018, and race. Model 3 adds sentence-specific information to Model 2: the number of counts in the individual's most recent sentence, the amount of time they spent on parole, and the class(es) of felony for which they were convicted. Table \ref{tab:to-18-logit} makes clear that formerly incarcerated men were far less likely to vote than formerly incarcerated women; that older formerly incarcerated individuals were more likely to cast a ballot; and individuals who spent longer on parole were more likely to participate in the midterm election.
 
@@ -416,21 +517,36 @@ Where *Y~i~* is 1 if individual *i* cast a ballot, *X~1i~* is the probability th
 
 There is also reason to believe that an individual's likelihood of having his rights restored is correlated with his natural propensity to vote. Individuals who were discharged from parole but are not U.S. citizens, for instance, did not having voting rights restored (or, in this case, granted) after the Executive Order went into effect. This ineligibility to have voting rights granted is of course correlated with these individuals' propensity to vote: non-citizens cannot cast ballots in elections in New York State. The available data does not indicate whether individuals were eligible to have their rights restored. We can, however, examine the demographic differences between individuals who had their rights restored and those who did not.
 
-```{r restoree-demo-chunk, echo = F}
+```{r restoree-demo-chunk, echo = F, warning = F}
 t <- readRDS("./temp/demos_restorees.rds")
 j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:demos-restorees) Demographics of \"Compliers\" and \"Non-Compliers\"", linesep = "",
-                  align = c("l", "c", "c")) %>% 
+                  align = c("l", "c", "c"), "latex") %>% 
   kable_styling(latex_options = c("HOLD_position"),
-                full_width = F) %>% 
-  footnote(c("* Difference is significant at 95% confidence level.",
-             "Shows demographics for individuals discharged from parole",
-             "between May 18th, 2018, and October 12th, 2018."))
-j
+                full_width = F) 
+
+write(j, "./temp/tempo.tex")
+
+j <- fread("./temp/tempo.tex", sep = "+", header = F)
+
+note.latex <- "\\multicolumn{3}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^*$ Difference is significant at 95 percent confidence level. \\\\Shows demographics for individuals discharged from parole \\\\between May 18th, 2018, and October 12th, 2018.}}}"
+
+j <- j %>% 
+  mutate(n = row_number())
+
+lab <- "\\caption{\\label{tab:demos-restorees} Demographics of \"Compliers\" and \"Non-Compliers\"}"
+
+j <- bind_rows(j, data.frame(V1 = c(note.latex), n = 16.5)) %>% 
+  arrange(n) %>% 
+  select(-n)
+
+j$V1[3] <- lab
+
+write.table(j, "./temp/table_whatever.tex", quote = F, col.names = F,
+            row.names = F)
 ```
+\input{"../temp/table_whatever.tex"}
 
-Table \ref{tab:demos-restorees} makes clear that the restoration of voting rights ("compliance") is strongly correlated with certain demographics that are also linked to propensity to vote. Men, for instance, were less likely to have their rights restored than women. Table \ref{tab:to-18-logit} above indicates that men who have been on probation are less likely to vote than women. Similarly, Latinos made up more than a third of individuals whose rights were not restored, but just 19 percent of individuals who did have voting rights restored. This is likely a reflection of citizenship status. Table \ref{tab:demos-restorees} indicates that *b~1~* is probably correlated with *Y*.
-
-An ordinary least squares (or one-stage logistic) approach in which is we regress turnout on a dummy indicating rights restoration is therefore inappropriate. Such an approach cannot tell whether rights restoration *caused* turnout to increase, or whether it simply identifies individuals with a higher propensity to vote.
+Table \ref{tab:demos-restorees} makes clear that the restoration of voting rights ("compliance") is strongly correlated with certain demographics that are also linked to propensity to vote. Men, for instance, were less likely to have their rights restored than women. Table \ref{tab:to-18-logit} above indicates that men who have been on probation are less likely to vote than women. Similarly, Latinos made up more than a third of individuals whose rights were not restored, but just 19 percent of individuals who did have voting rights restored. This is likely a reflection of citizenship status. Table \ref{tab:demos-restorees} indicates that *b~1~* is probably correlated with *Y*. A one-stage approach in which is we regress turnout on a dummy indicating rights restoration is therefore inappropriate: such an approach cannot tell whether rights restoration *caused* turnout to increase, or whether it simply identifies individuals with a higher propensity to vote.
 
 The standard way of dealing with such a problem is an instrumental variables approach [@Angrist1996]. Such an approach has been widely used in the context of voter turnout [e.g. @Ansolabehere1999; @Gerber2000; @Milligan2004;  @Lassen2004; @Sondheimer2010]. A valid instrumental variable must satisfy two criteria: it must be correlated with the right-hand-side (endogenous) variable of interest, and it must be uncorrelated with the error of the regression.
 
@@ -459,11 +575,11 @@ load("./temp/iv_individual_turnout_18.rdata")
 
 Table \ref{tab:iv-models-r} indicates that rights restoration prior to discharge boosted turnout among White individuals by around 1.6 percentage points. We cannot determine whether rights restoration had an effect on non-White individuals: the coefficient on these estimates are small and not statistically significant.
 
-Why would the intervention have increased turnout among White individuals and have had no effect on Black individuals? Some of this may be explained by different propensities to vote. @White2019, for instance, shows that brief periods of incarceration decreases Black individuals' propensity to vote by substantially more than White individuals. She demonstrates that, prior to incarceration, Black individuals were more likely to vote, identifying "a narrative in which targeted policing brings many Black defendants into court, including some voters (so they can be deterred), while lower arrest rates among Whites mean that the White defendant pool rarely includes voters (so there is little demobilization, because the people jailed were unlikely to vote anyway)" (pg. 321). The inverse may hold true here: if Black individuals released from parole have a higher natural propensity to vote, they may be less "susceptible" to a policy intervention of this sort.
+Why would the intervention have increased turnout among White individuals and have had no effect on Black individuals? Some of this may be explained by different propensities to vote. @White2019, for instance, shows that brief periods of incarceration decreases Black individuals' propensity to vote by substantially more than White individuals. She demonstrates that, prior to incarceration, Black individuals were more likely to vote, identifying "a narrative in which targeted policing brings many Black defendants into court, including some voters (so they can be deterred), while lower arrest rates among Whites mean that the White defendant pool rarely includes voters (so there is little demobilization, because the people jailed were unlikely to vote anyway)" (321). The inverse may hold true here: if Black individuals released from parole have a higher natural propensity to vote, they may be less "susceptible" to a policy intervention of this sort.
 
 There is reason to believe this may be the case. Table \ref{tab:black-to} presents a series of logit models estimating turnout rates of all individuals discharged from parole prior to the Executive Order going into effect, and the turnout rates of all individuals who had their rights restored. Because Latino voters are more likely to be non-citizens (and therefore have a lower turnout rate), these individuals have been excluded from Models 2 and 4.
 
-```{r logit-black-to-chunk, echo = F, results = "asis", message = F}
+```{r logit-black-to-chunk, echo = F, results = "hide", message = F, warning = F}
 load("./temp/black_to.rdata")
 
 stargazer(black_to1, black_to2, black_to3, black_to4,
@@ -473,16 +589,42 @@ stargazer(black_to1, black_to2, black_to3, black_to4,
           type = "latex", notes.align = "l",
           covariate.labels = c("D(Black)", "D(Male)", "Age (Years)",
                                "Years on Parole"),
-          dep.var.labels = c("Voted in 2018"),
-          title = "(\\#tab:black-to) Turnout Rate Among Former Parolees",
+          dep.var.labels = c("Cast Ballot in 2018 Election"),
+          title = "\\label{tab:black-to} Turnout Rate Among Former Parolees",
           table.placement = "H",
           omit.stat = c("f", "ser"),
-          notes = c("Standard errors in parentheses.",
-                    "Latino individuals excluded",
-                    "from Models 2 and 4."),
-          omit = "felony")
-```
+          omit = "felony",
+          table.layout = "-dcm#-t-a-s-n",
+          out = "./temp/test.tex",
+          out.header = F,
+          notes = "TO REPLACE",
+          se = list(
+            sqrt(diag(vcovHC(black_to1, type = "HC0"))),
+            sqrt(diag(vcovHC(black_to2, type = "HC0"))),
+            sqrt(diag(vcovHC(black_to3, type = "HC0"))),
+            sqrt(diag(vcovHC(black_to4, type = "HC0")))
+          ))
 
+j <- fread("./temp/test.tex", header = F, sep = "+")
+
+note.latex <- "\\multicolumn{5}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses. \\\\Latino individuals excluded from Models 2 and 4.}}}"
+
+j <- j %>% 
+  mutate(n = row_number(),
+         V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
+         V1 = ifelse(grepl("\\\\#tab", V1), gsub("\\\\#", "", V1), V1)) %>% 
+  filter(!grepl("Note:", V1))
+
+insert <- "\\cmidrule(l{3pt}r{3pt}){2-3} \\cmidrule(l{3pt}r{3pt}){4-5}"
+
+j <- bind_rows(j, data.frame(V1 = c(insert), n = 7.5)) %>% 
+  arrange(n) %>% 
+  select(-n)
+
+write.table(j, "./temp/table5.tex", quote = F, col.names = F,
+            row.names = F)
+```
+\input{"../temp/table5.tex"}
 Of the 14,155 individuals discharged from parole between January 1^st^, 2017, and May 18^th^, 2018, 6,066 (or 43 percent) were Black. These Black voters were more than 50 percent more likely to vote than the rest of the population. Even when Latinos are excluded from this group, Black individuals were still 36 percent more likely to cast a ballot. In both specifications, this higher turnout rate is significant at the 95 percent level of confidence.
 
 Table \ref{tab:black-to} also shows, however, that the turnout rate among Black individuals who had their rights restored were not statistically significantly higher (or lower) than other individuals who had their rights restored. The Executive Order, therefore, seems to have had a leveling effect --- Black parolees were not longer substantially more likely to turnout than other individuals discharged from parole in New York State.
@@ -513,37 +655,13 @@ Despite the substantial increase in turnout thanks to Executive Order 181, turno
 # References {-}
 <div id="refs"></div>
 
+
 \newpage
 # Appendix A {-}
 
-As noted above, the turnout figures reported in the registered voter file do not align with the results reported by the New York City Board of Elections. According to the official results, `r comma(readRDS("./temp/mayoral_ballots.rds"))` ballots were cast in the 2017 mayoral election. The registered voter file reports that just `r comma(readRDS("./temp/vf_ballots_17.rds"))` voters cast a ballot. This is not necessarily evidence of poor management by the Board of Elections. Some voters choose not to make their voter registration information publicly available (such as domestic violence survivors and officers of the court).^[This is not to say that there is *not* evidence of mismanagement by the BOE. For instance, the author is incorrectly marked as not participating in the 2017 mayoral primary.] Where more ballots are recorded by the BOE than in the voter file, turnout calculated from the voter file will be artificially lower. If the voter file undercount rate is systematically worse in neighborhoods with lost voters, this would pose a serious challenge to the validity of the results reported in the body of this paper.
-
-To test whether there is a relationship between lost voters and voter file undercount, I examine the undercount rate at the precinct level. The voter file indicates the home precinct of each voter, and the Board of Elections publishes election results at the precinct level. Precincts are assigned the demographics of the block group in which they are situated. Where precincts cross block group lines, the precinct is assigned the characteristics of all block groups in which it is located weighted by the number of voters from each block group. The undercount rate is calculated as the number of votes derived from the voter file divided by the number reported in BOE results. Robust standard errors are clustered at the assembly district level.
-
-```{r undercount-reg-chunk, echo = F, results = "asis", message = F}
-load("./temp/compare_ballots_off_results.RData")
-
-stargazer(ed_reg,
-          header = F,
-          type = "latex", notes.align = "l",
-          se = list(ed_comp_ses),
-          covariate.labels = c("Lost Voters", "Median Income (Thousands of Dollars)", "Percent Latino", "Percent Non-Hispanic Black", "Percent Non-Hispanic White",
-                               "Percent With Some College", "Median Age", "Registration Rate", "Percent Democrats", "Percent Noncitizen", "Percent Won by City Council Representative"),
-          dep.var.labels = c("Undercount Rate"),
-          title = "(\\#tab:uc-reg) Registered Voter File Ballot Undercount",
-          table.placement = "H",
-          omit.stat = c("f", "ser"),
-          notes = c("Robust standard errors (clustered by", "assembly district) in parentheses."),
-          omit = "boro")
-```
-
-As Table \ref{tab:uc-reg} makes clear, there is very little relationship (p = 0.47) between the number of lost voters in a precinct and the ballot undercount rate. Although researchers should be somewhat wary using turnout rates derived from New York State's registered voter file, there is no evidence that the reporting error impact this analysis.
-
-\newpage
-# Appendix B {-}
-
 In the [Instrumental Variables Approach] section of this paper, I argue that being discharged from parole in the final months leading up to an election is uncorrelated with propensity to vote. Table \ref{tab:to-16-logit} demonstrates that individuals discharged between May 18^th^ -- October 14^th^, 2016, did not participate at different rates in the 2016 presidential election than other formerly incarcerated individuals. Table \ref{tab:to-16-logit} includes all individuals last discharged from parole between January 1^st^, 2015, and October 14^th^, 2016.
-```{r logit-reg-chunk-16, echo = F, results = "asis", message = F}
+
+```{r logit-reg-chunk-16, echo = F, results = "hide", message = F}
 load("./temp/individual_turnout_16.rdata")
 
 stargazer(model1, model2, model3,
@@ -553,11 +671,32 @@ stargazer(model1, model2, model3,
                                "D(Male)", "Age (Years)", "Counts in Most Recent Sentence",
                                "Time Spent on Parole (Years)"),
           dep.var.labels = c("Cast Ballot in 2016 Election"),
-          title = "(\\#tab:to-16-logit) Individual-Level Logit Model",
+          title = "\\label{tab:to-16-logit} Individual-Level Logit Model",
           table.placement = "H",
           omit = c("race", "felony"),
           add.lines=list(c("Race / Ethnicity FE", "", "X", "X"),
                          c("Felony Class FE", "", "", "X")),
-          table.layout = "-dm#-t-a-s-n")
+          table.layout = "-dcm#-t-a-s-n",
+          out = "./temp/test.tex",
+          out.header = F,
+          notes = "TO REPLACE",
+          se = list(
+            sqrt(diag(vcovHC(model1, type = "HC0"))),
+            sqrt(diag(vcovHC(model2, type = "HC0"))),
+            sqrt(diag(vcovHC(model3, type = "HC0")))
+          ))
+j <- fread("./temp/test.tex", header = F, sep = "+")
+
+note.latex <- "\\multicolumn{4}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.}}}"
+
+j <- j %>% 
+  mutate(V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
+         V1 = ifelse(grepl("\\\\#tab", V1), gsub("\\\\#", "", V1), V1)) %>% 
+  filter(!grepl("Note:", V1))
+
+write.table(j, "./temp/table55.tex", quote = F, col.names = F,
+            row.names = F)
 ```
+\input{"../temp/table55.tex"}
+
 Although turnout was generally higher in 2016 than in 2018 (reflecting statewide higher turnout thanks to the presidential contest), there is no evidence that being discharged in the summer of 2016 was associated with an individual's propensity to cast a ballot. The nonsignificant results from 2016 provide strong corroboration that discharge date serves as an effective instrument for rights restoration.

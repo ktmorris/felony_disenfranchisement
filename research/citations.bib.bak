@@ -850,6 +850,37 @@ number = "3",
   year      = {2000},
 }
 
+@Book{Wooldridge2010,
+  author    = {Jeffrey M. Wooldridge},
+  title     = {Econometric Analysis of Cross Section and Panel Data},
+  publisher = {The MIT Press},
+  isbn      = {9780262296793},
+  url       = {https://www.amazon.com/Econometric-Analysis-Cross-Section-Panel-ebook/dp/B007CNRAHY?SubscriptionId=AKIAIOBINVZYXZQZ2U3A&tag=chimbori05-20&linkCode=xm2&camp=2025&creative=165953&creativeASIN=B007CNRAHY},
+  year      = {2010},
+}
+
+@Article{Terza2007,
+  author    = {Joseph V. Terza and W. David Bradford and Clara E. Dismuke},
+  title     = {The Use of Linear Instrumental Variables Methods in Health Services Research and Health Economics: A Cautionary Note},
+  volume    = {43},
+  number    = {3},
+  pages     = {1102--1120},
+  doi       = {10.1111/j.1475-6773.2007.00807.x},
+  journal   = {Health Services Research},
+  month     = {nov},
+  publisher = {Wiley},
+  year      = {2007},
+}
+
+@Article{Lassen2004,
+  author    = {David Dreyer Lassen},
+  title     = {The Effect of Information on Voter Turnout: Evidence from a Natural Experiment},
+  doi       = {10.2139/ssrn.475821},
+  journal   = {{SSRN} Electronic Journal},
+  publisher = {Elsevier {BV}},
+  year      = {2004},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
 
 @Comment{jabref-meta: grouping:
