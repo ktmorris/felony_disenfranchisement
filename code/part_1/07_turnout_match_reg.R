@@ -82,11 +82,14 @@ for(geo in c("block_group", "tract")){
   
   reg_output <- lm(to ~ treat, data = reg, weights = weight)
   reg_output_ses <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
-  save(reg_output, reg_output_ses, file = paste0("./temp/match_reg_", geo, ".rdata"))
+  reg_output_pval <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 4]
+  
+  save(reg_output, reg_output_ses, reg_output_pval, file = paste0("./temp/match_reg_", geo, ".rdata"))
   
   reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight)
   reg_output_nhblack_ses <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
-  save(reg_output_nhblack, reg_output_nhblack_ses, file = paste0("./temp/match_reg_", geo, "_nhb.rdata"))
+  reg_output_nhblack_pval <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 4]
+  save(reg_output_nhblack, reg_output_nhblack_ses, reg_output_nhblack_pval, file = paste0("./temp/match_reg_", geo, "_nhb.rdata"))
   
   ###########
   load(paste0("./temp/mout_", geo, ".RData"))
