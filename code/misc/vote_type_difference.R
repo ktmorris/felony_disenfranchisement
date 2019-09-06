@@ -109,20 +109,40 @@ precincts <- left_join(precincts, ab, by = c("assembly_district" = "AD",
 
 
 
-aoc_1 <- lm(share_yes ~ I(lost > 0), data = precincts)
-ab_1 <- lm(share_ab ~ I(lost > 0), data = precincts)
+aoc_1 <- lm(share_aoc ~ lost, data = precincts)
+aoc_1_ses  <- data.frame(
+  summary(lm_robust(share_aoc ~ lost, data = precincts, se_type = "stata"))$coefficients)[, 2]
 
-aoc_2 <- lm(share_aoc ~ lost + median_income + share_dem + age + some_college + w + b + l, data = precincts)
-ab_2 <- predict(lm(share_ab ~ lost + median_income + share_dem + age + some_college + w + b + l, data = precincts))
+ab_1 <- lm(share_ab ~ lost, data = precincts)
+ab_1_ses  <- data.frame(
+  summary(lm_robust(share_ab ~ lost, data = precincts, se_type = "stata"))$coefficients)[, 2]
 
 
+aoc_2 <- lm(share_aoc ~ lost + median_income + share_dem +
+              age + some_college + w + b + l + share_non_citizen, data = precincts)
+
+aoc_2_ses  <- data.frame(
+  summary(lm_robust(share_aoc ~ lost + median_income + share_dem +
+                      age + some_college + w + b + l + share_non_citizen,
+                    data = precincts, se_type = "stata"))$coefficients)[, 2]
+
+
+ab_2 <- lm(share_ab ~ lost + median_income + share_dem +
+             age + some_college + w + b + l + share_non_citizen, data = precincts)
+
+ab_2_ses  <- data.frame(
+  summary(lm_robust(share_ab ~ lost + median_income + share_dem +
+                      age + some_college + w + b + l + share_non_citizen,
+                    data = precincts, se_type = "stata"))$coefficients)[, 2]
+
+save(aoc_1, aoc_1_ses, aoc_2, aoc_2_ses, ab_1, ab_1_ses, ab_2, ab_2_ses, file = "./temp/primary_regs.rdata")
 
 ####
 
 ninth <- precincts %>% 
   filter(!is.na(share_ab))
 
-ninth$p <- predict(lm(share_ab ~ lost + median_income + share_dem + age + some_college + w + b + l, data = ninth))
+ninth_model <- lm(share_ab ~ lost + median_income + share_dem + age + some_college + w + b + l +share_non_citizen, data = ninth)
 
 
 ###summary(lm(share_ab ~ median_income + share_dem + age + some_college + w + b + l, data = ninth))
