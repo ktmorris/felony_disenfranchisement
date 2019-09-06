@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  6 SEP 2019 10:57
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  6 SEP 2019 18:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1060,42 +1060,42 @@ Overfull \hbox (5.13248pt too wide) in paragraph at lines 5--39
  []
 
 ) [36] [37] (../temp/table5.tex) [38] (../temp/iv_clean_months.tex) [39] [40] [
-41]
+41] [42]
 Missing character: There is no � in font [lmroman10-regular]:mapping=tex-text;!
-[42] [43] [44]
-Underfull \hbox (badness 1742) in paragraph at lines 749--751
+[43] [44] [45] [46]
+Underfull \hbox (badness 1742) in paragraph at lines 770--772
 \TU/lmr/m/it/10 ANNALS of the American Academy of Political and Social Science 
 \TU/lmr/m/n/10 651 (1): 220–49. []$[][][][][] []
  []
 
-[45] [46]
-Underfull \hbox (badness 10000) in paragraph at lines 809--811
+[47] [48]
+Underfull \hbox (badness 10000) in paragraph at lines 833--835
 [][] [] [][][][][][][][][][] [] [][][][][][][][][][][][][][] [] [][][][][][][][
 ][][][][][][][][][][][][] [] [][][] [] [][][][][][][][][][][][][][] [] [][][][]
 [][][][] [] [][][] []
  []
 
 
-Underfull \hbox (badness 1365) in paragraph at lines 812--814
+Underfull \hbox (badness 1365) in paragraph at lines 836--838
 \TU/lmr/m/n/10 Press. []$[][][][][] [] [] [] [][][] [] [][][][][][] [] [][][] [
 ] [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
 ][][][][][][][][][][][][] [] [][] [] [][][][][][][][][][] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 812--814
+Underfull \hbox (badness 10000) in paragraph at lines 836--838
 [][][][][][][][][][][][][][] [] [][][][][][][][][][][][][][][][][][][][] [] [][
 ][] [] [][][][][][][][][][][][][][] [] [][][][][][][][] [] [][][] [] [][][][] [
 ] [][][][] []
  []
 
-[47] (../temp/table55.tex)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 831.
-[48]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 831.
+[49] (../temp/table55.tex)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 855.
+[50]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 855.
 (./felony_disenfranchisement_nys.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 831.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 831.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 855.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 855.
 Package rerunfilecheck Info: File `felony_disenfranchisement_nys.out' has not c
 hanged.
 (rerunfilecheck)             Checksum: B903D544F9D2079A17AF208E52F9BF29.
@@ -1106,10 +1106,10 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  24342 strings out of 494894
  451990 string characters out of 6175524
- 569229 words of memory out of 5000000
+ 569217 words of memory out of 5000000
  27969 multiletter control sequences out of 15000+600000
  553182 words of font info for 65 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  46i,17n,68p,2220b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on felony_disenfranchisement_nys.pdf (50 pages).
+Output written on felony_disenfranchisement_nys.pdf (52 pages).
