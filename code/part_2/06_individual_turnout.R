@@ -158,9 +158,9 @@ outreg2 using temp/iv_tables, append tex(frag) drop(i.race felony*) lab ///
 ")
 
 iv3 <- ivreg(v2018 ~ restored + 
-               as.factor(race) + as.factor(sex) + age +
+               age +
                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
-             data = filter(parolees, year(parole_status_date) >= 2017))
+             data = filter(parolees, year(parole_status_date) >= 2017, (sex != "MALE" | race != "WHITE")))
 
 save(iv3, file = "./temp/iv_individual_turnout_18.rdata")
 
@@ -276,6 +276,65 @@ foreach race in WHITE NONWHITE BLACK{
   margins, dydx(*) predict(pmarg1) post
   
   outreg2 using temp/iv_tables_nw, append tex(frag) drop(felony*) lab ///
+    adds(\"Wald $\\chi^2$\", `chisq', \"$\\rho$\", `rho') ///
+  	addtext(Felony Class FE, X) dec(4)
+}
+")
+### now for men and women
+stata("
+
+insheet using \"temp/iv_data.csv\", clear
+
+capture erase \"temp/iv_tables_mf.tex\"
+capture erase \"temp/iv_tables_mf.txt\"
+
+foreach var in sex county race{
+	encode `var', gen(x)
+	drop `var'
+	rename x `var'
+}
+
+label var restored2 \"D(Rights Restored)\"
+label var v2016 \"D(Voted in 2016)\"
+label var male \"D(Male)\"
+label var age \"Age (Years)\"
+label var parole_time \"Years on Parole\"
+preserve
+
+foreach sex in MALE FEMALE{
+  restore, preserve
+  di \"STEP A\"
+  keep if sex == \"`sex'\"
+  
+  encode sex, gen(x)
+  drop sex
+  rename x sex
+  
+  * 2sls w/ covariates
+  ivregress 2sls v2018 race age felony_a felony_b ///
+  	felony_c felony_d felony_e parole_time (restored2 = finished_post2), vce(robust)
+  	
+  outreg2 using temp/iv_tables_mf, append tex(frag) drop(felony*) lab ///
+  	addtext(Felony Class FE, X) dec(4) adjr2
+}
+
+foreach sex MALE FEMALE{
+  restore, preserve
+  
+  keep if sex ==  \"`sex'\" 
+  
+  *bivariate probit model with all covariates
+  biprobit (v2018 = restored2 race age felony_a felony_b ///
+  	felony_c felony_d felony_e parole_time) ///
+  	(restored2 = finished_post2 race age felony_a felony_b ///
+  	felony_c felony_d felony_e parole_time), vce(robust)
+  local chisq `e(chi2)'
+  local rho `e(rho)'
+  
+  * predict marginal effects
+  margins, dydx(*) predict(pmarg1) post
+  
+  outreg2 using temp/iv_tables_mf, append tex(frag) drop(felony*) lab ///
     adds(\"Wald $\\chi^2$\", `chisq', \"$\\rho$\", `rho') ///
   	addtext(Felony Class FE, X) dec(4)
 }
