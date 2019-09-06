@@ -2,7 +2,7 @@
 
 ############# READ IN NYS VOTER FILES #############
 db <- dbConnect(SQLite(), "D:/rolls.db")
-nys_roll <- dbGetQuery(db, "select last_name, first_name, middle_name, dob, voter_status, nys_id from nys_roll_0319 limit 1000")
+nys_roll <- dbGetQuery(db, "select political_party, last_name, first_name, middle_name, dob, voter_status, nys_id from nys_roll_0319")
 
 nys_roll <- nys_roll %>% 
   mutate(a = as.integer(voter_status == "ACTIVE"),
