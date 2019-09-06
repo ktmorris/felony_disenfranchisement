@@ -415,3 +415,23 @@ black_to4 <- glm(v2018 ~
                                restored), family = "binomial")
 
 save(black_to1, black_to2, black_to3, black_to4, file = "./temp/black_to.rdata")
+
+### turnout for folks on parole after reg deadline
+
+## this is the treated group
+nys_roll <- readRDS("./temp/parolee_to_18.rds")
+parolees <- readRDS("./temp/parolees_with_restoration.rds")
+
+
+parolees_ed <- left_join(parolees, nys_roll, by = "din") %>% 
+  filter((parole_status == "DISCHARGED" & parole_status_date > "2018-10-12") |
+           parole_status == "ACTIVE",
+         release_date_parole < "2018-10-12",
+         restored) %>% 
+  mutate(v2018 = ifelse(is.na(v2018), 0, v2018))
+
+new_eligible_18 <- nrow(parolees_ed)
+new_votes_18 <- sum(parolees_ed$v2018, na.rm = T)
+
+saveRDS(new_eligible_18, "./temp/new_eligible_18.rds")
+saveRDS(new_votes_18, "./temp/new_votes_18.rds")
