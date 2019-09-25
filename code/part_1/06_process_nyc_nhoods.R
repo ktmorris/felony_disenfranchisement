@@ -1,6 +1,6 @@
 ## spatial join nyc
 # 
-# nyc <- dbGetQuery(db, "select dob, nys_id, voter_status, history, county_code, gender,
+# nyc <- dbGetQuery(db, "select dob, nys_id, voter_status, history, county_code, gender, congressional_district,
 #                        political_party, last_name, zip5, registration_date
 #                        from nys_roll_0418 where county_code in (24, 41, 31, 3, 43)")
 # 
