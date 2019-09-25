@@ -83,7 +83,7 @@ in_2017 <- all_doccs %>%
          current_felon == T) %>% 
   group_by(din) %>% 
   filter(row_number() == 1) %>% 
-  select(din, last, first, middle, dob)
+  select(din, last, first, middle, dob, race)
 
 ### INDIVIDUALS ON PAROLE AS OF 2017 ELECTION
 names <- read.csv("./raw_data/doccs_data/parolee_column_names.csv", header = F, stringsAsFactors=FALSE)$V1 # VARIABLE NAMES SET IN CSV 'CAUSE I'M LAZY
@@ -129,7 +129,7 @@ parolees_felons <- parolees_felons %>%
 rm(parolee_crimes, parolees)
   
 parolees_felons <- parolees_felons %>% 
-  select(din, dob, first, last, middle)
+  select(din, dob, first, last, middle, race)
 
 ## COMBINE TO FIND ALL DISENFRANCHISED AS OF ELECTION IN 2017
 in_2017 <- bind_rows(in_2017, parolees_felons)
