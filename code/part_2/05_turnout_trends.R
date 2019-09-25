@@ -7,15 +7,6 @@ nys_roll <- dbGetQuery(db, "select history, voter_status, nys_id, political_part
 
 nys_roll <- nys_roll[nys_roll$nys_id %in% readRDS("./temp/din_nys_parolees.rds")$nys_id, ]
 
-nys_roll <- nys_roll %>%
-  mutate(a = as.integer(voter_status == "ACTIVE"),
-         b = as.integer(voter_status == "INACTIVE"),
-         c = as.integer(voter_status == "PREREG"))
-
-nys_roll <- setorder(nys_roll, nys_id, -a, -b, -c) ## KEEP ONE RECORD FOR EVERY VOTER
-nys_roll <- nys_roll[!duplicated(nys_roll$nys_id),]
-nys_roll <- select(nys_roll, -a, -b, -c)
-
 nys_roll <- left_join(nys_roll, readRDS("./temp/din_nys_parolees.rds"), by = "nys_id")
 
 nys_roll <- cSplit(nys_roll, "history", sep = ";", direction = "long", type.convert = F)
@@ -27,7 +18,8 @@ nys_roll <- nys_roll %>%
   group_by(nys_id) %>%
   mutate(year = ifelse(is.na(year), 0, year),
          v2018 = max(year == 2018 & election_type == "general"),
-         v2016 = max(year == 2016 & election_type == "general")) %>%
+         v2016 = max(year == 2016 & election_type == "general"),
+         v2008 = max(year == 2008 & election_type == "general")) %>%
   filter(row_number() == 1)
 
 saveRDS(nys_roll, "./temp/parolee_to_18.rds")
@@ -44,7 +36,8 @@ parolees$reg <- parolees$voter_status == "ACTIVE" & !is.na(parolees$voter_status
 low_level <- parolees %>% 
   filter(parole_status == "DISCHARGED") %>% 
   mutate(parole_status_date = as.Date(parole_status_date, "%m/%d/%Y"),
-         month_done = make_date(year = year(parole_status_date), month(parole_status_date), day = 1)) %>% 
+         month_done = make_date(year = year(parole_status_date), month(parole_status_date), day = 1),
+         b = race == "BLACK") %>% 
   group_by(month_done) %>% 
   summarize(to16 = mean(v2016),
             to18 = mean(v2018),
