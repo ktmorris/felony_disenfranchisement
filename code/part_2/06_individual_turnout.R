@@ -14,12 +14,13 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
   mutate(age = as.numeric((as.Date("2018-11-06") - dob_parole) / 365.25),
          parole_time = as.numeric((parole_status_date - release_date_parole) / 365.25),
          v2018 = ifelse(is.na(v2018), 0, v2018),
-         finished_post = parole_status_date >= "2018-05-18",
+         finished_post = parole_status_date >= "2018-05-22",
          days_since_done = as.numeric(as.Date("2018-11-06") - parole_status_date),
          days2 = days_since_done^2,
          restored = ifelse(is.na(restored), F, restored),
          days_since_m21 = parole_status_date - as.Date("2018-05-19"),
-         v2016 = ifelse(is.na(v2016), 0, v2016))
+         v2016 = ifelse(is.na(v2016), 0, v2016),
+         v2008 = ifelse(is.na(v2008), 0, v2008))
 
 model1 <- glm(v2018 ~ restored + days_since_done + days2,
               family = "binomial", data = parolees)
@@ -178,19 +179,21 @@ foreach var in race sex county{
 	rename x `var'
 }
 
-gen months_past = ceil((date(parole_status_date, \"YMD\") - date(\"2018-5-17\", \"YMD\")) / 30.5) * restored2
+gen months_past_tr = ceil((date(parole_status_date, \"YMD\") - date(\"2018-5-17\", \"YMD\")) / 30.5) * restored2
+
+gen months_past = ceil((date(parole_status_date, \"YMD\") - date(\"2018-5-17\", \"YMD\")) / 30.5) * finished_post2
 
 label var restored2 \"D(Rights Restored)\"
 label var v2016 \"D(Voted in 2016)\"
 label var male \"D(Male)\"
 label var age \"Age (Years)\"
 label var parole_time \"Years on Parole\"
-label var months_past \"Months Restored\"
+label var months_past_tr \"Months Restored\"
 
 
 * add in sentence info
 ivregress 2sls v2018 i.race male age felony_a felony_b ///
-	felony_c felony_d felony_e parole_time (months_past = finished_post2), vce(robust)
+	felony_c felony_d felony_e parole_time (months_past_tr = months_past), vce(robust)
 	
 outreg2 using temp/iv_tables_months, replace drop(i.race felony*) lab ///
 	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4) adjr2
@@ -198,7 +201,7 @@ outreg2 using temp/iv_tables_months, replace drop(i.race felony*) lab ///
 
 * ivprobit with all of the covariates
 ivprobit v2018 i.race male age felony_a felony_b ///
-	felony_c felony_d felony_e parole_time (months_past = finished_post2), vce(robust)
+	felony_c felony_d felony_e parole_time (months_past_tr = months_past), vce(robust)
 	
 local chisq `e(chi2)'
 
@@ -347,6 +350,76 @@ summary(glm(v2018 ~ finished_post +
                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time ,
              data = filter(parolees, year(parole_status_date) >= 2017, race != "WHITE"), family = "binomial"))
 
+
+##### black turnout prior to executive order
+
+black_to1 <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               !finished_post), family = "binomial")
+
+black_to2 <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               race != "HISPANIC",
+                               !finished_post), family = "binomial")
+
+black_to1b <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               finished_post), family = "binomial")
+
+black_to2b <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               race != "HISPANIC",
+                               finished_post), family = "binomial")
+
+black_to3 <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               restored), family = "binomial")
+
+black_to4 <- glm(v2018 ~ 
+                   I(race == "BLACK") + as.factor(sex) + age + 
+                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                 data = filter(parolees,
+                               year(parole_status_date) >= 2017,
+                               race != "HISPANIC",
+                               restored), family = "binomial")
+
+save(black_to1, black_to2, black_to1b, black_to2b, black_to3, black_to4, file = "./temp/black_to.rdata")
+
+### turnout for folks on parole after reg deadline
+
+## this is the treated group
+nys_roll <- readRDS("./temp/parolee_to_18.rds")
+parolees <- readRDS("./temp/parolees_with_restoration.rds")
+
+
+parolees_ed <- left_join(parolees, nys_roll, by = "din") %>% 
+  filter((parole_status == "DISCHARGED" & parole_status_date > "2018-10-12") |
+           parole_status == "ACTIVE",
+         release_date_parole < "2018-10-12",
+         restored) %>% 
+  mutate(v2018 = ifelse(is.na(v2018), 0, v2018))
+
+new_eligible_18 <- nrow(parolees_ed)
+new_votes_18 <- sum(parolees_ed$v2018, na.rm = T)
+
+saveRDS(new_eligible_18, "./temp/new_eligible_18.rds")
+saveRDS(new_votes_18, "./temp/new_votes_18.rds")
+
 ######################
 ### 2016
 
@@ -380,58 +453,3 @@ model3 <- glm(v2016 ~ finished_post +
               family = "binomial", data = parolees)
 
 save(model1, model2, model3, file = "./temp/individual_turnout_16.rdata")
-
-
-##### black turnout prior to executive order
-
-black_to1 <- glm(v2018 ~ 
-                   I(race == "BLACK") + as.factor(sex) + age + 
-                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
-                 data = filter(parolees,
-                               year(parole_status_date) >= 2017,
-                               !finished_post), family = "binomial")
-
-black_to2 <- glm(v2018 ~ 
-                   I(race == "BLACK") + as.factor(sex) + age + 
-                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
-                 data = filter(parolees,
-                               year(parole_status_date) >= 2017,
-                               race != "HISPANIC",
-                               !finished_post), family = "binomial")
-
-black_to3 <- glm(v2018 ~ 
-                   I(race == "BLACK") + as.factor(sex) + age + 
-                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
-                 data = filter(parolees,
-                               year(parole_status_date) >= 2017,
-                               restored), family = "binomial")
-
-black_to4 <- glm(v2018 ~ 
-                   I(race == "BLACK") + as.factor(sex) + age + 
-                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
-                 data = filter(parolees,
-                               year(parole_status_date) >= 2017,
-                               race != "HISPANIC",
-                               restored), family = "binomial")
-
-save(black_to1, black_to2, black_to3, black_to4, file = "./temp/black_to.rdata")
-
-### turnout for folks on parole after reg deadline
-
-## this is the treated group
-nys_roll <- readRDS("./temp/parolee_to_18.rds")
-parolees <- readRDS("./temp/parolees_with_restoration.rds")
-
-
-parolees_ed <- left_join(parolees, nys_roll, by = "din") %>% 
-  filter((parole_status == "DISCHARGED" & parole_status_date > "2018-10-12") |
-           parole_status == "ACTIVE",
-         release_date_parole < "2018-10-12",
-         restored) %>% 
-  mutate(v2018 = ifelse(is.na(v2018), 0, v2018))
-
-new_eligible_18 <- nrow(parolees_ed)
-new_votes_18 <- sum(parolees_ed$v2018, na.rm = T)
-
-saveRDS(new_eligible_18, "./temp/new_eligible_18.rds")
-saveRDS(new_votes_18, "./temp/new_votes_18.rds")
