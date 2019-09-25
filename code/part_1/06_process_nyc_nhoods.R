@@ -105,7 +105,13 @@ share_dem_bg <- nyc %>%
   group_by(GEOID) %>% 
   mutate(biggest_d = max(count_d),
          biggest_district = ifelse(count_d == biggest_d, cc_district, 0)) %>% 
+  group_by(GEOID, congressional_district) %>% 
+  mutate(count_dcd = n()) %>% 
+  group_by(GEOID) %>% 
+  mutate(biggest_dcd = max(count_dcd),
+         biggest_districtcd = ifelse(count_dcd == biggest_dcd, congressional_district, 0)) %>% 
   summarize(district = max(biggest_district),
+            districtcd = max(biggest_districtcd),
             share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
             vcount = n(),
@@ -118,7 +124,13 @@ share_dem_tract <- nyc %>%
   group_by(GEOID) %>% 
   mutate(biggest_d = max(count_d),
          biggest_district = ifelse(count_d == biggest_d, cc_district, 0)) %>% 
+  group_by(GEOID, congressional_district) %>% 
+  mutate(count_dcd = n()) %>% 
+  group_by(GEOID) %>% 
+  mutate(biggest_dcd = max(count_dcd),
+         biggest_districtcd = ifelse(count_dcd == biggest_dcd, congressional_district, 0)) %>% 
   summarize(district = max(biggest_district),
+            districtcd = max(biggest_districtcd),
             share_dem = mean(political_party == "DEM" & !is.na(political_party)),
             v2017 = sum(v2017),
             vcount = n(),
@@ -137,10 +149,7 @@ share_dem_zip <- nyc %>%
             vcount = n(),
             share_winner = mean(share_winner))
 
-
-
-
-#block group / tract level
+# #block group / tract level
 # geos <- lapply(c("tract", "block group", "zcta"), function(var) {
 #   units <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c, run = run){
 #     if(var != "zcta" | c == "KINGS"){
@@ -152,23 +161,37 @@ share_dem_zip <- nyc %>%
 #       }
 #       income <- census_income(var, state = s, year = 2017, county = c) %>%
 #         dplyr::select(-NAME)
-#   
+# 
 #       race <- census_race_ethnicity(var, state = s, year = 2017, county = c) %>%
 #         dplyr::select(-NAME)
-#   
+# 
 #       education <- census_education(var, state = s, year = 2017, county = c) %>%
 #         dplyr::select(-NAME)
-#   
+# 
 #       age <- census_median_age(var, state = s, year = 2017, county = c)
-#   
-#       vap <- census_vap(var, state = s, year = 2017, county = c)
+# 
+#       if(var == "tract"){
+#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/Tract.csv") %>% 
+#           filter(lntitle == "Total") %>% 
+#           mutate(GEOID = substring(geoid, 8)) %>% 
+#           select(GEOID, cvap = CVAP_EST)
+#       }
+#       if(var == "block group"){
+#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/BlockGr.csv") %>% 
+#           filter(lntitle == "Total") %>% 
+#           mutate(GEOID = substring(geoid, 8)) %>% 
+#           select(GEOID, cvap = CVAP_EST)
+#       }
+#       if(var == "zcta"){
+#         cvap <- census_vap(var, state = s, year = 2017, county = c)
+#       }
 #       
 #       noncit <- census_non_citizen(var, state = s, year = 2017, county = c)
-#   
+# 
 #       units <- left_join(income,
 #                          left_join(race, left_join(education,
 #                                                    left_join(age,
-#                                                              left_join(vap, noncit)))))
+#                                                              left_join(cvap, noncit)))))
 #       }else{
 #         units = data.frame("x" = NULL)
 #       }
@@ -196,8 +219,8 @@ tracts <- left_join(geos[[1]], left_join(share_dem_tract, left_join(arrests_trac
 
 tracts <- tracts[complete.cases(tracts), ] %>% 
   mutate(treat = lost_voters > 0,
-         to = v2017 / vap,
-         reg_rate = vcount / vap)
+         to = v2017 / cvap,
+         reg_rate = vcount / cvap)
 
 saveRDS(tracts, "./temp/tract_pre_match.rds")
 
@@ -206,8 +229,8 @@ block_groups <- left_join(geos[[2]], left_join(share_dem_bg, left_join(arrests_b
 
 block_groups <- block_groups[complete.cases(block_groups), ] %>% 
   mutate(treat = lost_voters > 0,
-         to = v2017 / vap,
-         reg_rate = vcount / vap)
+         to = v2017 / cvap,
+         reg_rate = vcount / cvap)
 
 saveRDS(block_groups, "./temp/block_group_pre_match.rds")
 
