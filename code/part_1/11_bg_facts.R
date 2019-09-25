@@ -5,13 +5,13 @@ block_groups <- readRDS("./temp/block_group_pre_match.rds")
 count_gt_90_black <- sum(block_groups$nh_black > 0.9)
 saveRDS(count_gt_90_black, "./temp/count_gt_90_black")
 
-vap_gt_90_black <- mean(filter(block_groups, nh_black > 0.9)$vap)
+vap_gt_90_black <- mean(filter(block_groups, nh_black > 0.9)$cvap)
 saveRDS(vap_gt_90_black, "./temp/vap_gt_90_black")
 
 count_lt_10_black <- sum(block_groups$nh_black > 0.9)
 saveRDS(count_gt_90_black, "./temp/count_gt_90_black")
 
-vap_lt_10_black <- mean(filter(block_groups, nh_black < 0.1)$vap)
+vap_lt_10_black <- mean(filter(block_groups, nh_black < 0.1)$cvap)
 saveRDS(vap_gt_90_black, "./temp/vap_gt_90_black")
 
 ### to stats
