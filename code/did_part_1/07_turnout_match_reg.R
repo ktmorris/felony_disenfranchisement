@@ -36,9 +36,9 @@ for(geo in c("block_group")){
   match_data <- units %>% 
     dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, reg_rate, share_dem, share_non_citizen, share_winner)
   
-  # genout <- GenMatch(Tr = units$treat, X = match_data,
-  #                    M = 3, replace = T, pop.size = 1000, cluster = cl)
-  # saveRDS(genout, paste0("./temp/genout_", geo, "_did.rds"))
+  genout <- GenMatch(Tr = units$treat, X = match_data,
+                     M = 3, replace = T, pop.size = 1000, cluster = cl)
+  saveRDS(genout, paste0("./temp/genout_", geo, "_did.rds"))
   
   genout <- readRDS(paste0("./temp/genout_", geo, "_did.rds"))
   
@@ -83,21 +83,93 @@ for(geo in c("block_group")){
                                     control_GEOID = unique(matches$GEOID),
                                     weight = 1))
   saveRDS(matches_v, paste0("./temp/matches_did_", geo, ".rds"))
-
+  
+  
+  ###########
+  load(paste0("./temp/mout_", geo, "_did.RData"))
+  order <- fread("./raw_data/misc/var_orders.csv")
+  
+  balance <- MatchBalance(treat ~ median_income + latino + nh_black + nh_white +
+                            some_college + median_age + reg_rate + share_dem + share_non_citizen + share_winner, match.out = mout,
+                          data = units)
+  TrMean <- c()
+  PreMean <- c()
+  PreQQmed <- c()
+  PreQQmean <- c()
+  PreQQmax <- c()
+  PostMean <- c()
+  PostQQmed <- c()
+  PostQQmean <- c()
+  PostQQmax <- c()
+  
+  for(i in c(1:length(balance$BeforeMatching))){
+    TrMean <- unlist(c(TrMean, balance$BeforeMatching[[i]][3][1]))
+    PreMean <- unlist(c(PreMean, balance$BeforeMatching[[i]][4][1]))
+    PreQQmed <- unlist(c(PreQQmed, balance$BeforeMatching[[i]]$qqsummary[2]))
+    PreQQmean <- unlist(c(PreQQmean, balance$BeforeMatching[[i]]$qqsummary[1]))
+    PreQQmax <- unlist(c(PreQQmax, balance$BeforeMatching[[i]]$qqsummary[3]))
+    
+    PostMean <- unlist(c(PostMean, balance$AfterMatching[[i]][4][1]))
+    PostQQmed <- unlist(c(PostQQmed, balance$AfterMatching[[i]]$qqsummary[2]))
+    PostQQmean <- unlist(c(PostQQmean, balance$AfterMatching[[i]]$qqsummary[1]))
+    PostQQmax <- unlist(c(PostQQmax, balance$AfterMatching[[i]]$qqsummary[3]))
+  }
+  
+  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "reg_rate", "share_dem", "share_non_citizen", "share_winner")
+  
+  
+  df <- data.frame("TrMean" = TrMean,
+                   "TrMean2" = TrMean,
+                   "PreMean" = PreMean,
+                   "PreQQmed" = PreQQmed,
+                   "PreQQmean" = PreQQmean,
+                   "PreQQmax" = PreQQmax,
+                   "PostMean" = PostMean,
+                   "PostQQmed" = PostQQmed,
+                   "PostQQmean" = PostQQmean,
+                   "PostQQmax" = PostQQmax,
+                   "names" = varnames) %>%
+    mutate(change_mean = 1 - (abs(TrMean - PostMean) / abs(TrMean - PreMean)),
+           change_eqqmed = 1 - abs(PostQQmed / PreQQmed),
+           change_eqqmean = 1 - abs(PostQQmean / PreQQmean),
+           change_eqqmax = 1 - abs(PostQQmax / PreQQmax)) %>%
+    mutate_at(vars(TrMean, PreMean, TrMean2, PostMean), funs(comma(round(., 2), accuracy = .01))) %>%
+    mutate_at(vars(change_mean, change_eqqmed, change_eqqmean, change_eqqmax), funs(round(. * 100, 2)))
+  
+  df <- full_join(df, order, by = c("names" = "variable")) %>%
+    arrange(order) %>%
+    select(name, TrMean, PreMean, TrMean2, PostMean, change_mean, change_eqqmed, change_eqqmean, change_eqqmax) %>%
+    filter(!is.na(TrMean))
+  
+  colnames(df) <- c("", "Treated", "Control", "Treated", "Control", "Mean Diff", "eQQ Med", "eQQ Mean", "eQQ Max")
+  
+  saveRDS(df, paste0("./temp/match_table_", geo, "_did.rds"))
+  
+  ########
+  bgs_16 <- readRDS(paste0("./temp/", geo, "_pre_match_16.rds")) %>% 
+    mutate(year = 2016) %>% 
+    filter(lost_voters == 0)
+  bgs_17 <- readRDS(paste0("./temp/", geo, "_pre_match.rds")) %>% 
+    mutate(year = 2017,
+           district = districtcd) %>% 
+    filter(GEOID %in% bgs_16$GEOID)
+  
+  matches <- readRDS(paste0("./temp/matches_did_", geo, ".rds"))
+  
+  bgs_16 <- inner_join(bgs_16, matches, by = c("GEOID" = "control_GEOID"))
+  bgs_17 <- inner_join(bgs_17, matches, by = c("GEOID" = "control_GEOID"))
+  
+  bgs <- bind_rows(bgs_16, bgs_17) %>% 
+    mutate(treat = GEOID == GEOID.y)
+  
+  reg_output <- lm(to ~ I(year == 2017) * treat + as.factor(district), data = bgs, weights = weight)
+  
+  reg_output_ses <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat + as.factor(district), data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 2]
+  
+  reg_output_pval <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat, data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 4]
+  
+  save(reg_output, reg_output_ses, reg_output_pval, file = paste0("./temp/match_reg_", geo, "_did.rdata"))
+  
 }
 
 
-bgs_16 <- readRDS("./temp/block_group_pre_match_16.rds") %>% 
-  mutate(year = 2016)
-bgs_17 <- readRDS("./temp/block_group_pre_match.rds") %>% 
-  mutate(year = 2017)
-
-matches <- readRDS("./temp/matches_did_block_group.rds")
-
-bgs_16 <- inner_join(bgs_16, matches, by = c("GEOID" = "control_GEOID"))
-bgs_17 <- inner_join(bgs_17, matches, by = c("GEOID" = "control_GEOID"))
-
-bgs <- bind_rows(bgs_16, bgs_17) %>% 
-  mutate(treat = GEOID == GEOID.y)
-
-summary(lm(to ~ I(year == 2017) * treat, bgs, weight = weight))
