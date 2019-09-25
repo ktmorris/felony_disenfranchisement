@@ -1029,6 +1029,35 @@ number = "3",
   year      = {2004},
 }
 
+@Unpublished{,
+}
+
+@Article{Dong2014,
+  author    = {Yingying Dong and Arthur Lewbel},
+  title     = {A Simple Estimator for Binary Choice Models with Endogenous Regressors},
+  volume    = {34},
+  number    = {1-2},
+  pages     = {82--105},
+  doi       = {10.1080/07474938.2014.944470},
+  journal   = {Econometric Reviews},
+  month     = {oct},
+  publisher = {Informa {UK} Limited},
+  year      = {2014},
+}
+
+@Article{Hajnal2005,
+  author    = {Zoltan Hajnal and Jessica Trounstine},
+  title     = {Where Turnout Matters: The Consequences of Uneven Turnout in City Politics},
+  volume    = {67},
+  number    = {2},
+  pages     = {515--535},
+  doi       = {10.1111/j.1468-2508.2005.00327.x},
+  journal   = {The Journal of Politics},
+  month     = {may},
+  publisher = {University of Chicago Press},
+  year      = {2005},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}
 
 @Comment{jabref-meta: grouping:
