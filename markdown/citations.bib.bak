@@ -1084,7 +1084,7 @@ number = "3",
 
 @Book{Hajnal2009,
   author    = {Zoltan Hajnal},
-  title     = {America's Uneven Democracy},
+  title     = {America{\textquotesingle}s Uneven Democracy},
   publisher = {Cambridge University Press},
   doi       = {10.1017/cbo9780511800535},
   year      = {2009},
