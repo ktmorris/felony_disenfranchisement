@@ -172,17 +172,17 @@ for(geo in c("tract")){
   
 }
 
-bgs_16 <- readRDS(paste0("./temp/block_group_pre_match_16.rds")) %>%
+bgs_16 <- readRDS(paste0("./temp/tract_pre_match_16.rds")) %>%
   mutate(year = 2016) %>%
   filter(lost_voters == 0)
 
 t1 <- select(bgs_16, lost_voters, GEOID)
 
 
-bgs_17 <- readRDS(paste0("./temp/block_group_pre_match.rds")) %>%
+bgs_17 <- readRDS(paste0("./temp/tract_pre_match.rds")) %>%
   mutate(year = 2017,
          district = districtcd,
-         none_16 = GEOID %in% bgs_16$GEOID) %>% 
+         none_16 = GEOID %in% bgs_16$GEOID) %>%
   filter(treat == T)
 
 t.test(bgs_17$median_income ~ bgs_17$none_16)
@@ -191,35 +191,35 @@ t.test(bgs_17$share_dem ~ bgs_17$none_16)
 t.test(bgs_17$nh_black ~ bgs_17$none_16)
 
 
-t1 <- readRDS(paste0("./temp/block_group_pre_match_16.rds")) %>% 
-  select(lost_voters_16 = lost_voters, GEOID)
-
-t2 <- readRDS(paste0("./temp/block_group_pre_match.rds")) %>%
-  select(GEOID, lost_voters_17 = lost_voters)
-
-t3 <- inner_join(t1, t2) %>% 
-  filter(lost_voters_17 >= lost_voters_16) %>% 
-  mutate(treat = lost_voters_17 > lost_voters_16)
-
-
-t1 <- readRDS(paste0("./temp/block_group_pre_match_16.rds")) %>% 
-  filter(GEOID %in% t3$GEOID) %>% 
-  mutate(year = 2016) %>% 
-  select(-treat)
-
-t2 <- readRDS(paste0("./temp/block_group_pre_match.rds")) %>%
-  filter(GEOID %in% t3$GEOID) %>% 
-  mutate(year = 2017) %>% 
-  select(-treat)
-
-
-full <- left_join(bind_rows(t1, t2),
-                  t3) %>% 
-  mutate(l = lost_voters * (year == 2016)) %>% 
-  group_by(GEOID) %>% 
-  mutate(lost_16 = max(l))
-
-
-summary(lm_robust(to ~ I(year == 2017) * treat + lost_16 +
-             median_income + latino + nh_black + nh_white +
-             some_college + median_age + reg_rate + share_dem + share_non_citizen, data = full, se_type = "stata"))
+# t1 <- readRDS(paste0("./temp/block_group_pre_match_16.rds")) %>% 
+#   select(lost_voters_16 = lost_voters, GEOID)
+# 
+# t2 <- readRDS(paste0("./temp/block_group_pre_match.rds")) %>%
+#   select(GEOID, lost_voters_17 = lost_voters)
+# 
+# t3 <- inner_join(t1, t2) %>% 
+#   filter(lost_voters_17 >= lost_voters_16) %>% 
+#   mutate(treat = lost_voters_17 > lost_voters_16)
+# 
+# 
+# t1 <- readRDS(paste0("./temp/block_group_pre_match_16.rds")) %>% 
+#   filter(GEOID %in% t3$GEOID) %>% 
+#   mutate(year = 2016) %>% 
+#   select(-treat)
+# 
+# t2 <- readRDS(paste0("./temp/block_group_pre_match.rds")) %>%
+#   filter(GEOID %in% t3$GEOID) %>% 
+#   mutate(year = 2017) %>% 
+#   select(-treat)
+# 
+# 
+# full <- left_join(bind_rows(t1, t2),
+#                   t3) %>% 
+#   mutate(l = lost_voters * (year == 2016)) %>% 
+#   group_by(GEOID) %>% 
+#   mutate(lost_16 = max(l))
+# 
+# 
+# summary(lm_robust(to ~ I(year == 2017) * treat + lost_16 +
+#              median_income + latino + nh_black + nh_white +
+#              some_college + median_age + reg_rate + share_dem + share_non_citizen, data = full, se_type = "stata"))
