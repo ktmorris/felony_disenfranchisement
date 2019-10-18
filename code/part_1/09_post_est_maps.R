@@ -48,6 +48,7 @@ dec_map <- ggplot() +
         panel.border = element_blank(),
         legend.position = "bottom",
         plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
         legend.background = element_blank(),
         legend.key=element_blank(),
         legend.key.width = unit(1.5, "cm"),
@@ -61,3 +62,18 @@ dec_map <- ggplot() +
   guides(fill = guide_colorbar(title.hjust = .5, title = NULL))
 
 saveRDS(dec_map, "./temp/dec_block_map.rds")
+
+### interactive
+
+dec_map <- readRDS("./temp/dec_block_map.rds")
+
+dec_map + guides(fill = guide_colorbar(title.hjust = .5,
+                                       title = "Estimated Depressed Turnout",
+                                       title.position = "top")) +
+  ggtitle("Effect of Felony Disenfranchisement on Neighborhood Turnout",
+          subtitle = "New York City Mayoral Election, 2017") + 
+  labs(caption = "Source: Morris, Kevin. 2019. Working paper.\n\"In the Shadow of Jim Crow: Felony Disenfranchisement in New York State.\"") +
+  theme(plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0))
+
+ggsave("./output/dep_map.pdf", device = "pdf", dpi = 500)
