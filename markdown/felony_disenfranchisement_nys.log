@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  26 SEP 2019 15:01
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  17 OCT 2019 17:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -900,6 +900,9 @@ LaTeX Warning: Label `' multiply defined.
 LaTeX Warning: Label `' multiply defined.
 
 
+LaTeX Warning: Label `tab:demos-restorees' multiply defined.
+
+
 LaTeX Warning: Label `' multiply defined.
 
 
@@ -1041,77 +1044,90 @@ ic file (type pdf)
 File: felony_disenfranchisement_nys_files/figure-latex/postest-map-1.pdf Graphi
 c file (type pdf)
 <use felony_disenfranchisement_nys_files/figure-latex/postest-map-1.pdf>
-[28] [29] [30] (../temp/table1111.tex) [31] [32] [33] [34] [35] [36] [37] [38]
+[28] [29] [30] (../temp/table1111.tex) [31] [32] [33] [34] [35] [36] [37] [38] 
+[39]
 File: felony_disenfranchisement_nys_files/figure-latex/to-16-chart-1.pdf Graphi
 c file (type pdf)
 <use felony_disenfranchisement_nys_files/figure-latex/to-16-chart-1.pdf>
-[39]
+[40]
 File: felony_disenfranchisement_nys_files/figure-latex/to-18-chart-1.pdf Graphi
 c file (type pdf)
 <use felony_disenfranchisement_nys_files/figure-latex/to-18-chart-1.pdf>
-[40] [41]
+[41] [42]
 File: felony_disenfranchisement_nys_files/figure-latex/to-18-recent-chart-1.pdf
  Graphic file (type pdf)
 <use felony_disenfranchisement_nys_files/figure-latex/to-18-recent-chart-1.pdf>
 
-(../temp/table3.tex) [42]
+(../temp/table3.tex) [43]
 File: felony_disenfranchisement_nys_files/figure-latex/restoration-chart-chunk-
 1.pdf Graphic file (type pdf)
 <use felony_disenfranchisement_nys_files/figure-latex/restoration-chart-chunk-1
 .pdf>
-[43] (../temp/table4.tex) [44] [45] [46] (../temp/table_whatever.tex) [47] [48]
-(../temp/iv_clean.tex) [49] [50] (../temp/iv_clean_race.tex
+[44]
+
+LaTeX Warning: Reference `tab:demo-rd' on page 45 undefined on input line 611.
+
+[45] (../temp/table_whatever2.tex
+Overfull \hbox (7.28499pt too wide) in paragraph at lines 6--20
+ [][] 
+ []
+
+) (../temp/table4.tex) [46] [47] [48] (../temp/table_whatever.tex) [49] [50] (.
+./temp/iv_clean.tex) [51] [52] (../temp/iv_clean_race.tex
 Overfull \hbox (5.13248pt too wide) in paragraph at lines 6--40
  [][] 
  []
 
-) [51] (../temp/table5.tex) [52] [53] (../temp/iv_clean_months.tex) [54] [55] [
-56] [57] [58] [59] [60] (../temp/table55.tex) [61] [62] [63]
-Overfull \hbox (58.95358pt too wide) in paragraph at lines 759--761
+) [53] (../temp/table5.tex) [54] [55] (../temp/iv_clean_months.tex) [56] [57] [
+58] [59] [60] [61] [62] (../temp/table55.tex) [63] [64] [65]
+Overfull \hbox (58.95358pt too wide) in paragraph at lines 767--769
  \TU/lmr/m/n/12 States.” []$[][][][][] [] [] [] [][][] [] [][][][][][][][][][][
 ][][] [] [][][] [] [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][]$[]. 
  []
 
 
-Underfull \hbox (badness 1286) in paragraph at lines 783--785
+Underfull \hbox (badness 1286) in paragraph at lines 791--793
  [][]\TU/lmr/m/n/12 Dawkins, Casey J. 2006. “Are Social Networks the Ties That 
 Bind Families to
  []
 
-[64] [65] [66] [67] [68] [69]
-Underfull \hbox (badness 2150) in paragraph at lines 921--923
+[66] [67] [68] [69] [70] [71]
+Underfull \hbox (badness 2150) in paragraph at lines 929--931
  \TU/lmr/m/n/12 ers: State-Level Estimates of Felony Disenfranchisement, 2016.”
  Research
  []
 
 
-Underfull \hbox (badness 1721) in paragraph at lines 921--923
+Underfull \hbox (badness 1721) in paragraph at lines 929--931
  \TU/lmr/m/n/12 report. Sentencing Project. []$[][][][][] [] [] [] [][][] [] []
 [][][][][][][][][][][][][][][][] [] [][][] [] [][][][][][][][][][][][] []
  []
 
-[70]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 958.
-[71]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 958.
+[72]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 966.
+[73]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 966.
 (./felony_disenfranchisement_nys.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 958.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 958.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 966.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 966.
 Package rerunfilecheck Info: File `felony_disenfranchisement_nys.out' has not c
 hanged.
 (rerunfilecheck)             Checksum: 6D47A2F2325CDF04B41F1B7455771625.
+
+LaTeX Warning: There were undefined references.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 24356 strings out of 494894
- 452167 string characters out of 6175524
- 567634 words of memory out of 5000000
- 27981 multiletter control sequences out of 15000+600000
+ 24360 strings out of 494894
+ 452249 string characters out of 6175524
+ 568630 words of memory out of 5000000
+ 27982 multiletter control sequences out of 15000+600000
  557199 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  46i,17n,68p,2061b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on felony_disenfranchisement_nys.pdf (73 pages).
+Output written on felony_disenfranchisement_nys.pdf (75 pages).

@@ -84,7 +84,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{September 26, 2019}
+    \date{October 17, 2019}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -431,6 +431,8 @@ As the analyses above make clear, neighborhoods with lost voters saw substantial
 
 I begin by restricting the set of neighborhoods to only neighborhoods that, on election day in 2016, had no lost voters. This process is the inverse of the process described above: I identify all individuals who were in prison or on parole on November 8\textsuperscript{th}, 2016, who had cast a ballot between 2006 and 2015. These individuals' home neighborhoods are removed from the subsequent analysis. I then use the genetic match algorithm discussed above to match neighborhoods with a lost voter in 2017 to neighborhoods with no lost voters in 2017. These neighborhoods, therefore, were \emph{newly} home to lost voters. If lost voters have no effect on neighborhood turnout, we would expect these treated neighborhoods to have lower turnout in both 2016 --- before they lost a voter --- and in 2017, after a voter was disenfranchised. In 2017, 1,497 neighborhoods had a lost voter; of these, 326 had no lost voters in 2016 and are included here. The original set of control block groups included 4,272 neighborhoods with no lost voters; of these, 211 \emph{did} have a lost voter in 2016, and are thus excluded from this analysis.
 
+Of course, felony disenfranchisement could structure neighborhood turnout differently for presidential and local elections. It is conceivable that the incarceration of a family member or neighbor would sour individuals on participating in local contests, but that the same individual would not read national politics through the same lens. Nevertheless, data limitations makes the 2016 election the only reasonable comparator for 2017 turnout.
+
 Tables \ref{tab:did-match} and \ref{tab:did-match-tract} present the results of matching on these subsets of neighborhoods. As before, the match results in a highly balanced panel between treated and untreated neighborhoods.
 
 \begin{table}[H]
@@ -471,25 +473,27 @@ Registration Rate & 0.98 & 0.94 & 0.98 & 0.95 & 25.09 & 46.49 & 42.16 & 33.06\\
 \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5} \cmidrule(l{3pt}r{3pt}){6-9}
  & Treated & Control & Treated & Control & Mean Diff & eQQ Med & eQQ Mean & eQQ Max\\
 \midrule
-\% Latino & 0.31 & 0.22 & 0.31 & 0.30 & 96.18 & 85.46 & 85.00 & 76.98\\
-\% Non-Hispanic Black & 0.25 & 0.12 & 0.25 & 0.24 & 97.15 & 88.52 & 85.34 & 77.02\\
-\% Non-Hispanic White & 0.29 & 0.44 & 0.29 & 0.28 & 97.20 & 87.45 & 79.41 & 64.95\\
-Median Income & 59,990.43 & 72,565.90 & 59,990.43 & 61,711.89 & 86.31 & 76.32 & 76.77 & 65.49\\
-\% With Some College & 0.67 & 0.71 & 0.67 & 0.66 & 95.15 & 88.35 & 84.14 & 75.44\\
-Median Age & 36.36 & 38.23 & 36.36 & 36.38 & 98.90 & 69.64 & 65.76 & 40.69\\
-Registration Rate & 0.92 & 0.90 & 0.92 & 0.91 & 8.97 & 63.21 & 60.34 & 50.97\\
-\% Democrats & 0.69 & 0.62 & 0.69 & 0.68 & 91.01 & 87.99 & 85.70 & 73.48\\
-\% Noncitizen & 0.18 & 0.17 & 0.18 & 0.18 & 83.92 & 77.72 & 65.69 & 47.73\\
-\% Won by City Council Representative & 0.83 & 0.79 & 0.83 & 0.83 & 99.99 & 77.50 & 67.39 & 41.31\\
+\% Latino & 0.31 & 0.22 & 0.31 & 0.30 & 94.34 & 86.10 & 84.77 & 75.82\\
+\% Non-Hispanic Black & 0.25 & 0.12 & 0.25 & 0.25 & 99.28 & 89.75 & 86.62 & 77.90\\
+\% Non-Hispanic White & 0.29 & 0.44 & 0.29 & 0.28 & 97.02 & 87.45 & 77.73 & 61.67\\
+Median Income & 59,990.43 & 72,565.90 & 59,990.43 & 61,973.89 & 84.23 & 78.35 & 76.98 & 66.57\\
+\% With Some College & 0.67 & 0.71 & 0.67 & 0.66 & 96.86 & 86.51 & 83.73 & 76.55\\
+Median Age & 36.36 & 38.23 & 36.36 & 36.39 & 98.60 & 73.15 & 69.00 & 42.11\\
+Registration Rate & 0.92 & 0.90 & 0.92 & 0.91 & 10.68 & 64.27 & 63.46 & 56.35\\
+\% Democrats & 0.69 & 0.62 & 0.69 & 0.68 & 91.23 & 90.06 & 87.35 & 76.31\\
+\% Noncitizen & 0.18 & 0.17 & 0.18 & 0.18 & 78.09 & 73.55 & 62.03 & 48.36\\
+\% Won by City Council Representative & 0.83 & 0.79 & 0.83 & 0.83 & 99.91 & 75.59 & 65.98 & 38.91\\
 \bottomrule
 \end{tabular}}
 \end{table}
 
-In Table \ref{tab:did-reg}, I present the out come of a simple least squares regression on this subset of block groups and tracts. In both models, D(2017) indicates that across the board turnout in 2017 was far lower than in 2016. D(Treat) can be understood as the difference between treated and control neighborhoods in the 2016 election. In Model 1, the treated and control neighborhoods did not have statistically significantly different turnout in the 2016 election; Model 2 indicates that treated census tracts had slightly \emph{higher} turnout prior to intervention. D(Treat) \(\times\) D(2017) is the coefficient of most interest here: it indicates whether, after treatment, treated neighborhoods turned out at lower rates than similar neighborhoods. In Model 1, this coefficient is negative and statistically significant, and is very similar to the coefficients reported in Tables \ref{tab:match-reg} and \ref{tab:trad-reg}. Model 1 in Table \ref{tab:did-reg} indicates that, in the first election after the removal of a voter, a neighborhood's turnout rate decreased by 2.6 percentage points. In Model 2, D(Treat) \(\times\) D(2017) is negative but not statistically significant. However, because treated tracts had significantly higher turnout than control tracts in 2016, this nonsignificance implies treatment --- the loss of a voter --- did decrease turnout to a significant degree relative to the control tracts.
+In Table \ref{tab:did-reg}, I present the out come of a simple least squares regression on this subset of block groups and tracts. In both models, D(2017) indicates that across the board turnout in 2017 was far lower than in 2016. D(Treat) can be understood as the difference between treated and control neighborhoods in the 2016 election. In Model 1, the treated and control neighborhoods did not have statistically significantly different turnout in the 2016 election; Model 2 indicates that treated census tracts had slightly \emph{higher} turnout prior to intervention. D(Treat) \(\times\) D(2017) is the coefficient of most interest here: it indicates whether, after treatment, treated neighborhoods turned out at lower rates than similar neighborhoods. In Model 1, this coefficient is negative and statistically significant, and is very similar to the coefficients reported in Tables \ref{tab:match-reg} and \ref{tab:trad-reg}. Model 1 in Table \ref{tab:did-reg} indicates that, in the first election after the removal of a voter, a neighborhood's turnout rate decreased by 2.6 percentage points. The relationship does not hold for tracts (suprisingly, treated tracts turned out at higher rates both before and after treatment than control tracts).
 
 \input{"../temp/table1111.tex"}
 
-Table \ref{tab:did-reg} makes clear that the removal of lost voters likely has a causal effect on neighborhoods' turnout rates. It is worth noting that this is the treatment effect on the treated --- which is to say, it is estimated using only neighborhoods with no lost voters in 2016. These neighborhoods may differ from neighborhoods that had lost voters in both 2016 and 2017. Indeed, neighborhoods that consistently have lost voters are more likely to be the places most impacted by policing patterns. Among block groups that had a lost voter in 2017, those who had no lost voters in 2016 were higher-income (\$51k versus \$56k), had higher shares non-Hispanic White (16 percent versus 21 percent), a lower share non-Hispanic Black (39 percent versus 33 percent), and a smaller share were registered as Democrats (76 percent versus 73 percent).\footnote{Each of these differences are significant at the 99 percent confidence level.} Unfortunately, because many neighborhoods consistently have lost voters, testing the causal effect of the first lost voter for all neighborhoods is not possible. Nevertheless, this analysis lends credence to the causal nature of lost voters on depressed turnout.
+Table \ref{tab:did-reg} makes clear that the removal of lost voters likely has a causal effect on neighborhoods' turnout rates. It is worth noting that this is the treatment effect on the treated --- which is to say, it is estimated using only neighborhoods with no lost voters in 2016. These neighborhoods may differ from neighborhoods that had lost voters in both 2016 and 2017. Indeed, neighborhoods that consistently have lost voters are more likely to be the places most impacted by policing patterns. Among block groups that had a lost voter in 2017, those who had no lost voters in 2016 were higher-income (\$51k versus \$56k), had higher shares non-Hispanic White (16 percent versus 21 percent), a lower share non-Hispanic Black (39 percent versus 33 percent), and a smaller share were registered as Democrats (76 percent versus 73 percent).\footnote{Each of these differences are significant at the 99 percent confidence level.} Each of these differences were even more magnified when comparing tracts included in this analysis to all tracts with lost voters in 2017.
+
+Of particular note is the lower share of the population in these neighborhoods that is Black. The analyses above indicate that neighborhoods with more Black residents respond the most strongly to felony disenfranchisement. The set of neighborhoods in this section, therefore, are likely among the least likely to see this relationship. Nevertheless, that this relationship can be detected at the block group level lends credence to the causal relationship between lost voters and depressed turnout.
 
 \hypertarget{discussion}{%
 \subsection*{Discussion}\label{discussion}}
@@ -585,7 +589,7 @@ However, the relationship between time-off-parole and propensity to vote is far 
 \caption{\label{fig:to-18-recent}Turnout in 2018 Midterm Election}\label{fig:to-18-recent-chart}
 \end{figure}
 
-Formalizing this chart into an individual-level logistic model demonstrates that time since discharge is not correlated with turnout in the short run. The models in Table \ref{tab:to-18-logit-short} include individuals last discharged from parole between January 1\textsuperscript{st}, 2017, and April 17\textsuperscript{th}, 2018.
+Formalizing this chart into an individual-level logistic model demonstrates that time since discharge is not correlated with turnout in the short run. The models in Table \ref{tab:to-18-logit-short} include individuals last discharged from parole between January 1\textsuperscript{st}, 2017, and April 17\textsuperscript{th}, 2018 --- that is to say, all individuals discharged prior to the implementation of the executive order.
 
 \input{"../temp/table3.tex"}
 
@@ -602,7 +606,11 @@ Although Governor Cuomo signed the executive order on April 18, 2018, an examina
 \caption{\label{fig:restoration-chart}Share of Discharged Parolees Whose Voting Rights Were Restored Prior to Discharge}\label{fig:restoration-chart-chunk}
 \end{figure}
 
-Although it perhaps seems counterintuitive to throw out many of our observations, ignoring all individuals last discharged from parole prior to 2017 give us an important asset: it allows us to conceptualize Executive Order 181 as a natural experiment. Whether an individual was discharged from parole before or after May 18\textsuperscript{th}, 2018, is akin to a randomly assigned treatment. Individuals who were discharged from parole prior to the implementation of the executive order are part of the ``control group'', while individuals discharged after are ``treated'' by the policy change. Any observed difference in turnout between individuals discharged before and after late May can therefore be attributed to the executive order.
+Although it perhaps seems counterintuitive to throw out many of our observations, ignoring all individuals last discharged from parole prior to 2017 give us an important asset: it allows us to conceptualize Executive Order 181 as a natural experiment. Whether an individual was discharged from parole before or after May 18\textsuperscript{th}, 2018, is akin to a randomly assigned treatment. Individuals who were discharged from parole prior to the implementation of the executive order are part of the ``control group'', while individuals discharged after are ``treated'' by the policy change. Because Table \ref{tab:to-18-logit-short} shows that discharge date from parole is uncorrelated in the short term with an individual's propensity to vote, any observed difference in turnout between individuals discharged before and after late May can therefore be attributed to the executive order.
+
+To further demonstrate the usefulness of discharge date as an intend-to-treat indicator, Table \ref{tab:demo-rd} shows the demographic characteristics of individuals in the control group (those discharged between January 1st, 2017, and May 17th, 2018) and the intend-to-treat group (those discharged between May 18th and October 12th, 2018). With the exception of age, the control and intend-to-treat groups are statistically indistinguishable from one another, further demonstrating the validity of the natural experiment conceptualization. The control group is, on average, slightly older, which Table \ref{tab:to-18-logit-short} indicates makes them slightly more likely to vote. To the extent our control group perhaps has a slightly higher propensity to vote than our intend-to-treat group our setup is biased against finding a significant increase due to the executive order.
+
+\input{"../temp/table_whatever2.tex"}
 
 In Table \ref{tab:to-18-logit}, I present the results of an individual-level logistic regression exploring whether individuals who were discharged on or after May 18\textsuperscript{th}, 2018, turned out at higher rates than those discharged earlier. The models include all individuals discharged from parole between January 1\textsuperscript{st}, 2017, through October 10\textsuperscript{th}, 2018 (the registration deadline in New York State).
 
@@ -678,7 +686,7 @@ Of course, with just a handful of months between the implementation of the execu
 \subsection*{Discussion}\label{discussion-1}}
 \addcontentsline{toc}{subsection}{Discussion}
 
-Restoring voting rights to individuals on parole is an important step toward undermining the disenfranchisement (both \emph{de jure} and \emph{de facto}) of communities of color disproportionately caught up in the criminal justice system. Prior to New York's Executive Order 181, parolees were required to wait until they finished their parole term to register to vote. That changed in 2018. On October 12\textsuperscript{th} --- the registration deadline for the 2018 midterms --- there were 21,863 active parolees whose voting rights had been restored. Without the executive order, every single one of these individuals would have been barred from participating. Though turnout among this group was low (just 791, or 3.62 percent, of these individuals successfully cast a ballot), their re-enfranchisement marks an important milestone for New York State.
+Restoring voting rights to individuals on parole is an important step toward undermining the disenfranchisement (both \emph{de jure} and \emph{de facto}) of communities of color disproportionately caught up in the criminal justice system. Prior to New York's Executive Order 181, parolees were required to wait until they finished their parole term to register to vote. That changed in 2018. On October 12\textsuperscript{th} --- the registration deadline for the 2018 midterms --- there were 21,863 active parolees whose voting rights had been restored. Without the executive order, every single one of these individuals would have been barred from participating. Though turnout among this group was low (just 792, or 3.62 percent, of these individuals successfully cast a ballot), their re-enfranchisement marks an important milestone for New York State.
 
 As this analysis demonstrates, however, the impact of Executive Order 181 was not limited only to the individuals who would have been disenfranchised in its absence. In the case of New York State, rights restoration prior to discharge from parole is broadly successful at boosting post-supervision participation rates. In this project I estimate that rights restoration increased individuals' propensity to vote by at least 32.7 percent. This estimate, however, should be taken as a lower bound: the data indicate that individuals who spent longer on parole after having their rights restored were more likely to vote than individuals who were discharged immediately following the implementation of the Executive Order. Notably, this upward trend showed no signs of leveling off prior to the 2018 election; individuals whose rights were restored that were discharged in the fifth month after implementation voted at higher rates than those discharged after three months; those discharged after three months turned out at higher rates than those discharged in the first month.
 
