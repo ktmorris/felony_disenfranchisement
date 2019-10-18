@@ -39,7 +39,7 @@ demos <- left_join(demos, rename_v)
 
 
 pvals <- unlist(lapply(demos$varnames, function(x){
-  t.test(demos1[, x] ~ demos1$restored)$p.value < 0.01
+  t.test(demos1[, x] ~ demos1$restored)$p.value < 0.05
 }))
 
 demos$pvals <- pvals
