@@ -14,7 +14,7 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
   mutate(age = as.numeric((as.Date("2018-11-06") - dob_parole) / 365.25),
          parole_time = as.numeric((parole_status_date - release_date_parole) / 365.25),
          v2018 = ifelse(is.na(v2018), 0, v2018),
-         finished_post = parole_status_date >= "2018-05-22",
+         finished_post = parole_status_date >= "2018-05-18",
          days_since_done = as.numeric(as.Date("2018-11-06") - parole_status_date),
          days2 = days_since_done^2,
          restored = ifelse(is.na(restored), F, restored),
