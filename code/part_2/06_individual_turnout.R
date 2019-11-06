@@ -4,6 +4,8 @@
 nys_roll <- readRDS("./temp/parolee_to_18.rds")
 parolees <- readRDS("./temp/parolees_with_restoration.rds")
 
+how_many_restored <- nrow(filter(parolees, year(parole_status_date) >= 2017, restored))
+saveRDS(how_many_restored, "./temp/how_many_restored.rds")
 
 parolees <- left_join(parolees, nys_roll, by = "din") %>% 
   select(-history, -year, -election_type) %>% 
@@ -21,6 +23,9 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
          days_since_m21 = parole_status_date - as.Date("2018-05-19"),
          v2016 = ifelse(is.na(v2016), 0, v2016),
          v2008 = ifelse(is.na(v2008), 0, v2008))
+
+control_to <- mean(filter(parolees, !finished_post, year(parole_status_date) >= 2017)$v2018)
+saveRDS(control_to, "./temp/control_to_18.rds")
 
 model1 <- glm(v2018 ~ restored + days_since_done + days2,
               family = "binomial", data = parolees)
