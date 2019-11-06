@@ -1084,7 +1084,7 @@ number = "3",
 
 @Book{Hajnal2009,
   author    = {Zoltan Hajnal},
-  title     = {America{\textquotesingle}s Uneven Democracy},
+  title     = {America's Uneven Democracy},
   publisher = {Cambridge University Press},
   doi       = {10.1017/cbo9780511800535},
   year      = {2009},
@@ -1100,6 +1100,19 @@ number = "3",
   pagetotal = {320},
   ean       = {9780226137667},
   year      = {2014},
+}
+
+@Article{White2019,
+  author    = {Ariel White},
+  title     = {Family Matters? Voting Behavior in Households with Criminal Justice Contact},
+  volume    = {113},
+  number    = {2},
+  pages     = {607--613},
+  doi       = {10.1017/s0003055418000862},
+  journal   = {American Political Science Review},
+  month     = {5},
+  publisher = {Cambridge University Press ({CUP})},
+  year      = {2019},
 }
 
 @Comment{jabref-meta: databaseType:biblatex;}

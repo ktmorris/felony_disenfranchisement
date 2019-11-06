@@ -1,5 +1,5 @@
 ---
-title: "Neighborhoods and Felony Disenfranchisement: The Case of New York CityXX"
+title: "Neighborhoods and Felony Disenfranchisement: The Case of New York City"
 author: "Kevin Morris"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
@@ -67,8 +67,6 @@ A number of papers have also explored the impact felony disenfranchisement polic
 Although scholars have established that felony disenfranchisement decreases turnout among Black voters at the *state* level, relatively little research has been done on how felony disenfranchisement operates at the sub-state level. Though we know that Black voters are generally less likely to cast a ballot when they live in a state with strict disenfranchisement laws, little work has been done exploring the impact these laws might have at the local level. @Burch2013 is an exception to this. Burch explores the depressive effect of disenfranchisement laws at the local level in North Carolina by examining census block group level turnout and zip code level involvement with the criminal justice system, determining that "at high concentrations, imprisonment and community supervision have an unequivocally demobilizing effect of neighborhoods" (185). This project seeks to expand on her work by replicating her findings in New York City; by using a different estimation technique; and by using a different definition of "lost voters."
 
 This paper begins by exploring the effect of felony disenfranchisement on neighborhood turnout in the New York City Mayoral election of 2017 using individual-level administrative data. Policing and incarceration patterns have historically targeted communities of color, damaging the social fabric of these neighborhoods [e.g. @Sewell2016; @Clear2008; @Lerman2013]. It is possible, however, that these effects run deeper than the direct focus on policing and incarceration has acknowledged. We know that felony disenfranchisement systematically removes individuals from certain neighborhoods, but it is not clear that enough would-be voters are removed relative to the electorate to meaningfully distort neighborhood representation. To the extent that felony disenfranchisement has a spatially-concentrated depressive effect on eligible voters, it is possible that these policies are powerful enough to materially reduce the representation of certain parts of the city.
-
-I begin by offering a refinement of our understanding of who lost voters are. Previous studies exploring the relationship between felony disenfranchisement and spill-over effects have not adequately accounted for the fact that many of the disenfranchised are low-propensity voters to begin with. In this analysis, I use administrative data to identify neighborhoods where individuals with a demonstrated history of participation are disenfranchised. By matching "treated" neighborhoods (neighborhoods with lost voters) to "untreated" neighborhoods, I estimate the causal effect of felony disenfranchisement on neighborhood turnout.
 
 ## Framing for Turnout Effects {-}
 
@@ -314,26 +312,113 @@ j <- readRDS("./temp/dec_block_map.rds")
 print(j)
 ```
 
+### Toward a Causal Estimation {-}
+
+As the analyses above make clear, neighborhoods with lost voters saw substantially lower turnout in the 2017 mayoral election than neighborhoods without lost voters. The possibility remains, however, that treated neighborhoods systematically differ from untreated neighborhoods in ways that cannot be accounted for using the available data. If that were the case, we would expect that these treated neighborhoods would have lower turnout regardless of whether they lost a voter. As the analysis that follows shows, this is not the case: prior to losing a voter, treated neighborhoods did not have systematically lower turnout than other neighborhoods.
+
+I begin by restricting the set of neighborhoods to only neighborhoods that, on election day in 2016, had no lost voters. This process is the inverse of the process described above: I identify all individuals who were in prison or on parole on November 8^th^, 2016, who had cast a ballot between 2006 and 2015. These individuals' home neighborhoods are removed from the subsequent analysis. I then use the genetic match algorithm discussed above to match neighborhoods with a lost voter in 2017 to neighborhoods with no lost voters in 2017. These neighborhoods, therefore, were *newly* home to lost voters. If lost voters have no effect on neighborhood turnout, we would expect these treated neighborhoods to have lower turnout in both 2016 --- before they lost a voter --- and in 2017, after a voter was disenfranchised. In 2017, 1,497 neighborhoods had a lost voter; of these, 326 had no lost voters in 2016 and are included here. The original set of control block groups included 4,272 neighborhoods with no lost voters; of these, 211 *did* have a lost voter in 2016, and are thus excluded from this analysis.
+
+Of course, felony disenfranchisement could structure neighborhood turnout differently for presidential and local elections. It is conceivable that the incarceration of a family member or neighbor would sour individuals on participating in local contests, but that the same individual would not read national politics through the same lens. Nevertheless, data limitations makes the 2016 election the only reasonable comparator for 2017 turnout. 
+
+Tables \ref{tab:did-match} and \ref{tab:did-match-tract} present the results of matching on these subsets of neighborhoods. As before, the match results in a highly balanced panel between treated and untreated neighborhoods.
+
+```{r block-table-chunk-did, echo = F}
+t <- readRDS("./temp/match_table_block_group_did.rds")
+j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:did-match) Results of Block Group-Level Matching", linesep = "") %>% 
+  add_header_above(c(" " = 1, "Means: Unmatched Data" = 2, "Means: Matched Data" = 2, "Percent Improvement" = 4), align = "c") %>% 
+  kable_styling(latex_options = c("scale_down", "HOLD_position"),
+                font_size = 10)
+j
+```
+
+```{r tract-chunk-did, echo = F}
+t <- readRDS("./temp/match_table_tract_did.rds")
+j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:did-match-tract) Results of Tract-Level Matching", linesep = "") %>% 
+  add_header_above(c(" " = 1, "Means: Unmatched Data" = 2, "Means: Matched Data" = 2, "Percent Improvement" = 4), align = "c") %>% 
+  kable_styling(latex_options = c("scale_down", "HOLD_position"),
+                font_size = 10)
+j
+```
+
+In Table \ref{tab:did-reg}, I present the out come of a simple least squares regression on this subset of block groups and tracts. In both models, D(2017) indicates that across the board turnout in 2017 was far lower than in 2016. D(Treat) can be understood as the difference between treated and control neighborhoods in the 2016 election. In Model 1, the treated and control neighborhoods did not have statistically significantly different turnout in the 2016 election; Model 2 indicates that treated census tracts had slightly *higher* turnout prior to intervention. D(Treat) $\times$ D(2017) is the coefficient of most interest here: it indicates whether, after treatment, treated neighborhoods turned out at lower rates than similar neighborhoods. In Model 1, this coefficient is negative and statistically significant, and is very similar to the coefficients reported in Tables \ref{tab:match-reg} and \ref{tab:trad-reg}. Model 1 in Table \ref{tab:did-reg} indicates that, in the first election after the removal of a voter, a neighborhood's turnout rate decreased by 2.6 percentage points. The relationship does not hold for tracts (suprisingly, treated tracts turned out at higher rates both before and after treatment than control tracts).
+
+```{r tract-reg-chunkssss, echo = F, results = "hide", message = F, warning = F}
+load("./temp/match_reg_block_group_did.rdata")
+
+bg_reg <- reg_output
+bg_reg_ses <- reg_output_ses
+
+load("./temp/match_reg_tract_did.rdata")
+
+tract_reg <- reg_output
+tract_reg_ses <- reg_output_ses
+
+stargazer(bg_reg, tract_reg,
+          header = F,
+          column.labels = c("Block Group Level", "Tract Level"),
+          se = list(bg_reg_ses, tract_reg_ses),
+          notes = c("TO REPLACE"),
+          type = "latex", notes.align = "l",
+          notes.append = T,
+          covariate.labels = c("D(2017)", "D(Treat)", "D(2017) $\\times$ D(Treat)", "Constant"),
+          omit = "district",
+          dep.var.labels = c("Turnout Rate"),
+          title = "\\label{tab:did-reg} Neighborhood Turnout in 2016 and 2017 General Elections",
+          table.placement = "H",
+          omit.stat = c("f", "ser"),
+          table.layout = "-dcm#-t-a-s-n",
+          out = "./temp/test_abc.tex",
+          out.header = F,
+          add.lines=list(c("Congressional District FE", "X", "X")))
+
+j <- fread("./temp/test_abc.tex", header = F, sep = "+")
+
+note.latex <- "\\multicolumn{3}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors (clustered at match level) in parentheses.}}}"
+
+j <- j %>% 
+  mutate(n = row_number(),
+         V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
+         V1 = ifelse(grepl("\\\\#tab", V1), gsub("\\\\#", "", V1), V1)) %>% 
+  filter(!grepl("Note:", V1))
+
+
+insert <- "\\cmidrule(l{3pt}r{3pt}){2-2} \\cmidrule(l{3pt}r{3pt}){3-3}"
+insert1 <- "\\fontsize{10}{12}\\selectfont"
+
+j <- bind_rows(j, data.frame(V1 = c(insert, insert1), n = c(7.5, 1.1))) %>% 
+  arrange(n) %>% 
+  select(-n)
+
+write.table(j, "./temp/table1111.tex", quote = F, col.names = F,
+            row.names = F)
+```
+\input{"../temp/table1111.tex"}
+
+
+Table \ref{tab:did-reg} makes clear that the removal of lost voters likely has a causal effect on neighborhoods' turnout rates. It is worth noting that this is the treatment effect on the treated --- which is to say, it is estimated using only neighborhoods with no lost voters in 2016. These neighborhoods may differ from neighborhoods that had lost voters in both 2016 and 2017. Indeed, neighborhoods that consistently have lost voters are more likely to be the places most impacted by policing patterns. Among block groups that had a lost voter in 2017, those who had no lost voters in 2016 were higher-income (\$51k versus \$56k), had higher shares non-Hispanic White (16 percent versus 21 percent), a lower share non-Hispanic Black (39 percent versus 33 percent), and a smaller share were registered as Democrats (76 percent versus 73 percent).^[Each of these differences are significant at the 99 percent confidence level.] Each of these differences were even more magnified when comparing tracts included in this analysis to all tracts with lost voters in 2017.
+
+Of particular note is the lower share of the population in these neighborhoods that is Black. The analyses above indicate that neighborhoods with more Black residents respond the most strongly to felony disenfranchisement. The set of neighborhoods in this section, therefore, are likely among the least likely to see this relationship. Nevertheless, that this relationship can be detected at the block group level lends credence to the causal relationship between lost voters and depressed turnout.
+
 ## Discussion {-}
 
-During the 2017 mayoral election, felony disenfranchisement laws were responsible for removing an estimated `r comma(readRDS("./temp/lost_count_nyc.rds"))` voters from New York City neighborhoods. The spatial concentration of these lost voters is striking, as demonstrated in Figure \ref{fig:citywide-map}, and the systematic removal of voters from these neighborhoods is troubling. However, more than one million votes were cast in the general election of 2017. Although felony disenfranchisement rules have enormous implications for the individuals targeted by them, the removal of such a small number of voters --- concentrated though they are --- is unlikely to have large implications on its own.
+During the 2017 mayoral election, felony disenfranchisement laws were responsible for removing an estimated `r comma(readRDS("./temp/lost_count_nyc.rds"))` voters from New York City neighborhoods. The spatial concentration of these lost voters is striking, as demonstrated in Figure \ref{fig:citywide-map}, and the systematic removal of voters from these neighborhoods is troubling. However, more than one million votes were cast in the general election of 2017. Although felony disenfranchisement rules have implications for the individuals targeted by them, the removal of such a small number of voters --- concentrated though they are --- is unlikely to have large implications on its own.
 
 As this analysis makes clear, however, felony disenfranchisement reaches beyond the individuals who are incarcerated. Previous literature has established that felony disenfranchisement impacts Black turnout at the state level, but this analysis demonstrates that these demobilizing effects intersect with geographical space to systematically depress the vote in neighborhoods where voters are being sent to prison. As discussed above, these neighborhoods have far lower incomes than the rest of the city: the median income of block groups without any lost voters is more than 40 percent higher than the median income of block groups with lost voters. Similarly, just 17 percent of individuals in the average block group with a lost voter were White, compared with 40 percent of the population in other block groups. Felony disenfranchisement has spillover effects on neighborhood turnout, and these neighborhoods systematically differ from the rest of the city's population. The effects are concentrated in neighborhoods where the most marginalized members of society live. These highly concentrated spillover effects are cause for major concern.
 
-Of equal concern is the apparent concentration of these effects in Black neighborhoods. Both Tables \ref{tab:match-reg} and \ref{tab:trad-reg} indicate that once the lost voter indicator is interacted with the share of a neighborhood that is Non-Hispanic Black, the lost voter indicator is either insignificant or significant and positive. This means that lost voters have no spillover effects in neighborhoods with small Black populations. Understanding the magnitude of this finding is important. In New York City, there are `r readRDS("./temp/count_gt_90_black")` block groups where the Black community makes up more than 90 percent of the population, with an average of `r round(readRDS("./temp/vap_gt_90_black"))` voting age citizens. Model 2 of Table \ref{tab:match-reg} indicates that, in a block group that is 90 percent Black with a citizen voting age population of `r round(readRDS("./temp/vap_gt_90_black"))`, having any lost voter reduced turnout by `r round(0.9 * -1*bg_reg_black[["coefficients"]][["treatTRUE:nh_black"]] * readRDS("./temp/vap_gt_90_black"), digits = 1)` ballots. Conversely, in a block group with the same voting age population that is just 10 percent Black, the loss of any voter decreased turnout by just `r round(0.1 * -1*bg_reg_black[["coefficients"]][["treatTRUE:nh_black"]] * readRDS("./temp/vap_gt_90_black"), digits = 1)` ballots.
+Of equal concern is the apparent concentration of these effects in Black neighborhoods. Both Tables \ref{tab:match-reg} and \ref{tab:trad-reg} indicate that once the lost voter indicator is interacted with the share of a neighborhood that is non-Hispanic Black, the lost voter indicator is either nonsignificant or significant and positive. This means that lost voters have no spillover effects in neighborhoods with small Black populations. Understanding the magnitude of this finding is important. In New York City, there are `r readRDS("./temp/count_gt_90_black")` block groups where the Black community makes up more than 90 percent of the population, with an average of `r round(readRDS("./temp/vap_gt_90_black"))` voting age citizens. Model 2 of Table \ref{tab:match-reg} indicates that, in a block group that is 90 percent Black with a citizen voting age population of `r round(readRDS("./temp/vap_gt_90_black"))`, having any lost voter reduced turnout by `r round(0.9 * -1*bg_reg_black[["coefficients"]][["treatTRUE:nh_black"]] * readRDS("./temp/vap_gt_90_black"), digits = 1)` ballots. Conversely, in a block group with the same voting age population that is just 10 percent Black, the loss of any voter decreased turnout by just `r round(0.1 * -1*bg_reg_black[["coefficients"]][["treatTRUE:nh_black"]] * readRDS("./temp/vap_gt_90_black"), digits = 1)` ballots.
 
 The standard OLS regression results tell a similar story: in our average block group that is 90 percent Black, each lost voter cost the neighborhood `r round(0.9 * -1*bg_model2[["coefficients"]][["lost_voters_black"]] * readRDS("./temp/vap_gt_90_black"), digits = 1)` ballots. In block groups of the same size where the population is just 10 percent Black, lost voters cost the neighborhood just `r round(0.1 * -1*bg_model2[["coefficients"]][["lost_voters_black"]] * readRDS("./temp/vap_gt_90_black"), digits = 1)` ballots --- hardly more votes than the lost voter herself.
 
-Why do lost voters in Black neighborhoods have such large spillover effects, when lost voters in predominantly non-Black neighborhoods do not? Much of the previous literature in this space establishes that individuals who have negative interactions with the government are less likely to choose to interact with the state in the future. @Lerman2013, for instance, shows that neighborhoods where there are many police stops that involve searches or use of force use 311 services less frequently. @Weaver2010 argues that interactions with the criminal justice system changes how individuals understand both their governments and their identities as citizens. It is possible that Black communities interpret the loss of voters differently than non-Black communities, and therefore respond differently.
+Why do lost voters in Black neighborhoods have such large spillover effects, when lost voters in predominantly non-Black neighborhoods do not? Much of the previous literature in this space establishes that individuals who have negative interactions with the government are less likely to choose to interact with the state in the future --- that these interactions have large "interpretive effects" [@Pierson1993]. @Lerman2013, for instance, shows that neighborhoods where there are many police stops that involve searches or use of force use 311 services less frequently. @Weaver2010 argues that interactions with the criminal justice system changes how individuals understand both their identities as citizens and the nature of governmental structures. Similarly, @Weaver2014 tells us that those who have had contact with the criminal justice system consider political participation not just unfruitful but rather "as something to be actively avoided" (16). It is perhaps unsurprising that the negative spillover effects are largest in neighborhoods where police presence and criminal justice involvement is most keenly (and unfairly) felt; namely, in plurality and majority Black neighborhoods.
 
 Individuals who live in neighborhoods where police activity is relatively limited may interpret the incarceration of a neighbor as a largely individual phenomenon. If it is understood as an isolated or individual event, voters in these neighborhoods who are not incarcerated are not likely to update their view of the state. They may draw no connections between their neighbor's imprisonment and their own efficacy as a voter. In the neighborhoods where policing is most prevalent --- often, lower-income Black communities --- the incarceration of a neighbor might not be interpreted so individualistically. It may, rather, be interpreted as another reminder of the government's unfairness. If a would-be voter finds herself soured on political participation because of her neighbor's incarceration, she may be less likely to cast a ballot.
 
-This finding mirrors @White2019, which finds that brief jail spells decrease future participation more for Black individuals than for White individuals. This is perhaps unsurprising. A large body of research indicates that, even after controlling for various sociodemographic characteristics and interactions with the police, Black Americans have far more negative views of the criminal justice system than White Americans [e.g. @Browning1992; @Hurwitz2005; @Henderson1997; @Wu2009]. Experience with the criminal justice system is less likely to be viewed in isolation (and therefore more likely to effect voting patterns) in Black neighborhoods.
+This finding mirrors @White2019, which finds that brief jail spells decrease future participation more for Black individuals than for White individuals. This is perhaps unsurprising. A large body of research indicates that, even after controlling for various sociodemographic characteristics and interactions with the police, Black Americans have far more negative views of the criminal justice system than White Americans [e.g. @Browning1992; @Hurwitz2005; @Henderson1997; @Wu2009]. Experience with the criminal justice system is less likely to be viewed in isolation (and therefore more likely to affect voting patterns) in Black neighborhoods. There is therefore strong reason to suspect that the concentrated depressive effects of felony disenfranchisement in Black neighborhoods arise from these distinct interpretations of the act of incarceration by the state.
 
 For decades, scholars have detailed the problems associated with poor and segregated urban neighborhoods [@Wilson1990]. More recent work has begun to interrogate the ways in which the increasing reach of the carceral state shapes the economic and political behavior of individuals caught up in the criminal justice system and their community members. Much of this work, however, has focused on either the impacts of living in marginalized communities (by measuring health and economic impacts) or has not accounted for the importance of physical space (by focusing only on proximal social, and not geographic, contact with directly impacted individuals). This analysis allows us to understand the implications for living in a neighborhood where individuals likely to cast a ballot are not allowed to because of a felony conviction. I find that neighborhoods that are home to lost voters --- and particularly neighborhoods with large Black populations --- systematically turn out for local elections at lower rates than otherwise similar neighborhoods.
 
-This has major ramifications for how we understand the political positioning of the minority neighborhoods most impacted by overpolicing and incarceration. In the case of the 2017 election, there were likely no electoral consequences: Bill de Blasio won reelection handily, and neighborhoods with lost voters overwhelmingly supported his candidacy. A lack of electoral consequences in 2017, however, should not be interpreted to mean that the disparate and concentrated depressive effects of felony disenfranchisement has no implications for who is elected to local office. As @Hajnal2005 shows, racial turnout differentials can have real consequences for city politics.
+This has major ramifications for how we understand the political positioning of the minority neighborhoods most impacted by overpolicing and incarceration. In the case of the 2017 election, there were likely no electoral consequences: Bill de Blasio won reelection handily, and neighborhoods with lost voters overwhelmingly supported his candidacy. A lack of electoral consequences in 2017, however, should not be interpreted to mean that the disparate and concentrated depressive effects of felony disenfranchisement never have implications for who is elected to local office. As @Hajnal2005 shows, racial turnout differentials can have real consequences for city politics.
 
 Moreover, we cannot conclude that depressed turnout in these neighborhoods in 2017 had no impact on their representation. City council members representing these neighborhoods, for instance, may determine that pushing for policies popular with these constituents (such as stricter police oversight) will not garner enough votes to make such a fight worthwhile. Although spillover effects from felony disenfranchisement may not have changed who won power in 2017, it very possibly altered how those individuals *held* and *used* their power.
 
-Felony disenfranchisement laws, originally adopted during Jim Crow, have taken on a new life in the era of mass incarceration. Abundant research has demonstrated the pernicious ways in which overincarceration dogs the lives of poor and nonwhite Americans. As this study shows, however, the neighborhoods bearing the brunt of felony disenfranchisement are also seeing their political power diminished through reduced turnout. The interlocking nature of racioeconomic segregation, politicing patterns, and felony disenfranchise all combine to undermine the political power of marginalized communities in New York City.
+Felony disenfranchisement laws, originally adopted during Jim Crow, have taken on a new life in the era of mass incarceration. Abundant research has demonstrated the pernicious ways in which overincarceration dogs the lives of poor and non-White Americans. As this study shows, however, the neighborhoods bearing the brunt of felony disenfranchisement are also seeing their political power diminished through reduced turnout. The interlocking nature of racioeconomic segregation, politicing patterns, and felony disenfranchisement all combine to undermine the political power of marginalized communities in New York City.
