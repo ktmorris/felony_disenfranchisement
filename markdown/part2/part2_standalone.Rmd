@@ -9,10 +9,8 @@ output:
     toc: no
     fig_caption: yes
     latex_engine: xelatex
-    # includes: 
-    #   in_header: "../code/misc/preamble.tex"
     keep_tex: true
-bibliography: "citations.bib"
+bibliography: "../citations.bib"
 link-citations: yes
 fontsize: 12pt
 header-includes:
@@ -33,7 +31,7 @@ abstract: |
 \pagenumbering{gobble}
 \pagebreak
 ```{r setup, echo = F, message = F, warning = F}
-knitr::opts_knit$set(root.dir = "..", dev = "cairo_pdf")
+knitr::opts_knit$set(root.dir = "../..", dev = "cairo_pdf")
 library(systemfit)
 library(AER)
 library(sandwich)
@@ -195,7 +193,7 @@ write.table(j, "./temp/table3.tex", quote = F, col.names = F,
             row.names = F)
 
 ```
-\input{"../temp/table3.tex"}
+\input{"../../temp/table3.tex"}
 
 The inclusion of time controls in Model 2 in Table \ref{tab:to-18-logit-short} increases the AIC. A Chi-squared test confirms that the model is not improved when controls for time are included. When we look only at individuals recently discharged from parole, the length of time an individual has been off parole is not associated with his propensity to vote.^[[Appendix A] provides further corroboration that being discharged from parole in the months before an election is uncorrelated with propensity to vote by exploring turnout rates in the 2016 presidential election.] This indicates that using individuals released in 2017 and 2018 prior to the executive order as a control group is feasible.
 
@@ -239,7 +237,7 @@ j$V1[4] <- lab
 write.table(j, "./temp/table_whatever2.tex", quote = F, col.names = F,
             row.names = F)
 ```
-\input{"../temp/table_whatever2.tex"}
+\input{"../../temp/table_whatever2.tex"}
 
 In Table \ref{tab:to-18-logit}, I present the results of an individual-level logistic regression exploring whether individuals who were discharged on or after May 18^th^, 2018, turned out at higher rates than those discharged earlier. The models include all individuals discharged from parole between January 1^st^, 2017, through October 10^th^, 2018 (the registration deadline in New York State).
 
@@ -285,7 +283,7 @@ write.table(j, "./temp/table4.tex", quote = F, col.names = F,
             row.names = F)
 
 ```
-\input{"../temp/table4.tex"}
+\input{"../../temp/table4.tex"}
 
 Model 1 in Table \ref{tab:to-18-logit} formalizes the trend presented in Figure \ref{fig:to-18-recent-chart} by controlling only for whether an individual was discharged after Executive Order 181 went into effect. Model 2 also controls for individual-level characteristics: sex, age on November 6^th^, 2018, and race. Model 3 adds sentence-specific information to Model 2: the amount of time the individual spent on parole, and the class(es) of felony for which they were convicted. Table \ref{tab:to-18-logit} makes clear that formerly incarcerated men were far less likely to vote than formerly incarcerated women; that older formerly incarcerated individuals were more likely to cast a ballot; and individuals who spent longer on parole were more likely to participate in the midterm election.
 
@@ -333,7 +331,7 @@ j$V1[4] <- lab
 write.table(j, "./temp/table_whatever.tex", quote = F, col.names = F,
             row.names = F)
 ```
-\input{"../temp/table_whatever.tex"}
+\input{"../../temp/table_whatever.tex"}
 Table \ref{tab:demos-restorees} makes clear that the restoration of voting rights (``compliance'') is strongly correlated with certain demographics that are also linked to propensity to vote. Men, for instance, were less likely to have their rights restored than women, and Table \ref{tab:to-18-logit} above indicates that men who have been on probation are less likely to vote than women. Similarly, Latinos made up more than a third of individuals whose rights were not restored, but just 19 percent of individuals who did have voting rights restored. This is likely a reflection of citizenship status. Table \ref{tab:demos-restorees} indicates that *b~1~* is very probably correlated with *Y*. An approach in which is we regress turnout on a dummy indicating rights restoration is therefore inappropriate: such an approach cannot tell whether rights restoration *caused* turnout to increase, or whether it simply identifies individuals with a higher propensity to vote.
 
 The standard way of dealing with such a problem is an instrumental variables approach [@Angrist1996]. Such an approach has been widely used in the context of voter turnout [e.g. @Ansolabehere1999; @Gerber2000; @Milligan2004; @Lassen2004; @Sondheimer2010]. A valid instrumental variable must satisfy two criteria: it must be correlated with the right-hand-side (endogenous) variable of interest, and it must be uncorrelated with dependent variable (except via the endogenous variable).
@@ -344,14 +342,14 @@ Two-stage least squares models allow us to leverage the random assignment of par
 
 Table \ref{tab:iv-models} presents the results of these various approaches on the question at hand. Models 1 and 2 utilize the linear two-stage least squares approach, with and without covariates. Model 3 uses the 2S probit specification (with all covariates), while Models 4 and 5 employ the bivariate probit specification (with and without covariates). For ease of comparison, I show the marginal effects of the probit models (measured at the means of the other variables).
 
-\input{"../temp/iv_clean.tex"}
+\input{"../../temp/iv_clean.tex"}
 The estimates of the bivariate probit model are modestly more conservative than the two-stage least squares model. After controlling for available demographics, the bivariate probit model indicates that rights restoration prior to discharge boosted turnout by individuals who had their rights restored by around 0.74 percentage points; the two-stage least squares model estimates that it increased turnout by around 0.85 percentage points. Though these numbers may seem small, they represent relatively large gains. Just 3.0 percent of individuals who had their rights restored cast a ballot in 2018, indicating that the executive order increased turnout by between `r round((0.74 / (3.0 - 0.74)) * 100, digits = 1)` and `r round((0.85 / (3.0 - 0.85)) * 100, digits = 1)` percent.
 
 ### Racial Variation {-}
 
 Although these models demonstrate that rights restoration had a generally positive effect on participation in the 2018 election, the models hide substantial variation between races. In Table \ref{tab:iv-models-r} I present the two-stage least squares and bivariate probit models on subsets of former parolees. These models include only white former parolees (Models 1 and 4), all non-white former parolees (Models 2 and 5), and only black former parolees (Models 3 and 6). Once again, the marginal effects in the bivariate probit models are calculated at the means of the other variables.
 
-\input{"../temp/iv_clean_race.tex"}
+\input{"../../temp/iv_clean_race.tex"}
 
 ```{r nameless-chunk, echo = F, results = "asis", message = F}
 load("./temp/iv_individual_turnout_18.rdata")
@@ -411,7 +409,7 @@ j <- bind_rows(j, data.frame(V1 = c(insert, insert1), n = c(7.5, 1.1))) %>%
 write.table(j, "./temp/table5.tex", quote = F, col.names = F,
             row.names = F)
 ```
-\input{"../temp/table5.tex"}
+\input{"../../temp/table5.tex"}
 Of the 14,155 individuals discharged from parole between January 1^st^, 2017, and May 18^th^, 2018, just over 6 thousand (43 percent) were black. These black voters were more than 50 percent more likely to vote in the midterms than the rest of the population. Even when Latinos are excluded from this group, black individuals were still 36 percent more likely to cast a ballot. In both specifications, this higher turnout rate is significant at the 95 percent level of confidence.
 
 Table \ref{tab:black-to} also shows, however, that among the intend-to-treat group (those discharged from parole after the executive order went into effect), black individuals were no more likely to participate in the 2018 general election. The same is true for the treatment group --- black individuals who had their rights restored were no more likely than other individuals to vote in 2018. The intervention, therefore, appears to have a leveling effect. Rights restoration prior to discharge seems to have no effect on future propensity to vote for black individuals, but that does not mean they are less likely to vote than other former parolees.
@@ -420,7 +418,7 @@ Table \ref{tab:black-to} also shows, however, that among the intend-to-treat gro
 
 There is some reason to believe that assuming a constant treatment effect understates the true impact of Executive Order 181. Figures \ref{fig:to-18-chart} and \ref{fig:to-18-recent-chart} suggest that, among individuals who finished parole after the Executive Order went into effect, individuals who were discharged later had a higher propensity to vote. This may be due to a number of factors: for instance, parole officers may have had longer to understand and communicate the new rules. Similarly, individuals discharged later may have had more meetings with their parole officers after the policy change, giving the parole officers multiple times to encourage the individuals under study to cast a ballot. Table \ref{tab:iv-models-time} investigates turnout as a function of the number of months an individual spent on parole after having her rights restored. If the individual did not have voting rights restored, this variable takes the value 0. This variable is instrumented by the number of months an individual spent on parole after the executive order went into effect. It is coded as 0 for individuals discharged prior to the implementation of the executive order.^[Because the bivariate probit specification is not appropriate when the endogenous variable is not binary, that specification is not included in Table \ref{tab:iv-models-time}.]
 
-\input{"../temp/iv_clean_months.tex"}
+\input{"../../temp/iv_clean_months.tex"}
 
 Table \ref{tab:iv-models-time} indicates that variable treatment intensity matters --- individuals who spent longer on parole after they had their rights restored were more likely to vote than those whose rights were restored shortly before discharge. Table \ref{tab:iv-models-time} shows that for each month individuals spent on parole after having their rights restored, turnout increased by between 0.25 percentage points (in the 2SLS model) and 0.48 percentage points (in the 2S probit model).
 
@@ -493,7 +491,7 @@ j <- bind_rows(j, data.frame(V1 = c(insert1), n = c(1.1))) %>%
 write.table(j, "./temp/table55.tex", quote = F, col.names = F,
             row.names = F)
 ```
-\input{"../temp/table55.tex"}
+\input{"../../temp/table55.tex"}
 
 Although turnout was generally higher in 2016 than in 2018 (reflecting statewide higher turnout thanks to the presidential contest), there is no evidence that being discharged in the summer of 2016 was associated with an individual's propensity to cast a ballot. The nonsignificant results from 2016 provide strong corroboration that discharge date serves as an effective instrument for rights restoration.
 
