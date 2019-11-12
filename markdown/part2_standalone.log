@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  6 NOV 2019 12:04
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.5.9)  12 NOV 2019 13:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -871,10 +871,6 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 )
-(c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/setspace/setspac
-e.sty
-Package: setspace 2011/12/19 v6.7a set line spacing
-)
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/rotatin
 g.sty
 Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
@@ -899,31 +895,31 @@ LaTeX Warning: Label `' multiply defined.
 )
 \openout1 = `part2_standalone.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 106.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 106.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 107.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 107.
 
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 106.
-LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 107.
+LaTeX Font Info:    ... okay on input line 107.
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -959,7 +955,7 @@ LaTeX Font Info:    ... okay on input line 106.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box68
-Package hyperref Info: Link coloring OFF on input line 106.
+Package hyperref Info: Link coloring OFF on input line 107.
 
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref
 .sty
@@ -971,90 +967,92 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count309
 )
-LaTeX Info: Redefining \ref on input line 106.
-LaTeX Info: Redefining \pageref on input line 106.
-LaTeX Info: Redefining \nameref on input line 106.
+LaTeX Info: Redefining \ref on input line 107.
+LaTeX Info: Redefining \pageref on input line 107.
+LaTeX Info: Redefining \nameref on input line 107.
 (./part2_standalone.out) (./part2_standalone.out)
 \@outlinefile=\write3
 \openout3 = `part2_standalone.out'.
 
-(./part2_standalone.toc
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 4.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 108.
+
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 4.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 108.
+
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 4.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 108
+.
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 4.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 108
+.
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 4.
+(Font)              <14.4> on input line 108.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 4.
+(Font)              <10> on input line 108.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 4.
-LaTeX Font Info:    Try loading font information for U+msa on input line 4.
+(Font)              <7> on input line 108.
+LaTeX Font Info:    Try loading font information for U+msa on input line 108.
 
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 4.
+LaTeX Font Info:    Try loading font information for U+msb on input line 108.
 
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 108.
+[1
 
-])
-\tf@toc=\write4
-\openout4 = `part2_standalone.toc'.
-
-[2]
+]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 121.
+(Font)              <12> on input line 122.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 121.
+(Font)              <8> on input line 122.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 121.
-[1] [2] [3] [4] [5] [6] [7] [8] [9] [10]
+(Font)              <6> on input line 122.
+[1] [2] [3] [4] [5] [6]
 File: part2_standalone_files/figure-latex/to-16-chart-1.pdf Graphic file (type 
 pdf)
 <use part2_standalone_files/figure-latex/to-16-chart-1.pdf>
-[11]
+[7]
 File: part2_standalone_files/figure-latex/to-18-chart-1.pdf Graphic file (type 
 pdf)
 <use part2_standalone_files/figure-latex/to-18-chart-1.pdf>
-[12]
+[8]
 File: part2_standalone_files/figure-latex/to-18-recent-chart-1.pdf Graphic file
  (type pdf)
 <use part2_standalone_files/figure-latex/to-18-recent-chart-1.pdf>
-(../temp/table3.tex) [13]
+[9] (../temp/table3.tex) [10]
 File: part2_standalone_files/figure-latex/restoration-chart-chunk-1.pdf Graphic
  file (type pdf)
 <use part2_standalone_files/figure-latex/restoration-chart-chunk-1.pdf>
-[14] [15] (../temp/table_whatever2.tex) (../temp/table4.tex) [16] [17] [18] (..
-/temp/table_whatever.tex) [19] [20] (../temp/iv_clean.tex) [21] [22] (../temp/i
-v_clean_race.tex
+[11] (../temp/table_whatever2.tex) [12] (../temp/table4.tex) [13] [14] (../temp
+/table_whatever.tex) [15] (../temp/iv_clean.tex) [16] (../temp/iv_clean_race.te
+x
 Overfull \hbox (5.13248pt too wide) in paragraph at lines 6--40
  [][] 
  []
 
-) [23] (../temp/table5.tex) [24] [25] (../temp/iv_clean_months.tex) [26] [27] [
-28] [29] [30] (../temp/table55.tex) [31] [32]
-Overfull \hbox (58.95358pt too wide) in paragraph at lines 405--407
+) [17] [18] (../temp/table5.tex) [19] (../temp/iv_clean_months.tex) [20] [21] [
+22] [23] (../temp/table55.tex) [24]
+Overfull \hbox (58.95358pt too wide) in paragraph at lines 411--413
  \TU/lmr/m/n/12 States.” []$[][][][][] [] [] [] [][][] [] [][][][][][][][][][][
 ][][] [] [][][] [] [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][]$[]. 
  []
 
-[33] [34] [35]
+[25] [26]
 Underfull \hbox (badness 2150) in paragraph at lines 477--479
  \TU/lmr/m/n/12 ers: State-Level Estimates of Felony Disenfranchisement, 2016.”
  Research
@@ -1066,26 +1064,25 @@ Underfull \hbox (badness 1721) in paragraph at lines 477--479
 [][][][][][][][][][][][][][][][] [] [][][] [] [][][][][][][][][][][][] []
  []
 
-[36]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 493.
-[37]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 493.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 499.
+[27]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 499.
 (./part2_standalone.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 493.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 493.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 499.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 499.
 Package rerunfilecheck Info: File `part2_standalone.out' has not changed.
-(rerunfilecheck)             Checksum: AC6160E21E3C0D0AE3602D2519E1DC68.
+(rerunfilecheck)             Checksum: 33A784C3CC817158230A467E61AA8ADC.
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 24306 strings out of 494894
- 450332 string characters out of 6175524
- 560096 words of memory out of 5000000
- 27939 multiletter control sequences out of 15000+600000
- 557199 words of font info for 70 fonts, out of 8000000 for 9000
+ 24280 strings out of 494894
+ 449863 string characters out of 6175524
+ 564104 words of memory out of 5000000
+ 27917 multiletter control sequences out of 15000+600000
+ 561232 words of font info for 77 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 46i,17n,68p,2048b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 46i,17n,68p,2051b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on part2_standalone.pdf (39 pages).
+Output written on part2_standalone.pdf (28 pages).
