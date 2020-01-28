@@ -81,15 +81,38 @@ for(geo in c("block_group", "tract")){
   reg$boro <- substring(reg$GEOID, 1, 5)
   
   reg_output <- lm(to ~ treat, data = reg, weights = weight)
+  
   reg_output_ses <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
   reg_output_pval <- data.frame(summary(lm_robust(to ~ treat, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 4]
   
-  save(reg_output, reg_output_ses, reg_output_pval, file = paste0("./temp/match_reg_", geo, ".rdata"))
+  reg_output2 <- lm(to ~ treat +
+                      median_income + latino + nh_black + nh_white + some_college +
+                      median_age + reg_rate + share_dem + share_non_citizen + share_winner,
+                    data = reg, weights = weight)
+  
+  reg_output2_ses <- data.frame(summary(lm_robust(to ~ treat +
+                                                    median_income + latino + nh_black + nh_white + some_college +
+                                                  median_age + reg_rate + share_dem + share_non_citizen + share_winner,
+                                                  data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
+  
+  save(reg_output, reg_output_ses, reg_output_pval,
+       reg_output2, reg_output2_ses, file = paste0("./temp/match_reg_", geo, ".rdata"))
   
   reg_output_nhblack <- lm(to ~ treat + treat * nh_black, data = reg, weights = weight)
   reg_output_nhblack_ses <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
   reg_output_nhblack_pval <- data.frame(summary(lm_robust(to ~ treat + treat * nh_black, data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 4]
-  save(reg_output_nhblack, reg_output_nhblack_ses, reg_output_nhblack_pval, file = paste0("./temp/match_reg_", geo, "_nhb.rdata"))
+  
+  reg_output2_nhblack <- lm(to ~ treat * nh_black +
+                              median_income + latino + nh_white + some_college +
+                              median_age + reg_rate + share_dem + share_non_citizen + share_winner,
+                            data = reg, weights = weight)
+  reg_output2_nhblack_ses <- data.frame(summary(lm_robust(to ~ treat * nh_black +
+                                                            median_income + latino + nh_white + some_college +
+                                                            median_age + reg_rate + share_dem + share_non_citizen + share_winner,
+                                                          data = reg, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
+  
+  save(reg_output_nhblack, reg_output_nhblack_ses, reg_output_nhblack_pval,
+       reg_output2_nhblack, reg_output2_nhblack_ses, file = paste0("./temp/match_reg_", geo, "_nhb.rdata"))
   
   ###########
   load(paste0("./temp/mout_", geo, ".RData"))
@@ -151,4 +174,61 @@ for(geo in c("block_group", "tract")){
   
   saveRDS(df, paste0("./temp/match_table_", geo, ".rds"))
 
-}
+  #####################
+  if(geo == "block_group"){
+    reg_output <- lm_robust(to ~ treat +
+                                  median_income + latino + nh_black + nh_white + some_college +
+                                  median_age + reg_rate + share_dem + share_non_citizen + share_winner,
+                                data = reg, weights = weight, cluster = GEOID, se_type = "stata")
+    
+    reg_output2 <- lm_robust(to ~ treat,
+                            data = reg, weights = weight, cluster = GEOID, se_type = "stata")
+    
+    
+    start <- plot_summs(reg_output, reg_output2, model.names = c("With Controls", "Without Controls"),
+                        coefs = c("Treated (Lost Voter)" = "treatTRUE"))
+    
+  
+    start + scale_x_continuous(labels = percent_format(accuracy = 0.1)) + theme_bc() +
+      theme(axis.text = element_text(size = 23),
+            axis.text.y = element_text(size = 15),
+            legend.text = element_text(size = 15),
+            legend.title = element_text(size = 15),
+            axis.title = element_text(size = 23),
+            text = element_text(size = 15),
+            plot.title = element_text(size = 23)) +
+      ggtitle("Effect of Lost Voters on Neighborhood Turnout")
+    
+    
+    ggsave("./temp/coef_plot1.png", width = 11, height = 7.25, units = "in")
+    
+    reg_output <- lm_robust(to ~ treat * nh_black +
+                              median_income + latino + nh_white + some_college +
+                              median_age + reg_rate + share_dem + share_non_citizen + share_winner,
+                            data = reg, weights = weight, cluster = GEOID, se_type = "stata")
+    
+    reg_output2 <- lm_robust(to ~ treat * nh_black,
+                             data = reg, weights = weight, cluster = GEOID, se_type = "stata")
+    
+    
+    start <- plot_summs(reg_output, reg_output2, model.names = c("With Controls", "Without Controls"),
+                        coefs = c("Treated (Lost Voter)" = "treatTRUE",
+                                  "(Treated)×(% Black)" = "treatTRUE:nh_black"))
+    
+    
+    start + scale_x_continuous(labels = percent_format(accuracy = 0.1)) + theme_bc() +
+      theme(axis.text = element_text(size = 23),
+            axis.text.y = element_text(size = 15),
+            legend.text = element_text(size = 15),
+            legend.title = element_text(size = 15),
+            axis.title = element_text(size = 23),
+            text = element_text(size = 15),
+            plot.title = element_text(size = 23)) +
+      ggtitle("Effect of Lost Voters on Neighborhood Turnout")
+    
+    
+    ggsave("./temp/coef_plot2.png", width = 11, height = 7.25, units = "in")
+    }
+  }
+
+

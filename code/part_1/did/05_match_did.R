@@ -23,7 +23,7 @@ if(on_nyu){
   cl <- NCPUS(detectCores() - 1)
 }
 
-for(geo in c("tract")){
+for(geo in c("block_group")){
   
   units <- readRDS(paste0("./temp/", geo, "_pre_match.rds"))
   units2 <- readRDS(paste0("./temp/", geo, "_pre_match_16.rds")) %>% 
@@ -34,7 +34,7 @@ for(geo in c("tract")){
   
 
   match_data <- units %>% 
-    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, reg_rate, share_dem, share_non_citizen, share_winner)
+    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, reg_rate, share_dem, share_non_citizen)
   
   genout <- GenMatch(Tr = units$treat, X = match_data,
                      M = 3, replace = T, pop.size = 1000, cluster = cl)
@@ -46,7 +46,7 @@ for(geo in c("tract")){
   
   X <- units %>% 
     dplyr::select(median_income, latino, nh_black, nh_white, some_college,
-                  median_age, reg_rate, share_dem, share_non_citizen, share_winner)
+                  median_age, reg_rate, share_dem, share_non_citizen)
   
   match_count <- ifelse(geo == "tract", 10, 30)
 
@@ -90,7 +90,7 @@ for(geo in c("tract")){
   order <- fread("./raw_data/misc/var_orders.csv")
   
   balance <- MatchBalance(treat ~ median_income + latino + nh_black + nh_white +
-                            some_college + median_age + reg_rate + share_dem + share_non_citizen + share_winner, match.out = mout,
+                            some_college + median_age + reg_rate + share_dem + share_non_citizen, match.out = mout,
                           data = units)
   TrMean <- c()
   PreMean <- c()
@@ -115,7 +115,7 @@ for(geo in c("tract")){
     PostQQmax <- unlist(c(PostQQmax, balance$AfterMatching[[i]]$qqsummary[3]))
   }
   
-  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "reg_rate", "share_dem", "share_non_citizen", "share_winner")
+  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "reg_rate", "share_dem", "share_non_citizen")
   
   
   df <- data.frame("TrMean" = TrMean,
@@ -166,9 +166,21 @@ for(geo in c("tract")){
   
   reg_output_ses <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat + as.factor(district), data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 2]
   
-  reg_output_pval <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat, data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 4]
+  reg_output2 <- lm(to ~ I(year == 2017) * treat +
+                      median_income + latino + nh_black + nh_white +
+                      some_college + median_age + reg_rate + share_dem + share_non_citizen + as.factor(district),
+                    data = bgs, weights = weight)
   
-  save(reg_output, reg_output_ses, reg_output_pval, file = paste0("./temp/match_reg_", geo, "_did.rdata"))
+  reg_output2_ses <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat + as.factor(district) +
+                                                    median_income + latino + nh_black + nh_white +
+                                                    some_college + median_age + reg_rate + share_dem + share_non_citizen,
+                                                  data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 2]
+  
+  reg_output_pval <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat,
+                                                  data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 4]
+  
+  save(reg_output, reg_output_ses, reg_output_pval,
+       reg_output2, reg_output2_ses, file = paste0("./temp/match_reg_", geo, "_did.rdata"))
   
 }
 

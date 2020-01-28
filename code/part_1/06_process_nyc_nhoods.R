@@ -171,21 +171,21 @@ share_dem_zip <- nyc %>%
 #       age <- census_median_age(var, state = s, year = 2017, county = c)
 # 
 #       if(var == "tract"){
-#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/Tract.csv") %>% 
-#           filter(lntitle == "Total") %>% 
-#           mutate(GEOID = substring(geoid, 8)) %>% 
+#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/Tract.csv") %>%
+#           filter(lntitle == "Total") %>%
+#           mutate(GEOID = substring(geoid, 8)) %>%
 #           select(GEOID, cvap = CVAP_EST)
 #       }
 #       if(var == "block group"){
-#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/BlockGr.csv") %>% 
-#           filter(lntitle == "Total") %>% 
-#           mutate(GEOID = substring(geoid, 8)) %>% 
+#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/BlockGr.csv") %>%
+#           filter(lntitle == "Total") %>%
+#           mutate(GEOID = substring(geoid, 8)) %>%
 #           select(GEOID, cvap = CVAP_EST)
 #       }
 #       if(var == "zcta"){
 #         cvap <- census_vap(var, state = s, year = 2017, county = c)
 #       }
-#       
+# 
 #       noncit <- census_non_citizen(var, state = s, year = 2017, county = c)
 # 
 #       units <- left_join(income,
@@ -199,18 +199,18 @@ share_dem_zip <- nyc %>%
 #   }))
 #   return(units)
 #   })
-# 
-# #### noncit not available at block group level
-# noncit <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-#   noncit <- census_non_citizen("tract", state = "NY", year = 2017, county = c)
-# }))
-# 
-# geos[[2]]$tract <- substring(geos[[2]]$GEOID, 1, 11)
-# geos[[2]] <- dplyr::select(geos[[2]], -share_non_citizen)
-# geos[[2]] <- left_join(geos[[2]], noncit, by = c("tract" = "GEOID"))
-# 
-# 
-# save(geos, file = "./temp/census_data_nyc_bgs_tracts.RData")
+
+#### noncit not available at block group level
+noncit <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
+  noncit <- census_non_citizen("tract", state = "NY", year = 2017, county = c)
+}))
+
+geos[[2]]$tract <- substring(geos[[2]]$GEOID, 1, 11)
+geos[[2]] <- dplyr::select(geos[[2]], -share_non_citizen)
+geos[[2]] <- left_join(geos[[2]], noncit, by = c("tract" = "GEOID"))
+
+
+save(geos, file = "./temp/census_data_nyc_bgs_tracts.RData")
 
 load("./temp/census_data_nyc_bgs_tracts.RData")
 

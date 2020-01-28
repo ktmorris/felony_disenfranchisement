@@ -1,0 +1,127 @@
+---
+title: "Felony Disenfranchisement and Neighborhood Turnout"
+subtitle: "The Case of New York City"
+shorttitle: "Other"
+author: Kevin Morris
+abstract: kevin.morris@nyu.edu
+institute: Brennan Center for Justice
+date: Southern Political Science Association, 2020
+output:
+  beamer_presentation:
+    latex_engine: xelatex
+    theme: "Berlin"
+    keep_tex: true
+bibliography: "../markdown/citations.bib"
+---
+```{r setup, echo = F, message = F, warning = F}
+knitr::opts_knit$set(dev = "cairo_pdf")
+library(systemfit)
+library(AER)
+library(sandwich)
+library(lmtest)
+library(scales)
+library(tidyverse)
+library(extrafont)
+library(kableExtra)
+library(stargazer)
+library(data.table)
+loadfonts()
+```
+
+## Outline
+
+>* Introducing space into the conversation
+
+>* Redefining "lost voters"
+
+>* Identifying neighborhoods with lost voters
+
+>* Testing turnout effects
+
+## Introducing Space
+
+>* Most of the existing literature on felony disenfranchisement and indirect turnout effects looks for effects at the state level [@Miles2004; @Bowers2009; @King2016]
+
+>* But we *know* that incarceration patterns aren't uniformly distributed throughout a given state [see, for instance, @Gelman2007]
+
+>* Turnout effects are likely to be socially mediated - and therefore show up in the neighborhoods where disenfranchised individuals live [e.g. @Foladare1968; @Huckfeldt1979; @Cho2006]
+
+
+## Redefining Lost Voters
+
+>* Much of the existing literature cannot identify individuals who *would have voted* if not for their disenfranchisement [@Burch2013]
+
+>* This undermines our ability to distinguish the causal effects of incarceration / probation from the effects of disenfranchisement
+
+>* This is especially likely given the low turnout propensity among the formerly disenfranchised [e.g. @Meredith2015; @Gerber2017; @White2019]
+
+## This Project Addresses Both Problems
+
+>* Administrative data from the NYS DOC allows us to conduct individual-level analysis
+
+>* Purge records in the NYS voter file allow us to construct vote histories for disenfranchised individuals
+
+>* Lost voters are all formally disenfranchised individuals who have voted in the past 10 years
+
+## Identifying Neighborhoods with Lost Voters
+
+```{r ttt, echo=FALSE, out.width = '100%'}
+knitr::include_graphics("../temp/lost_voters_map.png")
+```
+
+## Methodology
+
+* A genetic match algorithm [@Sekhon2011] is used to match treated census block groups to untreated ones.
+
+* Each block group is matched to 30 untreated block groups; matches are done with replacement.
+
+## Matching Results
+
+```{r, echo=FALSE,out.width="49%", out.height="49%",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("../temp/perc_white_spsa.png", "../temp/perc_black_spsa.png"))
+```
+
+## Matching Results
+
+```{r, echo=FALSE,out.width="49%", out.height="49%",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("../temp/perc_latino_spsa.png", "../temp/income_spsa.png"))
+```
+
+## Testing Turnout Effects
+
+```{r, echo=FALSE,out.width="85%", out.height="85%",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("../temp/coef_plot1.png"))
+```
+## Testing Turnout Effects
+
+```{r, echo=FALSE,out.width="85%", out.height="85%",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("../temp/coef_plot2.png"))
+```
+
+## Testing Turnout Effects
+
+```{r, echo=FALSE,out.width="85%", out.height="85%",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("../temp/coef_plot3b.png"))
+```
+
+## Testing Turnout Effects
+
+```{r post-est, echo=FALSE, out.width = '100%'}
+knitr::include_graphics(c("../output/dep_map.png"))
+```
+
+## Conclusions
+
+>* The indirect turnout effects identified in past research appear to be geographically concentrated where the lost voters live.
+
+>* @Hajnal2009 and others have demonstrated that turnout differentials can have real political implications, especially in low-turnout contests.
+
+>* Felony disenfranchisement undermines Black political representation at the local level.
+
+## We Made It!
+
+Thanks!
+
+kevin.morris@nyu.edu
+
+## References {.allowframebreaks}

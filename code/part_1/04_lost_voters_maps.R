@@ -70,4 +70,6 @@ city_map <- ggplot() +
 
 saveRDS(city_map, "./output/city_map.RDS")
 
+ggsave(city_map, file = "./temp/lost_voters_map.png")
+
 

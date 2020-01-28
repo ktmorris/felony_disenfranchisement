@@ -58,10 +58,38 @@ dec_map <- ggplot() +
   geom_path(data = bbs, aes(x = long, y = lat, group = group), color = "black") +
   coord_map() +
   labs(x = NULL, y = NULL) + 
-  scale_fill_gradient(high = "#DCDCDC", low = "red", labels = percent_format(accuracy = 1), limits = c(-0.05, 0), oob = squish) +
+  scale_fill_gradient(high = "#DCDCDC", low = "red",
+                      labels = percent_format(accuracy = 1),
+                      limits = c(-0.05, 0), oob = squish,
+                      guide = guide_legend(title.position = "top")) +
   guides(fill = guide_colorbar(title.hjust = .5, title = NULL))
 
 saveRDS(dec_map, "./temp/dec_block_map.rds")
+
+dec_map <- ggplot() +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        legend.background = element_blank(),
+        legend.key=element_blank(),
+        legend.key.width = unit(1.5, "cm"),
+        text = element_text(family = "LM Roman 10")) +
+  geom_polygon(data = tract_shp, aes(x = long, y = lat, group = group), fill = "#DCDCDC") +
+  geom_polygon(data = bg_shp, aes(x = long, y = lat, group = group, fill = decrease)) +
+  geom_path(data = bbs, aes(x = long, y = lat, group = group), color = "black") +
+  coord_map() +
+  labs(x = NULL, y = NULL) + 
+  scale_fill_gradient(low = "red", high = "#DCDCDC",
+                     limits = c(-0.05, 0), oob = squish,
+                     name = "Estimated Effect (Percentage Points)",
+                     labels = percent_format(accuracy = 1),
+                     guide = guide_colorbar(title.position = "top", title.hjust = 0.5))
+
+ggsave("./output/dep_map.png", plot = dec_map)
 
 ### interactive
 
