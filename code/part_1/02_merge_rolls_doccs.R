@@ -15,7 +15,7 @@ nys_roll <- select(nys_roll, -a, -b, -c)
 
 nys_roll <- nys_roll %>%
   mutate_at(vars(last_name, first_name, middle_name),
-            ~ gsub("[[:punct:]]| ", "", ifelse(. == "", NA, .))) %>% 
+            ~ gsub("[[:punct:]]| ", "", ifelse(. == "", NA, tolower(.)))) %>% 
   mutate(dob = as.Date(as.character(dob), "%Y%m%d"))
 
 # ## read doccs data - entered in 2017
@@ -41,7 +41,7 @@ doccs_to_rolls <- readRDS("./temp/in_2017.rds") %>%
          middle_name = middle,
          last_name = last) %>% 
   mutate_at(vars(last_name, first_name, middle_name),
-            ~ gsub("[[:punct:]]| ", "", ifelse(. == "", NA, .)))
+            ~ gsub("[[:punct:]]| ", "", ifelse(. == "", NA, tolower(.))))
 
 merge_list <- match_rolls_to_doc(doccs_to_rolls, din, nys_roll, nys_id)
 
