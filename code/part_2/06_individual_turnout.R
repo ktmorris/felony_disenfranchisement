@@ -22,7 +22,11 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
          restored = ifelse(is.na(restored), F, restored),
          days_since_m21 = parole_status_date - as.Date("2018-05-19"),
          v2016 = ifelse(is.na(v2016), 0, v2016),
-         v2008 = ifelse(is.na(v2008), 0, v2008))
+         v2008 = ifelse(is.na(v2008), 0, v2008),
+         registered = voter_status %in% c("ACTIVE", "INACTIVE"))
+
+how_many_restored <- sum(parolees$restored)
+saveRDS(how_many_restored, "./temp/how_many_restored.rds")
 
 control_to <- mean(filter(parolees, !finished_post, year(parole_status_date) >= 2017)$v2018)
 saveRDS(control_to, "./temp/control_to_18.rds")
@@ -61,16 +65,16 @@ save(model1, model2, model3, file = "./temp/individual_turnout_18_itt.rdata")
 #### IV approach
 
 date_to_model_notime <- glm(v2018 ~ 
-                       as.factor(race) + as.factor(sex) + age +
-                       felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
-                     family = "binomial",
-                     data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-04-18"))
-
-date_to_model_time <- glm(v2018 ~ days_since_done + days2 + 
                               as.factor(race) + as.factor(sex) + age +
                               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
                             family = "binomial",
-                            data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-04-18"))
+                            data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-18"))
+
+date_to_model_time <- glm(v2018 ~ days_since_done + days2 + 
+                            as.factor(race) + as.factor(sex) + age +
+                            felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                          family = "binomial",
+                          data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-18"))
 
 anova(date_to_model_notime, date_to_model_time, test = "Chisq")
 
@@ -84,6 +88,7 @@ parolees$restored2 <- 1 * parolees$restored
 parolees$finished_post2 <- 1 * parolees$finished_post
 parolees$male = 1 * (parolees$sex == "MALE")
 parolees$nyc = (parolees$county %in% c("KINGS", "NEW YORK", "QUEENS", "BRONX", "RICHMOND"))*1
+parolees$registered <- parolees$registered * 1
 
 fwrite(filter(parolees, year(parole_status_date) >= 2017), "./temp/iv_data.csv")
 
