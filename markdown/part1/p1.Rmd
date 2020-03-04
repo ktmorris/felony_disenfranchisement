@@ -15,6 +15,7 @@ fontsize: 12pt
 header-includes:
     - \usepackage{rotating}
     - \newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{A\arabic{table}} \setcounter{figure}{0} \renewcommand{\thefigure}{A\arabic{figure}}}
+    - \usepackage{setspace}\doublespacing
 abstract: |
   Over the past two decades, scholars have sought to estimate the direct and indirect effects of felony disenfranchisement on political representation. This literature, however, has often overlooked both the geographic concentration of communities impacted by over-incarceration and the low propensity to vote exhibited by individuals convicted of felony crimes. In this paper, I redefine “lost voters” as disenfranchised individuals with a history of participating in elections. I map these individuals to their pre-incarceration addresses and use matching and linear models to explore whether their home neighborhoods turned out at lower rates than other neighborhoods. I find that neighborhoods that were home to lost voters turnout at substantially lower rates than similar neighborhoods, and that black neighborhoods are particularly impacted by the spillover effects of disenfranchisement. These indirect effects of the incarceration of would-be voters may have serious implications for the representation of impacted neighborhoods.
 ---

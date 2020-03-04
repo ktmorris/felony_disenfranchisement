@@ -1,0 +1,134 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  12pt,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{rotating}
+\newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{A\arabic{table}} \setcounter{figure}{0} \renewcommand{\thefigure}{A\arabic{figure}}}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\doublespace
+
+\hypertarget{turnout-among-parolees-in-2016}{%
+\section*{Turnout Among Parolees in 2016}\label{turnout-among-parolees-in-2016}}
+\addcontentsline{toc}{section}{Turnout Among Parolees in 2016}
+
+In the Instrumental Variables Approach section of this paper, I argue that being discharged from parole in the final months leading up to an election is uncorrelated with propensity to vote. Table \ref{tab:to-16-logit} demonstrates that individuals discharged between May 18\textsuperscript{th} -- October 14\textsuperscript{th}, 2016, did not participate at different rates in the 2016 presidential election than other formerly incarcerated individuals. Table \ref{tab:to-16-logit} includes all individuals last discharged from parole between January 1\textsuperscript{st}, 2015, and October 14\textsuperscript{th}, 2016.
+
+\begin{singlespace}
+
+\input{"../../temp/table55.tex"}
+\end{singlespace}
+
+Although turnout was generally higher in 2016 than in 2018 (reflecting statewide higher turnout thanks to the presidential contest), there is no evidence that being discharged in the summer of 2016 was associated with an individual's propensity to cast a ballot. The nonsignificant results from 2016 provide strong corroboration that discharge date serves as an effective instrument for rights restoration.
+
+\hypertarget{treatment-effect-on-registration}{%
+\section*{Treatment Effect on Registration}\label{treatment-effect-on-registration}}
+\addcontentsline{toc}{section}{Treatment Effect on Registration}
+
+In the body of this paper, I argue that restoring voting rights to individuals in an in-person meeting while they are still on parole increases their eventual propensity to vote. The mechanism for this effect, of course, must run through voter registration; parole officers are encouraging their stewards to register, and the actual decision to vote occured when the individual was no longer on parole. Voter registration is, in and of itself, relatively uninteresting in this context: if the executive order had been successful at registering formerly incarcerated individuals, but did not result in higher turnout, it can hardly be said to have been effective at increasing political representation.
+
+In this Supplemental Appendix, I re-estimate the primary analyses found in Tables 5, 6, and 8 in the main body of this paper. Here, however, I use registration as the dependent variable, rather than turnout in 2018. As before, the dependent variable is binary: an individual is either registered or not registered. As such, the functional forms remain the same. As before, the marginal effects of the probit models are presented with other covariates held at their means.
+
+\begin{singlespace}
+\input{"../../temp/iv_clean_reg.tex"}
+\end{singlespace}
+
+The 2SLS model indicates that voting rights restoration increased the registration rate of former parolees by 1.37 percentange points, while the biprobit model estimates that the effect was between 1.25 and 1.57 percentage points. Given that 5.5 percent of parolees in the control group were registered to vote, this implies an increase of between 23 and 29 percent.
+
+\begin{singlespace}
+\input{"../../temp/iv_clean_race_reg.tex"}
+\end{singlespace}
+
+As with turnout, voting rights restoration appears to have increased registrations only among white former parolees. The estimated treatment effect is between 2.3 and 2.4 percentage points, off a registration rate among the control, white individuals of 4.4 percent. No significant effect is detected among non-white or Black former parolees, whose control groups had base registration rates of 5.9 and 7.2 percent, respectively. As with turnout, Black former parolees had much higher base registration rates than whites.
+
+\begin{singlespace}
+\input{"../../temp/iv_clean_months_reg.tex"}
+\end{singlespace}
+
+Finally, we see that the longer an individual was on parole after her voting rights were restored, the more likely she was to be registered. Each additional month on parole after voting rights were restored is associated with an increase in registration of between 0.5 and 0.9 percentage points.
+
+\end{document}
