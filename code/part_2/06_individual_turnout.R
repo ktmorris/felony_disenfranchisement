@@ -168,10 +168,10 @@ outreg2 using temp/iv_tables, append tex(frag) drop(i.race felony*) lab ///
 	
 ")
 
-iv3 <- ivreg(v2018 ~ restored + 
+iv3 <- ivreg(v2018 ~ restored + male + race +
                age +
                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
-             data = filter(parolees, year(parole_status_date) >= 2017, (sex != "MALE" | race != "WHITE")))
+             data = filter(parolees, year(parole_status_date) >= 2017))
 
 save(iv3, file = "./temp/iv_individual_turnout_18.rdata")
 
