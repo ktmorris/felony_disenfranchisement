@@ -8,27 +8,27 @@ block_groups$lost_voters_black <- block_groups$lost_voters * block_groups$nh_bla
 block_groups$lost_voters_latino <- block_groups$lost_voters * block_groups$latino
 block_groups$boro <- substring(block_groups$GEOID, 1, 5)
 
-bg_model  <- lm(to ~ lost_voters +
+bg_model  <- lm(to ~ lost_voters + sf +
                   median_income + latino + nh_black + nh_white +
                   some_college + median_age + reg_rate + share_dem +
                   share_non_citizen + share_winner,
                 data = block_groups)
 
 bg_model_ses  <- data.frame(
-  summary(lm_robust(to ~ lost_voters +
+  summary(lm_robust(to ~ lost_voters + sf +
                       median_income + latino + nh_black + nh_white +
                       some_college + median_age + reg_rate + share_dem +
                       share_non_citizen + share_winner,
                     data = block_groups, clusters = district, se_type = "stata"))$coefficients)[, 2]
 
-bg_model2  <- lm(to ~ lost_voters + lost_voters_black +
+bg_model2  <- lm(to ~ lost_voters + lost_voters_black + sf +
                    median_income + latino + nh_black + nh_white +
                    some_college + median_age + reg_rate + share_dem +
                    share_non_citizen + share_winner,
                  data = block_groups)
 
 bg_model2_ses  <- data.frame(
-  summary(lm_robust(to ~ lost_voters + lost_voters_black +
+  summary(lm_robust(to ~ lost_voters + lost_voters_black + sf +
                       median_income + latino + nh_black + nh_white +
                       some_college + median_age + reg_rate + share_dem +
                       share_non_citizen + share_winner,
