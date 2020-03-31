@@ -4,9 +4,6 @@
 nys_roll <- readRDS("./temp/parolee_to_18.rds")
 parolees <- readRDS("./temp/parolees_with_restoration.rds")
 
-how_many_restored <- nrow(filter(parolees, year(parole_status_date) >= 2017, restored))
-saveRDS(how_many_restored, "./temp/how_many_restored.rds")
-
 parolees <- left_join(parolees, nys_roll, by = "din") %>% 
   select(-history, -year, -election_type) %>% 
   filter(parole_status == "DISCHARGED",
