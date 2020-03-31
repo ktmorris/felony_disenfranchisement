@@ -94,6 +94,18 @@ arrests_race <- arrests %>%
   filter(substring(ARREST_DATE, 7) == "2017") %>% 
   summarize(share_black = mean(PERP_RACE == "BLACK", na.rm = T))
 
+####
+d <- fread("./raw_data/misc/stop_frisk_2017.txt") %>% 
+  filter(MONTH2 %in% c("January", "February", "March", "April", "May", "June",
+                       "July", "August", "September", "October"))
+pings  <- SpatialPoints(d[, c('longitude','latitude')], proj4string = bg_shp@proj4string)
+d$bg <- over(pings, bg_shp)$GEOID
+bg_sf <- d %>% 
+  group_by(bg) %>% 
+  tally() %>% 
+  rename(sf = n) %>% 
+  filter(!is.na(bg))
+
 ## share dem
 nyc <- nyc %>% 
   filter(voter_status != "PURGED")
@@ -227,9 +239,7 @@ saveRDS(tracts, "./temp/tract_pre_match.rds")
 block_groups <- left_join(geos[[2]], left_join(share_dem_bg, left_join(arrests_bg, lost_bg))) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
 
-sf <- readRDS("./temp/bg_sf.rds")
-
-block_groups <- left_join(block_groups, sf, by = c("GEOID" = "bg")) %>% 
+block_groups <- left_join(block_groups, bg_sf, by = c("GEOID" = "bg")) %>% 
   mutate(sf = ifelse(is.na(sf), 0, sf / (population / 1000)))
 
 block_groups <- block_groups[complete.cases(block_groups), ] %>% 

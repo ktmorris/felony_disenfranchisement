@@ -40,6 +40,22 @@ lost_tract <- nyc %>%
   group_by(GEOID = substring(bg, 1, 11)) %>% 
   summarize(lost_voters = sum(lost_voter))
 
+#########
+bg_shp <- readOGR("./raw_data/shapefiles/tl_2018_36_bg", "tl_2018_36_bg")
+d <- read.csv("./raw_data/misc/stop_frisk_2016.txt") %>% 
+  mutate(d = str_pad(datestop, width = 8, side = "left", pad = "0"),
+         d = as.Date(d, "%m%d%Y")) %>% 
+  filter(d < "2016-11-01")
+
+pings  <- SpatialPoints(d[, c('longitude','latitude')], proj4string = bg_shp@proj4string)
+d$bg <- over(pings, bg_shp)$GEOID
+
+bg_sf <- d %>% 
+  group_by(bg) %>% 
+  tally() %>% 
+  rename(sf = n) %>% 
+  filter(!is.na(bg))
+
 ##### 2016 ballots bg
 # read election names
 elects <- fread("./raw_data/misc/elects.csv")
@@ -158,9 +174,8 @@ saveRDS(tracts, "./temp/tract_pre_match_16.rds")
 block_groups <- left_join(geos[[2]], left_join(share_dem_bg, lost_bg)) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
 
-sf <- readRDS("./temp/bg_sf_16.rds")
 
-block_groups <- left_join(block_groups, sf, by = c("GEOID" = "bg")) %>% 
+block_groups <- left_join(block_groups, bg_sf, by = c("GEOID" = "bg")) %>% 
   mutate(sf = ifelse(is.na(sf), 0, sf / (population / 1000)))
 
 block_groups <- block_groups[complete.cases(block_groups), ] %>% 
