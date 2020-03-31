@@ -21,7 +21,9 @@
 # nyc$cc_district <- over(pings, council_districts)$CounDist
 # saveRDS(nyc, "./temp/nyc.rds")
 
-nyc <- readRDS("./temp/nyc.rds")
+nyc <- readRDS("./temp/nyc.rds") %>% 
+  filter(substring(bg, 1, 5) %in% c("36047", "36081", "36061",
+                                    "36005", "36085"))
 
 ## find lost voters
 nyc$lost_voter <- nyc$nys_id %in% readRDS("./temp/ids_of_lost_voters_16.rds")$nys_id
@@ -77,7 +79,7 @@ share_dem_tract <- nyc %>%
             v2016 = sum(v2016),
             vcount = n())
 
-
+# 
 # #block group / tract level
 # geos <- lapply(c("tract", "block group", "zcta"), function(var) {
 #   units <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c, run = run){
@@ -88,34 +90,34 @@ share_dem_tract <- nyc %>%
 #       }else{
 #         s = "NY"
 #       }
-#       income <- census_income(var, state = s, year = 2017, county = c) %>%
+#       income <- census_income(var, state = s, year = 2016, county = c) %>%
 #         dplyr::select(-NAME)
 # 
-#       race <- census_race_ethnicity(var, state = s, year = 2017, county = c) %>%
+#       race <- census_race_ethnicity(var, state = s, year = 2016, county = c) %>%
 #         dplyr::select(-NAME)
 # 
-#       education <- census_education(var, state = s, year = 2017, county = c) %>%
+#       education <- census_education(var, state = s, year = 2016, county = c) %>%
 #         dplyr::select(-NAME)
 # 
-#       age <- census_median_age(var, state = s, year = 2017, county = c)
+#       age <- census_median_age(var, state = s, year = 2016, county = c)
 # 
 #       if(var == "tract"){
-#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/Tract.csv") %>% 
-#           filter(lntitle == "Total") %>% 
-#           mutate(GEOID = substring(geoid, 8)) %>% 
+#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/Tract.csv") %>%
+#           filter(lntitle == "Total") %>%
+#           mutate(GEOID = substring(geoid, 8)) %>%
 #           select(GEOID, cvap = CVAP_EST)
 #       }
 #       if(var == "block group"){
-#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/BlockGr.csv") %>% 
-#           filter(lntitle == "Total") %>% 
-#           mutate(GEOID = substring(geoid, 8)) %>% 
+#         cvap <- fread("./raw_data/CVAP_2013-2017_ACS_csv_files/BlockGr.csv") %>%
+#           filter(lntitle == "Total") %>%
+#           mutate(GEOID = substring(geoid, 8)) %>%
 #           select(GEOID, cvap = CVAP_EST)
 #       }
 #       if(var == "zcta"){
-#         cvap <- census_vap(var, state = s, year = 2017, county = c)
+#         cvap <- census_vap(var, state = s, year = 2016, county = c)
 #       }
-#       
-#       noncit <- census_non_citizen(var, state = s, year = 2017, county = c)
+# 
+#       noncit <- census_non_citizen(var, state = s, year = 2016, county = c)
 # 
 #       units <- left_join(income,
 #                          left_join(race, left_join(education,
@@ -131,7 +133,7 @@ share_dem_tract <- nyc %>%
 # 
 # #### noncit not available at block group level
 # noncit <- rbindlist(lapply(c("KINGS", "QUEENS", "BRONX", "NEW YORK", "RICHMOND"), function(c){
-#   noncit <- census_non_citizen("tract", state = "NY", year = 2017, county = c)
+#   noncit <- census_non_citizen("tract", state = "NY", year = 2016, county = c)
 # }))
 # 
 # geos[[2]]$tract <- substring(geos[[2]]$GEOID, 1, 11)
@@ -139,9 +141,9 @@ share_dem_tract <- nyc %>%
 # geos[[2]] <- left_join(geos[[2]], noncit, by = c("tract" = "GEOID"))
 # 
 # 
-# save(geos, file = "./temp/census_data_nyc_bgs_tracts.RData")
+# save(geos, file = "./temp/census_data_nyc_bgs_tracts_16.RData")
 
-load("./temp/census_data_nyc_bgs_tracts.RData")
+load("./temp/census_data_nyc_bgs_tracts_16.RData")
 
 tracts <- left_join(geos[[1]], left_join(share_dem_tract, lost_tract)) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
@@ -156,6 +158,11 @@ saveRDS(tracts, "./temp/tract_pre_match_16.rds")
 block_groups <- left_join(geos[[2]], left_join(share_dem_bg, lost_bg)) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
 
+sf <- readRDS("./temp/bg_sf_16.rds")
+
+block_groups <- left_join(block_groups, sf, by = c("GEOID" = "bg")) %>% 
+  mutate(sf = ifelse(is.na(sf), 0, sf / (population / 1000)))
+
 block_groups <- block_groups[complete.cases(block_groups), ] %>% 
   mutate(treat = lost_voters > 0,
          to = v2016 / cvap,
@@ -163,3 +170,4 @@ block_groups <- block_groups[complete.cases(block_groups), ] %>%
 
 saveRDS(block_groups, "./temp/block_group_pre_match_16.rds")
 
+rm(reg_output)
