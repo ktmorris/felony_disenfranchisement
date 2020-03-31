@@ -30,15 +30,22 @@ for(geo in c("block_group")){
     filter(lost_voters == 0)
   
   units <- filter(units, GEOID %in% units2$GEOID)
-  rm(units2)
   
-
+  units <- inner_join(
+    select(units, GEOID, treat),
+    select(units2, -treat)
+  )
+ rm(units2)
+  
+  
   match_data <- units %>% 
-    dplyr::select(median_income, latino, nh_black, nh_white, some_college, median_age, reg_rate, share_dem, share_non_citizen)
+    dplyr::select(median_income, latino, nh_black, nh_white, some_college,
+                  median_age, reg_rate, share_dem, share_non_citizen, sf)
   
-  genout <- GenMatch(Tr = units$treat, X = match_data,
-                     M = 3, replace = T, pop.size = 1000, cluster = cl)
-  saveRDS(genout, paste0("./temp/genout_", geo, "_did.rds"))
+  # genout <- GenMatch(Tr = units$treat, X = match_data,
+  #                    M = 3, replace = T, pop.size = 1000, cluster = cl)
+  # 
+  # saveRDS(genout, paste0("./temp/genout_", geo, "_did.rds"))
   
   genout <- readRDS(paste0("./temp/genout_", geo, "_did.rds"))
   
@@ -46,9 +53,9 @@ for(geo in c("block_group")){
   
   X <- units %>% 
     dplyr::select(median_income, latino, nh_black, nh_white, some_college,
-                  median_age, reg_rate, share_dem, share_non_citizen)
+                  median_age, reg_rate, share_dem, share_non_citizen, sf)
   
-  match_count <- ifelse(geo == "tract", 10, 30)
+  match_count <- ifelse(geo == "tract", 10, 1)
 
   mout <- Match(Tr = treat, X = X, estimand = "ATT", Weight.matrix = genout, version = "fast", M = match_count)
   summary(mout)
@@ -90,7 +97,7 @@ for(geo in c("block_group")){
   order <- fread("./raw_data/misc/var_orders.csv")
   
   balance <- MatchBalance(treat ~ median_income + latino + nh_black + nh_white +
-                            some_college + median_age + reg_rate + share_dem + share_non_citizen, match.out = mout,
+                            some_college + median_age + reg_rate + share_dem + share_non_citizen + sf, match.out = mout,
                           data = units)
   TrMean <- c()
   PreMean <- c()
@@ -115,7 +122,9 @@ for(geo in c("block_group")){
     PostQQmax <- unlist(c(PostQQmax, balance$AfterMatching[[i]]$qqsummary[3]))
   }
   
-  varnames <- c("median_income", "latino", "nh_black", "nh_white", "some_college", "median_age", "reg_rate", "share_dem", "share_non_citizen")
+  varnames <- c("median_income", "latino",
+                "nh_black", "nh_white", "some_college",
+                "median_age", "reg_rate", "share_dem", "share_non_citizen", "sf")
   
   
   df <- data.frame("TrMean" = TrMean,
@@ -146,61 +155,82 @@ for(geo in c("block_group")){
   saveRDS(df, paste0("./temp/match_table_", geo, "_did.rds"))
   
   ########
-  bgs_16 <- readRDS(paste0("./temp/", geo, "_pre_match_16.rds")) %>% 
-    mutate(year = 2016) %>% 
-    filter(lost_voters == 0)
-  bgs_17 <- readRDS(paste0("./temp/", geo, "_pre_match.rds")) %>% 
-    mutate(year = 2017,
-           district = districtcd) %>% 
-    filter(GEOID %in% bgs_16$GEOID)
   
   matches <- readRDS(paste0("./temp/matches_did_", geo, ".rds"))
   
-  bgs_16 <- inner_join(bgs_16, matches, by = c("GEOID" = "control_GEOID"))
-  bgs_17 <- inner_join(bgs_17, matches, by = c("GEOID" = "control_GEOID"))
+  bgs_17 <- inner_join(matches, 
+                       readRDS(paste0("./temp/", geo, "_pre_match.rds")) %>% 
+                         mutate(year = 2017,
+                                district = districtcd) %>% 
+                         select(-treat),
+                       by = c("control_GEOID" = "GEOID"))
+  
+  ds <- bgs_17 %>% 
+    select(control_GEOID, district = districtcd) %>% 
+    distinct()
+  
+  bgs_16 <- inner_join(matches, 
+                       readRDS(paste0("./temp/", geo, "_pre_match_16.rds")) %>% 
+                         mutate(year = 2016) %>% 
+                         select(-treat, -district),
+                       by = c("control_GEOID" = "GEOID"))
+  
+  bgs_16 <- left_join(bgs_16, ds)
   
   bgs <- bind_rows(bgs_16, bgs_17) %>% 
-    mutate(treat = GEOID == GEOID.y)
+    mutate(treat = control_GEOID == GEOID)
   
   reg_output <- lm(to ~ I(year == 2017) * treat + as.factor(district), data = bgs, weights = weight)
   
-  reg_output_ses <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat + as.factor(district), data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 2]
+  reg_output_ses <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat + as.factor(district),
+                                                 data = bgs, weights = weight, cluster = GEOID,
+                                                 se_type = "stata"))$coefficients)[, 2]
   
-  reg_output2 <- lm(to ~ I(year == 2017) * treat +
+  reg_output2 <- lm(to ~ I(year == 2017) * treat + sf +
                       median_income + latino + nh_black + nh_white +
-                      some_college + median_age + reg_rate + share_dem + share_non_citizen + as.factor(district),
+                      some_college + median_age + reg_rate + share_dem + share_non_citizen +
+                      as.factor(district),
                     data = bgs, weights = weight)
   
-  reg_output2_ses <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat + as.factor(district) +
+  reg_output2_ses <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat + sf +
                                                     median_income + latino + nh_black + nh_white +
-                                                    some_college + median_age + reg_rate + share_dem + share_non_citizen,
-                                                  data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 2]
+                                                    some_college + median_age + reg_rate + share_dem + share_non_citizen +
+                                                    as.factor(district),
+                                                  data = bgs, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
   
   reg_output_pval <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat,
-                                                  data = bgs, weights = weight, cluster = GEOID.y, se_type = "stata"))$coefficients)[, 4]
+                                                  data = bgs, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 4]
+  
+  reg_output3 <- lm(to ~ I(year == 2017) * treat + sf +
+                      median_income + latino + nh_black + nh_white +
+                      some_college + median_age + reg_rate + share_dem + share_non_citizen +
+                      as.factor(district) + control_GEOID,
+                    data = bgs, weights = weight)
+  
+  reg_output3_ses <- data.frame(summary(lm_robust(to ~ I(year == 2017) * treat + sf +
+                                                    median_income + latino + nh_black + nh_white +
+                                                    some_college + median_age + reg_rate + share_dem + share_non_citizen +
+                                                    as.factor(district) + control_GEOID,
+                                                  data = bgs, weights = weight, cluster = GEOID, se_type = "stata"))$coefficients)[, 2]
   
   save(reg_output, reg_output_ses, reg_output_pval,
-       reg_output2, reg_output2_ses, file = paste0("./temp/match_reg_", geo, "_did.rdata"))
+       reg_output2, reg_output2_ses,
+       reg_output3, reg_output3_ses, file = paste0("./temp/match_reg_", geo, "_did.rdata"))
   
 }
 
-bgs_16 <- readRDS(paste0("./temp/tract_pre_match_16.rds")) %>%
-  mutate(year = 2016) %>%
+bgs_17 <- readRDS(paste0("./temp/block_group_pre_match.rds")) %>% 
+  filter(lost_voters > 0)
+
+bgs_16 <- readRDS(paste0("./temp/block_group_pre_match_16.rds")) %>% 
   filter(lost_voters == 0)
 
-t1 <- select(bgs_16, lost_voters, GEOID)
+bgs_17$treat <- !(bgs_17$GEOID %in% bgs_16$GEOID)
 
-
-bgs_17 <- readRDS(paste0("./temp/tract_pre_match.rds")) %>%
-  mutate(year = 2017,
-         district = districtcd,
-         none_16 = GEOID %in% bgs_16$GEOID) %>%
-  filter(treat == T)
-
-t.test(bgs_17$median_income ~ bgs_17$none_16)
-t.test(bgs_17$nh_white ~ bgs_17$none_16)
-t.test(bgs_17$share_dem ~ bgs_17$none_16)
-t.test(bgs_17$nh_black ~ bgs_17$none_16)
+t.test(bgs_17$median_income ~ bgs_17$treat)
+t.test(bgs_17$nh_white ~ bgs_17$treat)
+t.test(bgs_17$share_dem ~ bgs_17$treat)
+t.test(bgs_17$nh_black ~ bgs_17$treat)
 
 
 # t1 <- readRDS(paste0("./temp/block_group_pre_match_16.rds")) %>% 
