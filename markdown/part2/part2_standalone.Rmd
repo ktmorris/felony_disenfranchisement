@@ -1,13 +1,16 @@
 ---
 title: "Welcome Home --- Now Vote!"
 subtitle: "Voting Rights Restoration and Post-Supervision Participation"
+thanks: Prepared for the 2020 Annual Meeting of the Midwest Political Science Association. The author thanks Jacob Faber, Jeff Manza, Myrna Pérez, Ariel White, and Peter Miller for their comments on this project. All errors are my responsibility.
+author: Kevin Morris^[Researcher, Brennan Center for Justice at NYU School of Law, 120 Broadway Ste 1750, New York, NY 10271 (kevin.morris@nyu.edu)]
+institute: "Brennan Center for Justice"
 date: |
   `r format(Sys.time(), '%B %d, %Y')`
   \linebreak
   \linebreak
   \linebreak
   \linebreak
-  Word Count: 9,553
+  Word Count: 9,596
 output:
   bookdown::pdf_document2:
     toc: no
@@ -145,7 +148,7 @@ Although we can identify the individuals in the assigned-to-treatment group who 
 
 The standard way of dealing with imperfect compliance in an experimental setting is to leverage the (random) assignment to treatment as an instrument for the (nonrandom) actual compliance [@Angrist1996]. Such an approach has been widely used in the context of voter turnout [e.g. @Ansolabehere1999; @Gerber2000; @Milligan2004; @Lassen2004; @Sondheimer2010]. @Gerber2000 provides a helpful example of why this two-step process is necessary. The authors test the efficacy of phone calls on increasing turnout. One group is assigned to be the control; the authors do not attempt to call them. Another set of voters receive a phone call, but only some of them are actually contacted, or "treated" with the call. The authors could simply test to see whether those contacted by phone turned out at higher rates --- but what if high propensity voters are more likely to answer the phone? Then "treatment" would simply identify a group of individuals with higher vote propensity than the control group without actually speaking to the efficacy of the treatment.
 
-The same process is likely at play here. The control group includes individuals that *would have* had their rights restored at an in-person meeting if they had been discharged later; it also includes individuals who would not have received the treatment thanks to their citizenship status. By comparing turnout among the actually treated to the control group, we may simply be comparing the turnout of a group of *citizens* to the turnout of a group that includes both citizens *and* noncitizens. Although a positive "treatment effect" is likely in this context, it would be unable to speak to causality. The instrumental variables approach allows us to mitigate this problem.
+The same process is likely at play here. The control group includes individuals that *would have* had their rights restored at an in-person meeting if they had been discharged later; it also includes individuals who would not have received the treatment thanks to their citizenship status. By comparing turnout among the actually treated to the control group, we may simply be comparing the turnout of a group of *citizens* to the turnout of a group that includes both citizens *and* noncitizens. Although a positive "treatment effect" is likely in this context, it would be unable to speak to causality. The instrumental variables approach allows us to mitigate this problem. Moreover, a very small number of individuals in the control group are marked as having their rights restored prior to the effective date of the executive order. While this likely reflects paperwork errors, I nonetheless treat them as a second set of non-compliers.
 
 Figure \ref{fig:flow} demonstrates the buckets into which former parolees can fall. Although I argue that a parolee's assignment to the control or treatment categories is random and uncorrelated with turnout except via the treatment, whether a treated former parolee is treated or is a noncomplier is not random and is associated with their propensity to vote through mechanisms other than the treatment.
 
