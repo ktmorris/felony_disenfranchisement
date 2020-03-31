@@ -227,6 +227,11 @@ saveRDS(tracts, "./temp/tract_pre_match.rds")
 block_groups <- left_join(geos[[2]], left_join(share_dem_bg, left_join(arrests_bg, lost_bg))) %>% 
   mutate(lost_voters = ifelse(is.na(lost_voters), 0, lost_voters))
 
+sf <- readRDS("./temp/bg_sf.rds")
+
+block_groups <- left_join(block_groups, sf, by = c("GEOID" = "bg")) %>% 
+  mutate(sf = ifelse(is.na(sf), 0, sf / (population / 1000)))
+
 block_groups <- block_groups[complete.cases(block_groups), ] %>% 
   mutate(treat = lost_voters > 0,
          to = v2017 / cvap,
@@ -331,3 +336,75 @@ dep_to <- ggplot() +
 
 saveRDS(dep_to, "./output/dep_to_map.RDS")
 ggsave("./output/depressed_turnout.png", plot = dep_to)
+
+
+#############
+bgs_new <- readRDS("./temp/block_group_pre_match.rds")
+
+bgs_new <- rbind(
+  bgs_new %>% 
+    mutate(group = "former_inc",
+           weight = lost_voters),
+  bgs_new %>% 
+    mutate(group = "overall",
+           weight = population)
+)
+
+######
+
+tot <- rbindlist(lapply(c("median_income", "median_age", "some_college",
+                          "nh_white", "nh_black", "latino",
+                          "share_non_citizen", "share_dem"), function(m){
+                            ints <- rbindlist(lapply(unique(bgs_new$group), function(r){
+                              r <- as.character(r)
+                              t <- bgs_new %>% 
+                                filter(group == r) %>% 
+                                select(weight, measure = m) %>% 
+                                filter(!is.na(measure))
+                              j <- weighted.ttest.ci((t$measure), weights = t$weight,)
+                              j <- data.table(group = c(r),
+                                              measure = m,
+                                              lower = j[1],
+                                              upper = j[2])
+                            }))
+                            d <- data.table(sig = (ints$lower[1] > ints$upper[2]) | (ints$lower[2] > ints$upper[1]),
+                                            measure = m)
+                            return(d)
+                          }))
+
+
+
+ll <- bgs_new %>% 
+  group_by(group) %>% 
+  summarize_at(vars("median_income", "median_age", "some_college",
+                    "nh_white", "nh_black", "latino",
+                    "share_non_citizen", "share_dem"),
+               ~ weighted.mean(., weight, na.rm = T)) %>% 
+  mutate(median_income = dollar(median_income, accuracy = 1),
+         median_age = round(median_age, digits = 1)) %>% 
+  mutate_at(vars(some_college,
+                 nh_white, nh_black, latino,
+                 share_non_citizen, share_dem
+                 ), ~ percent(., accuracy = 0.1))
+
+ll <- transpose(ll)
+ll$var <- c("measure", "median_income", "median_age", "some_college",
+            "nh_white", "nh_black", "latino",
+            "share_non_citizen", "share_dem")
+
+colnames(ll) <- ll[1,]
+ll <- ll[2:nrow(ll),]
+
+ll <- left_join(ll, tot)
+
+ll$measure <- c( "Median Income", "Median Age", "% with Some College",
+                 "% Non-Hispanic White", "% Non-Hispanic Black", "% Latino",
+                 "% Non-Citizen", "% Democrats")
+
+ll <- ll %>% 
+  mutate(measure = ifelse(sig, paste0(measure, "*"), measure)) %>% 
+  select(measure, overall, former_inc)
+
+colnames(ll) <- c("Measure", "Average Neighborhood", "Average Neighborhood\\\\for Lost Voters")
+
+saveRDS(ll, "./temp/demos_nhoods.rds")
