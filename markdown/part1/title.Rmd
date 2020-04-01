@@ -1,0 +1,19 @@
+---
+title: "Neighborhoods and Felony Disenfranchisement: The Case of New York City"
+thanks: The author thanks Jacob Faber, Jeff Manza, Myrna Pérez, Ariel White, Peter Miller, participants at the 2020 Annual Meeting of the Southern Political Science Association, and several blind reviewers for their comments on this project. All errors are my responsibility.
+author: Kevin Morris^[Researcher, Brennan Center for Justice at NYU School of Law, 120 Broadway Ste 1750, New York, NY 10271 (kevin.morris@nyu.edu)]
+institute: "Brennan Center for Justice"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  word_document
+bibliography: "../nyc_neighborhoods.bib"
+mainfont: Times New Roman
+link-citations: yes
+fontsize: 12pt
+header-includes:
+    - \usepackage{rotating}
+    - \usepackage{endnotes}
+    - \let\footnote=\endnote
+abstract: |
+  Over the past two decades, scholars have sought to estimate the direct and indirect effects of felony disenfranchisement on political representation. This literature, however, has often overlooked both the geographic concentration of communities impacted by over-incarceration and the low propensity to vote exhibited by individuals convicted of felony crimes. In this paper, I redefine "lost voters" as disenfranchised individuals with a history of participating in elections. I map these individuals to their pre-incarceration addresses and use multiple approaches to explore whether their home neighborhoods turned out at lower rates than other neighborhoods in the 2017 NYC mayoral election. I find that neighborhoods that were home to lost voters turned out at substantially lower rates than similar neighborhoods, and that Black neighborhoods are particularly impacted by the spillover effects of disenfranchisement. These indirect effects of the incarceration of would-be voters may have serious implications for the representation of impacted neighborhoods.
+---
