@@ -364,7 +364,7 @@ bgs_new <- rbind(
 
 tot <- rbindlist(lapply(c("median_income", "median_age", "some_college",
                           "nh_white", "nh_black", "latino",
-                          "share_non_citizen", "share_dem"), function(m){
+                          "share_non_citizen", "share_dem", "sf"), function(m){
                             ints <- rbindlist(lapply(unique(bgs_new$group), function(r){
                               r <- as.character(r)
                               t <- bgs_new %>% 
@@ -388,10 +388,11 @@ ll <- bgs_new %>%
   group_by(group) %>% 
   summarize_at(vars("median_income", "median_age", "some_college",
                     "nh_white", "nh_black", "latino",
-                    "share_non_citizen", "share_dem"),
+                    "share_non_citizen", "share_dem", "sf"),
                ~ weighted.mean(., weight, na.rm = T)) %>% 
   mutate(median_income = dollar(median_income, accuracy = 1),
-         median_age = round(median_age, digits = 1)) %>% 
+         median_age = round(median_age, digits = 1),
+         sf = round(sf, digits = 2)) %>% 
   mutate_at(vars(some_college,
                  nh_white, nh_black, latino,
                  share_non_citizen, share_dem
@@ -400,7 +401,7 @@ ll <- bgs_new %>%
 ll <- transpose(ll)
 ll$var <- c("measure", "median_income", "median_age", "some_college",
             "nh_white", "nh_black", "latino",
-            "share_non_citizen", "share_dem")
+            "share_non_citizen", "share_dem", "sf")
 
 colnames(ll) <- ll[1,]
 ll <- ll[2:nrow(ll),]
@@ -409,7 +410,13 @@ ll <- left_join(ll, tot)
 
 ll$measure <- c( "Median Income", "Median Age", "% with Some College",
                  "% Non-Hispanic White", "% Non-Hispanic Black", "% Latino",
-                 "% Non-Citizen", "% Democrats")
+                 "% Non-Citizen", "% Democrats", "Stop-and-Frisk Encounters (per 1,000 residents)")
+
+ll <- ll %>% 
+  mutate(n = row_number()) %>% 
+  mutate(n = ifelse(measure == "Stop-and-Frisk Encounters (per 1,000 residents)", 0.01, n)) %>% 
+  arrange(n) %>% 
+  select(-n)
 
 ll <- ll %>% 
   mutate(measure = ifelse(sig, paste0(measure, "*"), measure)) %>% 
