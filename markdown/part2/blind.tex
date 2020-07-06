@@ -93,7 +93,7 @@
   \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces}%
   {\par}
 
-\title{Welcome Home --- Now Vote!\thanks{Prepared for the 2020 Annual Meeting of the Midwest Political Science Association. The author thanks Jacob Faber, Jeff Manza, Myrna Pérez, Ariel White, and Peter Miller for their comments on this project. All errors are my responsibility.}}
+\title{Welcome Home --- Now Vote!}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
@@ -101,13 +101,8 @@
 }
 \makeatother
 \subtitle{Voting Rights Restoration and Post-Supervision Participation}
-\author{Kevin Morris\footnote{Researcher, Brennan Center for Justice at NYU School of Law, 120 Broadway Ste 1750, New York, NY 10271 (\href{mailto:kevin.morris@nyu.edu}{\nolinkurl{kevin.morris@nyu.edu}})}}
-\date{April 08, 2020
-\linebreak
-\linebreak
-\linebreak
-\linebreak
-Word Count: 9,596}
+
+\date{April 08, 2020}
 
 \begin{document}
 \maketitle
@@ -125,7 +120,7 @@ This paper presents causal estimates of the effect of voting rights restoration 
 \section*{Introduction}\label{introduction}}
 \addcontentsline{toc}{section}{Introduction}
 
-In all but two states (Maine and Vermont), felony disenfranchisement laws mean that American citizens convicted of felony offenses lose the right to vote for at least some period of time. In some states, such as Oregon and Massachusetts, individuals lose that right only for the period in which they are actively incarcerated. Iowa stands alone at the other end of the spectrum, where felony convictions result in lifelong disenfranchisement unless a returned citizen receives an individual pardon from the state's governor (Justice \protect\hyperlink{ref-bcj_laws}{2019}). This variation in laws arises from language in the Fourteenth Amendment which allows states to revoke individuals' voting rights ``for participation in rebellion, or other crime.'' The definition of ``other crime,'' left so vague in the Constitution, is now generally used by states to disenfranchise citizens for any felony offense. The Supreme Court, in cases such as \emph{Richardson v. Ramirez} (1974), has upheld this practice. Collectively, these laws disenfranchise as many as 4.7 million American citizens. Of these, the majority are no longer incarcerated (Uggen, Larson, and Shannon \protect\hyperlink{ref-sentencing_2016}{2016}).\footnote{The figures reported in Uggen, Larson, and Shannon (\protect\hyperlink{ref-sentencing_2016}{2016}) have been adjusted to reflect the impact of Amendment 4 in Florida.}
+In all but two states (Maine and Vermont), felony disenfranchisement laws mean that American citizens convicted of felony offenses lose the right to vote for at least some period of time. In some states, such as Oregon and Massachusetts, individuals lose that right only for the period in which they are actively incarcerated. Iowa stands alone at the other end of the spectrum, where felony convictions result in lifelong disenfranchisement unless a returned citizen receives an individual pardon from the state's governor (Brennan Center for Justice \protect\hyperlink{ref-bcj_laws}{2019}). This variation in laws arises from language in the Fourteenth Amendment which allows states to revoke individuals' voting rights ``for participation in rebellion, or other crime.'' The definition of ``other crime,'' left so vague in the Constitution, is now generally used by states to disenfranchise citizens for any felony offense. The Supreme Court, in cases such as \emph{Richardson v. Ramirez} (1974), has upheld this practice. Collectively, these laws disenfranchise as many as 4.7 million American citizens. Of these, the majority are no longer incarcerated (Uggen, Larson, and Shannon \protect\hyperlink{ref-sentencing_2016}{2016}).\footnote{The figures reported in Uggen, Larson, and Shannon (\protect\hyperlink{ref-sentencing_2016}{2016}) have been adjusted to reflect the impact of Amendment 4 in Florida.}
 
 There is some evidence that incarceration continues to structure political participation even after an individual is no longer legally disenfranchised. As previous literature has established, interactions with the criminal justice system leaves residents less likely to vote in the future (White \protect\hyperlink{ref-White2019}{2019}; but see Gerber et al. \protect\hyperlink{ref-Gerber2017}{2017}). As Burch (\protect\hyperlink{ref-Burch2011}{2011}) and others have shown, moreover, turnout rates among the formerly incarcerated are extremely low. Formal disenfranchisement policy, the literature has made clear, is just one piece of an interlocking system that serves to disenfranchise minority and marginalized voters. The incarcerated population is drawn from a pool of individuals unlikely to vote even prior to their incarceration. To address only the formal laws contributing to disenfranchisement without also interrogating efforts to boost post-supervision participation risks leaving much of the system of effective disenfranchisement undisturbed. New York State offers us the opportunity to test how the timing and method of the re-instation of voting rights structures post-supervision participation.
 
@@ -230,7 +225,7 @@ Figure \ref{fig:flow} demonstrates the buckets into which former parolees can fa
 
 \begin{figure}[H]
 
-{\centering \includegraphics{../../temp/flowchart} 
+{\centering \includegraphics{flowchart} 
 
 }
 
@@ -251,7 +246,7 @@ Before analyzing turnout in the 2018 midterms, I begin by examining turnout in t
 
 \begin{figure}[H]
 
-{\centering \includegraphics{part2_standalone_files/figure-latex/to-16-chart-1} 
+{\centering \includegraphics{to-16-chart-1} 
 
 }
 
@@ -262,7 +257,7 @@ Figure \ref{fig:to-18} plots month of parole discharge and turnout in the 2018 m
 
 \begin{figure}[H]
 
-{\centering \includegraphics{part2_standalone_files/figure-latex/to-18-chart-1} 
+{\centering \includegraphics{to-18-chart-1} 
 
 }
 
@@ -281,7 +276,45 @@ However, Table \ref{tab:to-18-logit-short} indicates that this relationship brea
 
 \begin{singlespace}
 
-\input{"../../temp/table3.tex"}
+\begin{table}[H] \centering
+\fontsize{10}{12}\selectfont
+\caption{\label{tab:to-18-logit-short} Individual-Level Logit Models}
+\label{}
+\begin{tabular}{@{\extracolsep{5pt}}lcc}
+\\[-1.8ex]\hline \\[-1.8ex]
+\\[-1.8ex] & \multicolumn{2}{c}{Cast Ballot in 2018 Election} \\
+\\[-1.8ex] & (1) & (2)\\
+\hline \\[-1.8ex]
+Days Since Discharged &  & 0.001 \\
+&  & (0.003) \\
+& & \\
+Days Since Discharged\textsuperscript{2} &  & $-$0.00000 \\
+&  & (0.00000) \\
+& & \\
+D(Male) & $-$0.510$^{***}$ & $-$0.511$^{***}$ \\
+& (0.183) & (0.183) \\
+& & \\
+Age (Years) & 0.044$^{***}$ & 0.044$^{***}$ \\
+& (0.005) & (0.005) \\
+& & \\
+Years on Parole & 0.041$^{**}$ & 0.041$^{**}$ \\
+& (0.019) & (0.019) \\
+& & \\
+Constant & $-$6.646$^{***}$ & $-$6.878$^{***}$ \\
+& (1.069) & (1.168) \\
+& & \\
+\hline \\[-1.8ex]
+Race / Ethnicity FE & X & X \\
+Felony Class FE & X & X \\
+\hline \\[-1.8ex]
+Observations & 14,155 & 14,155 \\
+Log Likelihood & $-$1,365.859 & $-$1,365.740 \\
+Akaike Inf. Crit. & 2,761.719 & 2,765.480 \\
+\hline \\[-1.8ex]
+\multicolumn{3}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\Robust standard errors in parentheses.}}}
+\end{tabular}
+\end{table}
+
 \end{singlespace}
 
 The inclusion of time controls in Model 2 in Table \ref{tab:to-18-logit-short} leaves the AIC unchanged. A Chi-squared test confirms that the model is not improved when controls for time are included. When we look only at individuals recently discharged from parole, the length of time an individual has been off parole is not associated with his propensity to vote.\footnote{The Supplemental Information provides further corroboration that being discharged from parole in the months before an election is uncorrelated with propensity to vote by exploring turnout rates in the 2016 presidential election.} This indicates that using individuals released in 2017, and 2018 prior to the executive order, as a control group is feasible. Because discharge date from parole is uncorrelated in the short term with an individual's propensity to vote in the short-run, any observed difference in turnout between individuals discharged before and after late May can therefore be attributed to the executive order.
@@ -290,14 +323,68 @@ To further demonstrate the usefulness of discharge date as an intent-to-treat in
 
 \begin{singlespace}
 
-\input{"../../temp/table_whatever2.tex"}
+\begin{table}[H]
+\fontsize{10}{12}\selectfont
+
+\caption{\label{tab:demo-rd} Demographics of "Control" and "Intent-to-Treat" Groups}
+\centering
+\begin{tabular}[t]{lcc}
+\toprule
+Variable & Control & Intend-to-Treat\\
+\midrule
+Percent Male & 90.3\% & 90.2\%\\
+Percent NH-Black & 42.9\% & 41.6\%\\
+Percent NH-White & 30.8\% & 31.1\%\\
+Percent Latino & 22.6\% & 23.1\%\\
+Age (Years)* & 41.5 & 40.4\\
+Time Spent on Parole (Years) & 2.2 & 2.1\\
+Percent Voted in 2016 & 1.2\% & 1.3\%\\
+\bottomrule
+\multicolumn{3}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^*$ Difference is significant at 95 percent confidence level. \\Shows demographics for individuals discharged from parole \\between January 1st, 2017, and October 12th, 2018.}}}
+\end{tabular}
+\end{table}
+
 \end{singlespace}
 
 In Table \ref{tab:to-18-logit}, I present the results of an individual-level logistic regression exploring whether individuals who were discharged on or after May 18\textsuperscript{th}, 2018, turned out at higher rates than those discharged earlier. The models include all individuals discharged from parole between January 1\textsuperscript{st}, 2017, through October 10\textsuperscript{th}, 2018 (the registration deadline in New York State).
 
 \begin{singlespace}
+\begin{table}[H] \centering
+\fontsize{10}{12}\selectfont
+\caption{\label{tab:to-18-logit} Individual-Level Logit Models}
+\label{}
+\begin{tabular}{@{\extracolsep{5pt}}lccc}
+\\[-1.8ex]\hline \\[-1.8ex]
+\\[-1.8ex] & \multicolumn{3}{c}{Cast Ballot in 2018 Election} \\
+\\[-1.8ex] & (1) & (2) & (3)\\
+\hline \\[-1.8ex]
+D(Discharged After EO 181) & 0.235$^{**}$ & 0.296$^{***}$ & 0.300$^{***}$ \\
+& (0.112) & (0.113) & (0.113) \\
+& & & \\
+D(Male) &  & $-$0.337$^{**}$ & $-$0.369$^{**}$ \\
+&  & (0.158) & (0.159) \\
+& & & \\
+Age (Years) &  & 0.051$^{***}$ & 0.045$^{***}$ \\
+&  & (0.004) & (0.004) \\
+& & & \\
+Years on Parole &  &  & 0.037$^{**}$ \\
+&  &  & (0.016) \\
+& & & \\
+Constant & $-$3.839$^{***}$ & $-$7.278$^{***}$ & $-$7.223$^{***}$ \\
+& (0.059) & (1.050) & (1.054) \\
+& & & \\
+\hline \\[-1.8ex]
+Race / Ethnicity FE &  & X & X \\
+Felony Class FE &  &  & X \\
+\hline \\[-1.8ex]
+Observations & 18,423 & 18,423 & 18,423 \\
+Log Likelihood & $-$1,967.190 & $-$1,872.755 & $-$1,859.151 \\
+Akaike Inf. Crit. & 3,938.380 & 3,765.509 & 3,750.302 \\
+\hline \\[-1.8ex]
+\multicolumn{4}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\Robust standard errors in parentheses.}}}
+\end{tabular}
+\end{table}
 
-\input{"../../temp/table4.tex"}
 \end{singlespace}
 
 Model 1 in Table \ref{tab:to-18-logit} controls only for whether an individual was discharged after Executive Order 181 went into effect. Model 2 also controls for individual-level characteristics: sex, age on November 6\textsuperscript{th}, 2018, and race. Model 3 adds sentence-specific information to Model 2: the amount of time the individual spent on parole, and the class(es) of felony for which they were convicted. Table \ref{tab:to-18-logit} makes clear that formerly incarcerated men were far less likely to vote than formerly incarcerated women; that older formerly incarcerated individuals were more likely to cast a ballot; and individuals who spent longer on parole were more likely to participate in the midterm election.
@@ -315,7 +402,47 @@ Two-stage least squares models allow us to leverage the random assignment to tre
 Table \ref{tab:iv-models} presents the results of these various approaches on the question at hand. Models 1 and 2 utilize the linear two-stage least squares approach, with and without covariates. Model 3 uses the 2S probit specification (with all covariates), while Models 4 and 5 employ the bivariate probit specification (with and without covariates). For ease of comparison, I show the marginal effects of the probit models (measured at the means of the other variables).
 
 \begin{singlespace}
-\input{"../../temp/iv_clean.tex"}
+\begin{table}[H]
+\caption{\label{tab:iv-models-chunk}\label{tab:iv-models} Rights Restoration and Turnout}
+\fontsize{10}{12}\selectfont
+\centering
+
+\begin{tabular}{lccccc}
+\\[-1.8ex]\hline
+& \multicolumn{5}{c}{Cast Ballot in 2018 Election} \\
+& \multicolumn{2}{c}{2SLS} & \multicolumn{1}{c}{2S Probit} &   \multicolumn{2}{c}{Bivariate Probit}\\
+& & & \multicolumn{1}{c}{(Marg. Effects)} &   \multicolumn{2}{c}{(Marg. Effects)}\\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-4} \cmidrule(l{3pt}r{3pt}){5-6}
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5)\\
+\hline
+D(Rights Restored) & 0.0075** & 0.0096** & 0.0169*** & 0.0063** & 0.0084*** \\
+ & (0.0038) & (0.0038) & (0.0036) & (0.0030) & (0.0031) \\
+D(Male) &  & -0.0085** & -0.0079** &  & -0.0081** \\
+ &  & (0.0042) & (0.0035) &  & (0.0035) \\
+Age (Years) &  & 0.0011*** & 0.0010*** &  & 0.0010*** \\
+ &  & (0.0001) & (0.0001) &  & (0.0001) \\
+Years on Parole &  & 0.0015** & 0.0011** &  & 0.0011** \\
+ &  & (0.0006) & (0.0004) &  & (0.0004) \\
+Constant & 0.0210*** & -0.0416*** &  &  &  \\
+ & (0.0012) & (0.0090) &  &  &  \\
+\hline
+Race / Ethnicity FE &  & X & X &  & X \\
+Felony Class FE &  & X & X &  & X \\
+\hline
+Observations & 18,423 & 18,423 & 18,423 & 18,423 & 18,423 \\
+Adjusted R$^2$ & 0.0007 & 0.0134 &  &  &  \\
+Wald $\chi^2$ &  &  & 210.2 & 1168 & 1571 \\
+ $\rho$ &  &  &  & 0.138 & 0.0803 \\
+\hline
+\multicolumn{3}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\
+Robust standard errors in parentheses. \\
+Instrument is dummy indicating whether \\
+individual discharged after EO 181 went into effect. \\
+First-stage equations include covariates in Models 2 -- 3. \\
+Models 3 -- 5 present marginal effects, not model coefficients.}}}
+\end{tabular}
+\end{table}
+
 \end{singlespace}
 
 The estimates of the bivariate probit model are modestly more conservative than the two-stage least squares model. After controlling for available demographics, the bivariate probit model indicates that rights restoration prior to discharge boosted turnout by individuals who had their rights restored by around 0.84 percentage points; the two-stage least squares model estimates that it increased turnout by around 0.96 percentage points. Though these numbers may seem small, they represent relatively large gains. Just 3.2 percent of individuals who had their rights restored cast a ballot in 2018, indicating that the executive order increased turnout by between 36.1 and 43.5 percent.
@@ -324,7 +451,7 @@ Figure \ref{fig:sens} estimates Model 2 from Table \ref{tab:iv-models} while usi
 
 \begin{figure}[H]
 
-{\centering \includegraphics{part2_standalone_files/figure-latex/sensitivity-1} 
+{\centering \includegraphics{sensitivity-1} 
 
 }
 
@@ -340,7 +467,47 @@ In three of the four windows, the treatment effect remains significant at the 95
 Although these models demonstrate that rights restoration had a generally positive effect on participation in the 2018 election, the models hide substantial variation between races. In Table \ref{tab:iv-models-r} I present the two-stage least squares and bivariate probit models on subsets of former parolees. These models include only white former parolees (Models 1 and 4), all non-white former parolees (Models 2 and 5), and only Black former parolees (Models 3 and 6). Once again, the marginal effects in the bivariate probit models are calculated at the means of the other variables.
 
 \begin{singlespace}
-\input{"../../temp/iv_clean_race.tex"}
+\begin{table}[H]
+\caption{\label{tab:iv-models-r-chunk}\label{tab:iv-models-r} Rights Restoration and Turnout}
+\fontsize{10}{12}\selectfont
+\centering
+
+\begin{tabular}{lcccccc}
+\\[-1.8ex]\hline
+& \multicolumn{6}{c}{Cast Ballot in 2018 Election} \\
+& \multicolumn{3}{c}{2SLS} &  \multicolumn{3}{c}{Bivariate Probit}\\
+& & & &   \multicolumn{3}{c}{(Marg. Effects)}\\
+\cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-7}
+\\[-1.8ex] & White & Non-White & Black& White & Non-White & Black\\
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\
+\hline
+D(Rights Restored) & 0.0182*** & 0.0045 & 0.0032 & 0.0176*** & 0.0039 & 0.0033 \\
+ & (0.0067) & (0.0045) & (0.0057) & (0.0067) & (0.0034) & (0.0046) \\
+D(Male) & -0.0020 & -0.0165** & -0.0202** & -0.0009 & -0.0141*** & -0.0174*** \\
+ & (0.0052) & (0.0067) & (0.0091) & (0.0054) & (0.0045) & (0.0061) \\
+Age (Years) & 0.0016*** & 0.0009*** & 0.0010*** & 0.0013*** & 0.0008*** & 0.0010*** \\
+ & (0.0002) & (0.0001) & (0.0002) & (0.0002) & (0.0001) & (0.0002) \\
+Years on Parole & 0.0037** & 0.0008 & 0.0024** & 0.0023** & 0.0006 & 0.0018** \\
+ & (0.0018) & (0.0007) & (0.0011) & (0.0011) & (0.0005) & (0.0007) \\
+Constant & -0.0498*** & -0.0100 & -0.0143 &  &  &  \\
+ & (0.0113) & (0.0092) & (0.0127) &  &  &  \\
+\hline
+Felony Class FE & X & X & X & X & X & X \\
+\hline
+Observations & 5,691 & 12,732 & 7,843 & 5,691 & 12,732 & 7,843 \\
+Adjusted R$^2$ & 0.0211 & 0.0095 & 0.0140 &  &  &  \\
+Wald $\chi^2$ &  &  &  & 414.2 & 1207 & 984.2 \\
+ $\rho$ &  &  &  & -0.181 & 0.255 & 0.291 \\
+\hline
+\multicolumn{3}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\
+Robust standard errors in parentheses. \\
+Instrument is dummy indicating whether \\
+individual discharged after EO 181 went into effect. \\
+First-stage equations include covariates in all models. \\
+Models 4 -- 6 present marginal effects, not model coefficients.}}}
+\end{tabular}
+\end{table}
+
 \end{singlespace}
 
 Table \ref{tab:iv-models-r} indicates that rights restoration prior to discharge boosted turnout among white individuals by around 1.8 percentage points. Given that just 3.5 percent of white former parolees with restored voting rights cast a ballot, this means that rights restoration \emph{doubled} these individuals' likelihood of casting a ballot. We cannot determine whether rights restoration had an effect on non-white individuals: the coefficient on these estimates are small and not statistically significant. Turnout among treated non-white and Black former parolees was 3.0 and 3.3 percent, respectively.
@@ -350,8 +517,41 @@ Why would the intervention have increased turnout among white individuals and ha
 There is reason to believe this may be the case. Table \ref{tab:black-to} presents a series of logistic models estimating turnout in 2018 for the control group (individuals discharged from parole before the executive order went into effect), the intent-to-treat group (those discharged after the executive order), and of the treatment group (individuals whose rights were restored), testing whether Black individuals turned out at higher rates. Because Latinos are more likely to be non-citizens (and therefore have a lower turnout rate than Black individuals), these individuals have been excluded from Models 2, 4, and 6 in case their inclusion overstates the relative propensity of Black individuals to vote.
 
 \begin{singlespace}
+\begin{table}[H] \centering
+\fontsize{10}{12}\selectfont
+\caption{\label{tab:black-to} Turnout Rate Among Former Parolees}
+\label{}
+\begin{tabular}{@{\extracolsep{5pt}}lcccccc}
+\\[-1.8ex]\hline \\[-1.8ex]
+\\[-1.8ex] & \multicolumn{6}{c}{Cast Ballot in 2018 Election} \\
+& \multicolumn{2}{c}{Discharged Prior to EO} & \multicolumn{2}{c}{ITT Group} & \multicolumn{2}{c}{Treatment Group} \\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}  \cmidrule(l{3pt}r{3pt}){6-7}
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\
+\hline \\[-1.8ex]
+D(Black) & 0.417$^{***}$ & 0.285$^{**}$ & 0.039 & $-$0.161 & 0.084 & $-$0.039 \\
+& (0.121) & (0.141) & (0.197) & (0.215) & (0.212) & (0.236) \\
+& & & & & & \\
+D(Male) & $-$0.563$^{***}$ & $-$0.486$^{**}$ & $-$0.053 & $-$0.119 & 0.053 & $-$0.019 \\
+& (0.178) & (0.195) & (0.327) & (0.332) & (0.364) & (0.369) \\
+& & & & & & \\
+Age (Years) & 0.045$^{***}$ & 0.045$^{***}$ & 0.050$^{***}$ & 0.052$^{***}$ & 0.048$^{***}$ & 0.051$^{***}$ \\
+& (0.005) & (0.005) & (0.007) & (0.008) & (0.008) & (0.009) \\
+& & & & & & \\
+Years on Parole & 0.033$^{*}$ & 0.049$^{**}$ & 0.017 & 0.075 & 0.133$^{**}$ & 0.135$^{**}$ \\
+& (0.019) & (0.023) & (0.033) & (0.046) & (0.054) & (0.057) \\
+& & & & & & \\
+Constant & $-$5.825$^{***}$ & $-$5.862$^{***}$ & $-$6.125$^{***}$ & $-$5.991$^{***}$ & $-$6.182$^{***}$ & $-$6.075$^{***}$ \\
+& (0.299) & (0.321) & (0.486) & (0.530) & (0.548) & (0.601) \\
+& & & & & & \\
+\hline \\[-1.8ex]
+Observations & 14,155 & 10,963 & 4,268 & 3,280 & 3,093 & 2,514 \\
+Log Likelihood & $-$1,371.825 & $-$1,133.731 & $-$492.408 & $-$402.919 & $-$402.966 & $-$341.008 \\
+Akaike Inf. Crit. & 2,763.649 & 2,287.462 & 1,004.817 & 825.838 & 825.932 & 702.015 \\
+\hline \\[-1.8ex]
+\multicolumn{7}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\Robust standard errors in parentheses. \\Latino individuals excluded from Models 2, 4, and 6.}}}
+\end{tabular}
+\end{table}
 
-\input{"../../temp/table5.tex"}
 \end{singlespace}
 
 Of the 14,155 individuals discharged from parole between January 1\textsuperscript{st}, 2017, and May 18\textsuperscript{th}, 2018, just over 6 thousand (43 percent) were Black. These Black voters were more than 50 percent more likely to vote in the midterms than the rest of the population. Even when Latinos are excluded from this group, Black individuals were still a third more likely to cast a ballot. In both specifications, this higher turnout rate is significant at the 95 percent level of confidence.
@@ -365,7 +565,46 @@ Table \ref{tab:black-to} also shows, however, that among the intent-to-treat gro
 There is some reason to believe that assuming a constant treatment effect understates the true impact of Executive Order 181. Figure \ref{fig:to-18-chart} suggests that individuals discharged later in the treatment period had a higher propensity to vote. This may be due to a number of factors: for instance, parole officers may have had longer to understand and communicate the new rules. Similarly, individuals discharged later may have had more meetings with their parole officers after the policy change, giving the parole officers multiple times to encourage the individuals under study to cast a ballot. Table \ref{tab:iv-models-time} investigates turnout as a function of the number of months an individual spent on parole after having her rights restored. If the individual did not have voting rights restored, this variable takes the value 0. This variable is instrumented by the number of months an individual spent on parole after the executive order went into effect. It is coded as 0 for individuals discharged prior to the implementation of the executive order.\footnote{Because the bivariate probit specification is not appropriate when the endogenous variable is not binary, that specification is not included in Table \ref{tab:iv-models-time}.}
 
 \begin{singlespace}
-\input{"../../temp/iv_clean_months.tex"}
+\begin{table}[H]
+\caption{\label{tab:iv-models-chunk-time}\label{tab:iv-models-time} Rights Restoration and Turnout}
+\fontsize{10}{12}\selectfont
+\centering
+
+\begin{tabular}{lcc}
+\\[-1.8ex]\hline
+& \multicolumn{2}{c}{Cast Ballot in 2018 Election} \\
+& \multicolumn{1}{c}{2SLS} & \multicolumn{1}{c}{2S Probit}\\
+& &  \multicolumn{1}{c}{(Marg. Effects)}\\
+\cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3}
+\\[-1.8ex] & (1) & (2) \\
+\hline
+Months Restored & 0.0029** & 0.0050*** \\
+ & (0.0011) & (0.0010) \\
+D(Male) & -0.0084** & -0.0080** \\
+ & (0.0042) & (0.0035) \\
+Age (Years) & 0.0011*** & 0.0010*** \\
+ & (0.0001) & (0.0001) \\
+Years on Parole & 0.0015** & 0.0011** \\
+ & (0.0006) & (0.0004) \\
+Constant & -0.0418*** &  \\
+ & (0.0090) &  \\
+\hline
+Race / Ethnicity FE & X & X \\
+Felony Class FE & X & X \\
+\hline
+Observations & 18,423 & 18,423 \\
+Adjusted R$^2$ & 0.0134 &  \\
+ Wald $\chi^2$ &  & 210.9 \\
+\hline
+\multicolumn{3}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\
+Robust standard errors in parentheses. \\
+Instrument is dummy indicating whether \\
+individual discharged after EO 181 went into effect. \\
+First-stage equations include covariates in both models. \\
+Model 2 presents marginal effects, not model coefficients.}}}
+\end{tabular}
+\end{table}
+
 \end{singlespace}
 
 Table \ref{tab:iv-models-time} indicates that variable treatment intensity matters --- individuals who spent longer on parole after they had their rights restored were more likely to vote than those whose rights were restored shortly before discharge. Table \ref{tab:iv-models-time} shows that for each month individuals spent on parole after having their rights restored, turnout increased by between 0.29 percentage points (in the 2SLS model) and 0.50 percentage points (in the 2S probit model).
@@ -412,6 +651,9 @@ Angrist, Joshua D., and Jörn-Steffen Pischke. 2008. \emph{Mostly Harmless Econo
 \leavevmode\hypertarget{ref-Ansolabehere1999}{}%
 Ansolabehere, Stephen D., Shanto Iyengar, and Adam Simon. 1999. ``Replicating Experiments Using Aggregate and Survey Data: The Case of Negative Advertising and Turnout.'' \emph{American Political Science Review} 93 (4): 901--9. \url{https://doi.org/10.2307/2586120}.
 
+\leavevmode\hypertarget{ref-bcj_laws}{}%
+Brennan Center for Justice. 2019. ``Criminal Disenfranchisement Laws Across the United States.'' May 30, 2019. \url{https://www.brennancenter.org/our-work/research-reports/criminal-disenfranchisement-laws-across-united-states}.
+
 \leavevmode\hypertarget{ref-Burch2011}{}%
 Burch, Traci. 2011. ``Turnout and Party Registration Among Criminal Offenders in the 2008 General Election.'' \emph{Law \& Society Review} 45 (3): 699--730. \url{https://doi.org/10.1111/j.1540-5893.2011.00448.x}.
 
@@ -447,9 +689,6 @@ Haselswerdt, Michael V. 2009. ``Con Job: An Estimate of Ex-Felon Voter Turnout U
 
 \leavevmode\hypertarget{ref-Hemmens2000}{}%
 Hemmens, Craig, and James W. Marquart. 2000. ``Friend or Foe? Race, Age, and Inmate Perceptions of Inmate-Staff Relations.'' \emph{Journal of Criminal Justice} 28 (4): 297--312. \url{https://doi.org/10.1016/S0047-2352(00)00044-1}.
-
-\leavevmode\hypertarget{ref-bcj_laws}{}%
-Justice, Brennan Center for. 2019. ``Criminal Disenfranchisement Laws Across the United States.'' May 30, 2019. \url{https://www.brennancenter.org/our-work/research-reports/criminal-disenfranchisement-laws-across-united-states}.
 
 \leavevmode\hypertarget{ref-Lassen2004}{}%
 Lassen, David Dreyer. 2004. ``The Effect of Information on Voter Turnout: Evidence from a Natural Experiment.'' SSRN Scholarly Paper ID 475821. Rochester, NY: Social Science Research Network. \url{https://papers.ssrn.com/abstract=475821}.

@@ -2,7 +2,8 @@
 
 ############# READ IN NYS VOTER FILES #############
 db <- dbConnect(SQLite(), "D:/rolls.db")
-nys_roll <- dbGetQuery(db, "select political_party, last_name, first_name, middle_name, dob, voter_status, nys_id from nys_roll_0319")
+nys_roll <- dbGetQuery(db, "select political_party, last_name, first_name, middle_name, dob,
+                            voter_status, nys_id from nys_roll_0319")
 
 nys_roll <- nys_roll %>% 
   mutate(a = as.integer(voter_status == "ACTIVE"),
@@ -27,7 +28,7 @@ doccs_to_rolls <- doccs_to_rolls %>%
             ~ gsub("[[:punct:]]| ", "", ifelse(. == "", NA, .))) %>% 
   rename(dob = dob_parole)
 
-merge_list <- match_rolls_to_doc(doccs_to_rolls, din, nys_roll, nys_id)
+merge_list <- match_rolls_to_doc(doccs_to_rolls, "din", nys_roll, "nys_id")
 
 small <- merge_list[[1]] %>% 
   select(nys_id, din) %>% 

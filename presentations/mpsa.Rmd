@@ -1,0 +1,109 @@
+---
+title: "Welcome Home --- Now Vote!"
+subtitle: "Voting Rights Restoration and Post-Supervision Turnout"
+shorttitle: "Other"
+author: Kevin Morris
+abstract: kevin.morris@nyu.edu
+institute: Brennan Center for Justice
+date: Midwest Political Science Association, 2020
+output:
+  beamer_presentation:
+    latex_engine: xelatex
+    theme: "Berlin"
+    keep_tex: true
+bibliography: "../markdown/welcome_home_vote.bib"
+---
+```{r setup, echo = F, message = F, warning = F}
+knitr::opts_knit$set(dev = "cairo_pdf")
+library(systemfit)
+library(AER)
+library(sandwich)
+library(lmtest)
+library(scales)
+library(tidyverse)
+library(extrafont)
+library(kableExtra)
+library(stargazer)
+library(data.table)
+loadfonts()
+```
+
+## Outline
+
+>* Previous research indicates that notification laws increase post-supervision turnout
+
+>* The notification laws are "baked in" to the control group here. In 2018, New York State began implementing rights restoration prior to parole discharge at in-person meetings.
+
+>* So --- did rights restoration *prior* to parole discharge increase formerly incarcerated individuals' propensity to vote?
+
+## Formerly Incarcerated Individuals Turn Out at Low Rates
+
+>* The low turnout rates among the formerly disenfranchised have been shown in a number of studies [e.g. @Burch2011; @Burch2012; @White2019]
+
+>* The *causal effect* of incarceration, however, is the subject of some debate. @Gerber2017, for instance, argues that most of the low turnout observed in the formerly incarcerated population is attributable not to incarceration, but to other factors predating incarceration.
+
+>* Nevertheless, @Lerman2014 and others have convincingly shown through qualitative and quantitative work that criminal justice involvement structures individuals' relationship to the state.
+
+## Notification Laws and Post-Supervision Turnout
+
+>* In 2005, Iowa changed its disenfranchisement laws to allow formerly incarcerated individuals to vote. Not all formerly incarcerated individuals, however, were notified of the change in the mail. @Meredith2015 exploits this uneven treatment, demonstrating that mail notification increased turnout.
+
+>* In 2012, @Gerber2015 expanded on the natural experiment setup of @Meredith2015. In a randomized experiment, they sent mail notifications to some formerly disenfranchised individuals in Connecticut. They too find that notification increases participation, arguing "Whatever the participatory consequences of incarceration they are not in large part impossible to overcome" (p. 924).
+
+## Changes in New York State in 2018
+
+>* In the spring of 2018, Governor Andrew Cuomo signs Executive Order 181 restoring voting rights to individuals *prior* to their discharge from parole.
+
+>* The New York DOC issues guidance calling the program a *priority* initiative, telling parole officers to help their parolees register to vote.
+
+>* Does in-person rights restoration prior to parole discharge increase post-supervision turnout?
+
+## Methodology
+
+>* I limit the pool of individuals to those discharged before the 2018 registration deadline in 2018. These are all individuals, therefore, who could have voted even if the executive order had not been implemented.
+
+>* I compare turnout to those treated by the executive order to those who were untreated by the order afterwards.
+
+>* Because of "imperfect compliance" with the treatment, I adopt an instrumental variables approach. Treatment is instrumented by whether someone came off parole after the executive order went into effect.
+
+## Turnout in 2016 Among the Formerly Incarcerated
+
+```{r, echo=FALSE,out.width="85%", out.height="85%",fig.show='hold',fig.align='center'}
+j <- readRDS("../temp/to16_chart.rds") +
+  theme(text = element_text(size = 18)) +
+  labs(y = "Turnout in 2016")
+j
+```
+
+## Turnout in 2018 Among the Formerly Incarcerated
+
+```{r, echo=FALSE,out.width="85%", out.height="85%",fig.show='hold',fig.align='center'}
+j <- readRDS("../temp/to18_chart.rds") +
+  theme(text = element_text(size = 18)) +
+  labs(y = "Turnout in 2018")
+j
+```
+
+
+## Overall Treatment Effects
+
+```{r, echo=FALSE,out.width="85%", out.height="85%",fig.show='hold',fig.align='center', caption = "", warning = FALSE}
+j <- readRDS("../temp/window_change_plot_mpsa.rds")
+j
+```
+
+## Treatment Effects Vary by Race
+
+```{r, echo=FALSE,out.width="85%", out.height="85%",fig.show='hold',fig.align='center', caption = "", warning = FALSE}
+j <- readRDS("../temp/race_change_plot_mpsa.rds")
+j
+```
+
+
+## We Made It!
+
+Thanks!
+
+kevin.morris@nyu.edu
+
+## References {.allowframebreaks}

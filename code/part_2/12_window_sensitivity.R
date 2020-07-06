@@ -4,9 +4,6 @@
 nys_roll <- readRDS("./temp/parolee_to_18.rds")
 parolees <- readRDS("./temp/parolees_with_restoration.rds")
 
-how_many_restored <- nrow(filter(parolees, year(parole_status_date) >= 2017, restored))
-saveRDS(how_many_restored, "./temp/how_many_restored.rds")
-
 parolees <- left_join(parolees, nys_roll, by = "din") %>% 
   select(-history, -year, -election_type) %>% 
   filter(parole_status == "DISCHARGED",
@@ -30,7 +27,8 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
 iv1 <- as.data.frame(confint_robust(ivreg(v2018 ~ restored + male + race +
                age +
                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
-             data = filter(parolees, year(parole_status_date) >= 2017)))) %>% 
+             data = filter(parolees, year(parole_status_date) >= 2017)), level = 0.95,
+             HC_type = "HC1")) %>% 
   add_rownames(var = "coef") %>% 
   filter(coef == "restoredTRUE") %>% 
   rename(lb = `2.5 %`,
@@ -42,7 +40,8 @@ iv1 <- as.data.frame(confint_robust(ivreg(v2018 ~ restored + male + race +
 iv2 <- as.data.frame(confint_robust(ivreg(v2018 ~ restored + male + race +
                                      age +
                                      felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
-                                   data = filter(parolees, parole_status_date >= as.Date("2017-06-01"))))) %>% 
+                                   data = filter(parolees, parole_status_date >= as.Date("2017-06-01"))), level = 0.95,
+                                   HC_type = "HC1")) %>% 
   add_rownames(var = "coef") %>% 
   filter(coef == "restoredTRUE") %>% 
   rename(lb = `2.5 %`,
@@ -54,7 +53,8 @@ iv2 <- as.data.frame(confint_robust(ivreg(v2018 ~ restored + male + race +
 iv3 <- as.data.frame(confint_robust(ivreg(v2018 ~ restored + male + race +
                                      age +
                                      felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
-                                   data = filter(parolees, parole_status_date >= as.Date("2018-01-01"))))) %>% 
+                                   data = filter(parolees, parole_status_date >= as.Date("2018-01-01"))), level = 0.95,
+                                   HC_type = "HC1")) %>% 
   add_rownames(var = "coef") %>% 
   filter(coef == "restoredTRUE") %>% 
   rename(lb = `2.5 %`,
@@ -67,7 +67,8 @@ iv4 <- as.data.frame(confint_robust(ivreg(v2018 ~ restored + male + race +
                                      age +
                                      felony_a + felony_b + felony_c + felony_d + felony_e + parole_time | . -restored + finished_post,
                                    data = filter(parolees, parole_status_date >= as.Date("2018-02-18"),
-                                                 parole_status_date <= as.Date("2018-08-18"))))) %>% 
+                                                 parole_status_date <= as.Date("2018-08-18"))), level = 0.95,
+                                   HC_type = "HC1")) %>% 
   add_rownames(var = "coef") %>% 
   filter(coef == "restoredTRUE") %>% 
   rename(lb = `2.5 %`,
@@ -86,7 +87,7 @@ oshapes <- c(21:25, 15:18, 3, 4, 8)
 shapes <- oshapes[1:4]
 
 
-p <- ggplot(data = estimates)
+p <- ggplot(data = estimates) + theme_bw()
 
 p <- p + ggstance::geom_pointrangeh(aes(y = coef, x = estimate, 
                                         xmin = lb, xmax = ub, color = window, 

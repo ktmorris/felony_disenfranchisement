@@ -104,8 +104,42 @@
 In the Instrumental Variables Approach section of this paper, I argue that being discharged from parole in the final months leading up to an election is uncorrelated with propensity to vote. Table \ref{tab:to-16-logit} demonstrates that individuals discharged between May 18\textsuperscript{th} -- October 14\textsuperscript{th}, 2016, did not participate at different rates in the 2016 presidential election than other formerly incarcerated individuals. Table \ref{tab:to-16-logit} includes all individuals last discharged from parole between January 1\textsuperscript{st}, 2015, and October 14\textsuperscript{th}, 2016.
 
 \begin{singlespace}
+\begin{table}[H] \centering
+\fontsize{10}{12}\selectfont
+\caption{\label{tab:to-16-logit} Individual-Level Logit Model}
+\label{}
+\begin{tabular}{@{\extracolsep{5pt}}lccc}
+\\[-1.8ex]\hline \\[-1.8ex]
+\\[-1.8ex] & \multicolumn{3}{c}{Cast Ballot in 2016 Election} \\
+\\[-1.8ex] & (1) & (2) & (3)\\
+\hline \\[-1.8ex]
+D(Discharged on or after May 18\textsuperscript{th}, 2016) & $-$0.121 & $-$0.093 & $-$0.103 \\
+& (0.093) & (0.094) & (0.094) \\
+& & & \\
+D(Male) &  & $-$0.490$^{***}$ & $-$0.524$^{***}$ \\
+&  & (0.117) & (0.118) \\
+& & & \\
+Age (Years) &  & 0.034$^{***}$ & 0.030$^{***}$ \\
+&  & (0.003) & (0.003) \\
+& & & \\
+Counts in Most Recent Sentence &  &  & 0.049$^{***}$ \\
+&  &  & (0.014) \\
+& & & \\
+Time Spent on Parole (Years) & $-$3.105$^{***}$ & $-$4.354$^{***}$ & $-$4.264$^{***}$ \\
+& (0.044) & (0.498) & (0.502) \\
+& & & \\
+\hline \\[-1.8ex]
+Race / Ethnicity FE &  & X & X \\
+Felony Class FE &  &  & X \\
+\hline \\[-1.8ex]
+Observations & 16,867 & 16,867 & 16,867 \\
+Log Likelihood & $-$2,927.513 & $-$2,846.416 & $-$2,829.391 \\
+Akaike Inf. Crit. & 5,859.027 & 5,712.831 & 5,690.782 \\
+\hline \\[-1.8ex]
+\multicolumn{4}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\Robust standard errors in parentheses.}}}
+\end{tabular}
+\end{table}
 
-\input{"../../temp/table55.tex"}
 \end{singlespace}
 
 Although turnout was generally higher in 2016 than in 2018 (reflecting statewide higher turnout thanks to the presidential contest), there is no evidence that being discharged in the summer of 2016 was associated with an individual's propensity to cast a ballot. The nonsignificant results from 2016 provide strong corroboration that discharge date serves as an effective instrument for rights restoration.
@@ -119,19 +153,138 @@ In the body of this paper, I argue that restoring voting rights to individuals i
 In this Supplemental Appendix, I re-estimate the primary analyses found in Tables 5, 6, and 8 in the main body of this paper. Here, however, I use registration as the dependent variable, rather than turnout in 2018. As before, the dependent variable is binary: an individual is either registered or not registered. As such, the functional forms remain the same. As before, the marginal effects of the probit models are presented with other covariates held at their means.
 
 \begin{singlespace}
-\input{"../../temp/iv_clean_reg.tex"}
+\begin{table}[H]
+\caption{\label{tab:iv-models-chunk}\label{tab:iv-models} Rights Restoration and Registration}
+\fontsize{10}{12}\selectfont
+\centering
+
+\begin{tabular}{lccccc}
+\\[-1.8ex]\hline
+& \multicolumn{5}{c}{Registered to Vote} \\
+& \multicolumn{2}{c}{2SLS} & \multicolumn{1}{c}{2S Probit} &   \multicolumn{2}{c}{Bivariate Probit}\\
+& & & \multicolumn{1}{c}{(Marg. Effects)} &   \multicolumn{2}{c}{(Marg. Effects)}\\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-4} \cmidrule(l{3pt}r{3pt}){5-6}
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5)\\
+\hline
+D(Rights Restored) & 0.0137** & 0.0164*** & 0.0253*** & 0.0125** & 0.0157*** \\
+ & (0.0058) & (0.0058) & (0.0055) & (0.0051) & (0.0051) \\
+D(Male) &  & -0.0295*** & -0.0268*** &  & -0.0269*** \\
+ &  & (0.0067) & (0.0054) &  & (0.0054) \\
+Age (Years) &  & 0.0013*** & 0.0013*** &  & 0.0013*** \\
+ &  & (0.0002) & (0.0001) &  & (0.0001) \\
+Years on Parole &  & -0.0000 & -0.0000 &  & -0.0001 \\
+ &  & (0.0009) & (0.0008) &  & (0.0008) \\
+Constant & 0.0545*** & -0.0053 &  &  &  \\
+ & (0.0019) & (0.0151) &  &  &  \\
+\hline
+Race / Ethnicity FE &  & X & X &  & X \\
+Felony Class FE &  & X & X &  & X \\
+\hline
+Observations & 18,423 & 18,423 & 18,423 & 18,423 & 18,423 \\
+Adjusted R$^2$ & 0.0008 & 0.0113 &  &  &  \\
+Wald $\chi^2$ &  &  & 214.6 & 1171 & 1581 \\
+ $\rho$ &  &  &  & 0.0855 & 0.0452 \\
+\hline
+\multicolumn{3}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\
+Robust standard errors in parentheses. \\
+Instrument is dummy indicating whether \\
+individual discharged after EO 181 went into effect. \\
+First-stage equations include covariates in Models 2 -- 3. \\
+Models 3 -- 5 present marginal effects, not model coefficients.}}}
+\end{tabular}
+\end{table}
+
 \end{singlespace}
 
 The 2SLS model indicates that voting rights restoration increased the registration rate of former parolees by 1.37 percentange points, while the biprobit model estimates that the effect was between 1.25 and 1.57 percentage points. Given that 5.5 percent of parolees in the control group were registered to vote, this implies an increase of between 23 and 29 percent.
 
 \begin{singlespace}
-\input{"../../temp/iv_clean_race_reg.tex"}
+\begin{table}[H]
+\caption{\label{tab:iv-models-r-chunk}\label{tab:iv-models-r} Rights Restoration and Registration}
+\fontsize{10}{12}\selectfont
+\centering
+
+\begin{tabular}{lcccccc}
+\\[-1.8ex]\hline
+& \multicolumn{6}{c}{Registered to Vote} \\
+& \multicolumn{3}{c}{2SLS} &  \multicolumn{3}{c}{Bivariate Probit}\\
+& & & &   \multicolumn{3}{c}{(Marg. Effects)}\\
+\cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-7}
+\\[-1.8ex] & White & Non-White & Black& White & Non-White & Black\\
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\
+\hline
+D(Rights Restored) & 0.0235*** & 0.0114 & 0.0030 & 0.0225*** & 0.0109* & 0.0039 \\
+ & (0.0090) & (0.0075) & (0.0093) & (0.0087) & (0.0063) & (0.0084) \\
+D(Male) & -0.0099 & -0.0523*** & -0.0581*** & -0.0093 & -0.0424*** & -0.0479*** \\
+ & (0.0078) & (0.0112) & (0.0146) & (0.0073) & (0.0074) & (0.0101) \\
+Age (Years) & 0.0021*** & 0.0010*** & 0.0008*** & 0.0018*** & 0.0010*** & 0.0008*** \\
+ & (0.0003) & (0.0002) & (0.0003) & (0.0002) & (0.0002) & (0.0003) \\
+Years on Parole & 0.0019 & -0.0010 & 0.0018 & 0.0014 & -0.0010 & 0.0016 \\
+ & (0.0022) & (0.0010) & (0.0016) & (0.0017) & (0.0010) & (0.0015) \\
+Constant & -0.0417*** & 0.0688*** & 0.0834*** &  &  &  \\
+ & (0.0150) & (0.0146) & (0.0197) &  &  &  \\
+\hline
+Felony Class FE & X & X & X & X & X & X \\
+\hline
+Observations & 5,691 & 12,732 & 7,843 & 5,691 & 12,732 & 7,843 \\
+Adjusted R$^2$ & 0.0172 & 0.0066 & 0.0073 &  &  &  \\
+Wald $\chi^2$ &  &  &  & 408.1 & 1163 & 923.7 \\
+ $\rho$ &  &  &  & -0.135 & 0.150 & 0.153 \\
+\hline
+\multicolumn{3}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\
+Robust standard errors in parentheses. \\
+Instrument is dummy indicating whether \\
+individual discharged after EO 181 went into effect. \\
+First-stage equations include covariates in all models. \\
+Models 4 -- 6 present marginal effects, not model coefficients.}}}
+\end{tabular}
+\end{table}
+
 \end{singlespace}
 
 As with turnout, voting rights restoration appears to have increased registrations only among white former parolees. The estimated treatment effect is between 2.3 and 2.4 percentage points, off a registration rate among the control, white individuals of 4.4 percent. No significant effect is detected among non-white or Black former parolees, whose control groups had base registration rates of 5.9 and 7.2 percent, respectively. As with turnout, Black former parolees had much higher base registration rates than whites.
 
 \begin{singlespace}
-\input{"../../temp/iv_clean_months_reg.tex"}
+\begin{table}[H]
+\caption{\label{tab:iv-models-chunk-time}\label{tab:iv-models-time} Rights Restoration and Registration}
+\fontsize{10}{12}\selectfont
+\centering
+
+\begin{tabular}{lcc}
+\\[-1.8ex]\hline
+& \multicolumn{2}{c}{Registered to Vote} \\
+& \multicolumn{1}{c}{2SLS} & \multicolumn{1}{c}{2S Probit}\\
+& &  \multicolumn{1}{c}{(Marg. Effects)}\\
+\cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3}
+\\[-1.8ex] & (1) & (2) \\
+\hline
+Months Restored & 0.0052*** & 0.0088*** \\
+ & (0.0018) & (0.0016) \\
+D(Male) & -0.0295*** & -0.0267*** \\
+ & (0.0067) & (0.0054) \\
+Age (Years) & 0.0013*** & 0.0013*** \\
+ & (0.0002) & (0.0001) \\
+Years on Parole & -0.0000 & -0.0000 \\
+ & (0.0009) & (0.0008) \\
+Constant & -0.0058 &  \\
+ & (0.0151) &  \\
+\hline
+Race / Ethnicity FE & X & X \\
+Felony Class FE & X & X \\
+\hline
+Observations & 18,423 & 18,423 \\
+Adjusted R$^2$ & 0.0115 &  \\
+ Wald $\chi^2$ &  & 213.6 \\
+\hline
+\multicolumn{3}{l}{\scriptsize{\parbox{.5\linewidth}{\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\
+Robust standard errors in parentheses. \\
+Instrument is dummy indicating whether \\
+individual discharged after EO 181 went into effect. \\
+First-stage equations include covariates in both models. \\
+Model 2 presents marginal effects, not model coefficients.}}}
+\end{tabular}
+\end{table}
+
 \end{singlespace}
 
 Finally, we see that the longer an individual was on parole after her voting rights were restored, the more likely she was to be registered. Each additional month on parole after voting rights were restored is associated with an increase in registration of between 0.5 and 0.9 percentage points.
