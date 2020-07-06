@@ -138,8 +138,6 @@ dd <- parolees %>%
   mutate(parole_status_date = as.Date(parole_status_date, "%m/%d/%Y"),
          b = race == "BLACK") %>% 
   rename(day_done = parole_status_date) %>% 
-  filter((day_done >= "2015-05-20" & day_done <= "2016-10-14") |
-           (day_done >= "2017-05-18" & day_done <= "2018-10-12")) %>% 
   mutate(year = ifelse(year(day_done) %in% c(2015, 2016), 2016, 2018),
          turnout = ifelse(year == 2016, v2016, v2018),
          days = ifelse(year == 2016, day_done - as.Date("2016-05-20"), day_done - as.Date("2018-05-18")),
@@ -165,7 +163,7 @@ dd <- bind_rows(h, i)
 
 m1 <- lm(turnout ~ as.factor(year) * treated + white +
            as.factor(sex) + age +
-           felony_a + felony_b + felony_c + felony_d + felony_e + parole_time, filter(dd, days >= -999))
+           felony_a + felony_b + felony_c + felony_d + felony_e + parole_time, filter(dd, (day_done >= "2017-12-01" & day_done <= "2018-10-12")))
 m2 <- lm(turnout ~ as.factor(year) * treated * white +
            as.factor(sex) + age +
            felony_a + felony_b + felony_c + felony_d + felony_e + parole_time, filter(dd, days >= -999))

@@ -29,37 +29,40 @@ library(data.table)
 library(stargazer)
 loadfonts()
 ```
-# Turnout Among Parolees in 2016 {-}
+# Treatment Effect on Registration {-}
 
-In the Instrumental Variables Approach section of this paper, I argue that being discharged from parole in the final months leading up to an election is uncorrelated with propensity to vote. Table \ref{tab:to-16-logit} demonstrates that individuals discharged between May 18^th^ -- October 14^th^, 2016, did not participate at different rates in the 2016 presidential election than other formerly incarcerated individuals. Table \ref{tab:to-16-logit} includes all individuals last discharged from parole between January 1^st^, 2015, and October 14^th^, 2016.
+In the body of this manuscript, I argue that restoring voting rights to individuals in an in-person meeting while they are still on parole increases their eventual propensity to vote. The mechanism for this effect, of course, must run through voter registration; parole officers are encouraging their stewards to register, and the actual decision to vote occurred when the individual was no longer on parole. Voter registration is, in and of itself, relatively uninteresting in this context: if the executive order had been successful at registering formerly incarcerated individuals, but did not result in higher turnout, it can hardly be said to have been effective at increasing political representation.
+
+In this Supplemental Appendix, I re-estimate the primary analysis found in Table 4 and 5in the main body of this manuscript. Here, however, I use registration as the dependent variable, rather than turnout in 2018.
+
 \begin{singlespace}
-```{r logit-reg-chunk-16, echo = F, results = "hide", message = F, warning = F}
-load("./temp/individual_turnout_16.rdata")
+```{r race-reg-chunk, echo = F, results = "hide", message = F, warning = F}
+load("./temp/app_reg.rdata")
 
-stargazer(model1, model2, model3,
+stargazer(model1, model2,
           header = F,
-          type = "latex", notes.align = "l",
-          covariate.labels = c("D(Discharged on or after May 18\\textsuperscript{th}, 2016)", 
-                               "D(Male)", "Age (Years)", "Counts in Most Recent Sentence",
-                               "Time Spent on Parole (Years)"),
-          dep.var.labels = c("Cast Ballot in 2016 Election"),
-          title = "\\label{tab:to-16-logit} Individual-Level Logit Model",
+          type = "text", notes.align = "l",
+          covariate.labels = c("D(Discharged After EO 181)", "D(Male)", "Age (Years)",
+                               "Voted in 2008",
+                               "Years on Parole",
+                               "Days off Parole Before Election",
+                               "Black $\\times$ D(Discharged After EO 181)"),
+          dep.var.labels = c("Registered to Vote"),
+          title = "\\label{tab:racevar} ITT By Race",
           table.placement = "H",
           omit = c("race", "felony"),
-          add.lines=list(c("Race / Ethnicity FE", "", "X", "X"),
-                         c("Felony Class FE", "", "", "X")),
-          table.layout = "-dcm#-t-a-s-n",
+          keep.stat = c("n", "rsq", "adj.rsq"),
+          add.lines=list(c("Race / Ethnicity FE", "", "X", "X", "X"),
+                         c("Felony Class FE", "", "", "X", "X")),
+          table.layout = "-dm#-t-a-s-n",
           out = "./temp/test.tex",
-          out.header = F,
           notes = "TO REPLACE",
-          se = list(
-            sqrt(diag(vcovHC(model1, type = "HC0"))),
-            sqrt(diag(vcovHC(model2, type = "HC0"))),
-            sqrt(diag(vcovHC(model3, type = "HC0")))
-          ))
+          out.header = F,
+          se = list(m1_ses$V1, m2_ses$V1))
+
 j <- fread("./temp/test.tex", header = F, sep = "+")
 
-note.latex <- "\\multicolumn{4}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.}}}"
+note.latex <- "\\multicolumn{2}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.}}}"
 
 j <- j %>% 
   mutate(V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
@@ -73,33 +76,11 @@ j <- bind_rows(j, data.frame(V1 = c(insert1), n = c(1.1))) %>%
   arrange(n) %>% 
   select(-n)
 
-write.table(j, "./temp/table55.tex", quote = F, col.names = F,
+write.table(j, "./temp/tablexxx.tex", quote = F, col.names = F,
             row.names = F)
+
 ```
-\input{"../../temp/table55.tex"}
-\end{singlespace}
-Although turnout was generally higher in 2016 than in 2018 (reflecting statewide higher turnout thanks to the presidential contest), there is no evidence that being discharged in the summer of 2016 was associated with an individual's propensity to cast a ballot. The nonsignificant results from 2016 provide strong corroboration that discharge date serves as an effective instrument for rights restoration.
-
-# Treatment Effect on Registration {-}
-
-In the body of this paper, I argue that restoring voting rights to individuals in an in-person meeting while they are still on parole increases their eventual propensity to vote. The mechanism for this effect, of course, must run through voter registration; parole officers are encouraging their stewards to register, and the actual decision to vote occured when the individual was no longer on parole. Voter registration is, in and of itself, relatively uninteresting in this context: if the executive order had been successful at registering formerly incarcerated individuals, but did not result in higher turnout, it can hardly be said to have been effective at increasing political representation.
-
-In this Supplemental Appendix, I re-estimate the primary analyses found in Tables 5, 6, and 8 in the main body of this paper. Here, however, I use registration as the dependent variable, rather than turnout in 2018. As before, the dependent variable is binary: an individual is either registered or not registered. As such, the functional forms remain the same. As before, the marginal effects of the probit models are presented with other covariates held at their means.
-
-\begin{singlespace}
-\input{"../../temp/iv_clean_reg.tex"}
+\input{"../../temp/tablexxx.tex"}
 \end{singlespace}
 
-The 2SLS model indicates that voting rights restoration increased the registration rate of former parolees by 1.37 percentange points, while the biprobit model estimates that the effect was between 1.25 and 1.57 percentage points. Given that 5.5 percent of parolees in the control group were registered to vote, this implies an increase of between 23 and 29 percent.
-
-\begin{singlespace}
-\input{"../../temp/iv_clean_race_reg.tex"}
-\end{singlespace}
-
-As with turnout, voting rights restoration appears to have increased registrations only among white former parolees. The estimated treatment effect is between 2.3 and 2.4 percentage points, off a registration rate among the control, white individuals of 4.4 percent. No significant effect is detected among non-white or Black former parolees, whose control groups had base registration rates of 5.9 and 7.2 percent, respectively. As with turnout, Black former parolees had much higher base registration rates than whites.
-
-\begin{singlespace}
-\input{"../../temp/iv_clean_months_reg.tex"}
-\end{singlespace}
-
-Finally, we see that the longer an individual was on parole after her voting rights were restored, the more likely she was to be registered. Each additional month on parole after voting rights were restored is associated with an increase in registration of between 0.5 and 0.9 percentage points.
+As with turnout, there is a positive ITT of around 1 percentage point. However, as Model 2 makes clear, this was not so for Black voters, whose registration was apparently undisturbed by the treatment.

@@ -53,15 +53,15 @@ demos <- left_join(demos, rename_v)
 
 
 pvals <- unlist(lapply(demos$varnames, function(x){
-  t.test(demos1[, x] ~ demos1$finished_post)$p.value < 0.05
+  t.test(demos1[, x] ~ demos1$finished_post)$p.value
 }))
 
 demos$pvals <- pvals
 
 demos <- demos %>% 
-  mutate(names = ifelse(pvals, paste0(names, "*"), as.character(names))) %>% 
-  select(names, finished_before, finished_after)
+  mutate(pvals = round(pvals, digits = 3)) %>% 
+  select(names, finished_before, finished_after, pvals)
 
-colnames(demos) <- c("Variable", "Control", "Intend-to-Treat")
+colnames(demos) <- c("Variable", "Control", "Intend-to-Treat", "p-value")
 
 saveRDS(demos, "./temp/demos_rd_time.rds")

@@ -1,3 +1,74 @@
+
+#### individual level regressions
+
+## this is the treated group
+nys_roll <- readRDS("./temp/parolee_to_18.rds")
+parolees <- readRDS("./temp/parolees_with_restoration.rds")
+
+parolees <- left_join(parolees, nys_roll, by = "din") %>% 
+  select(-history, -year, -election_type) %>% 
+  filter(parole_status == "DISCHARGED",
+         parole_status_date >= "2012-01-01",
+         parole_status_date <= "2018-10-12",
+         !is.na(dob_parole)) %>% 
+  mutate(age = as.numeric((as.Date("2018-11-06") - dob_parole) / 365.25),
+         parole_time = as.numeric((parole_status_date - release_date_parole) / 365.25),
+         v2018 = ifelse(is.na(v2018), 0, v2018),
+         finished_post = parole_status_date >= "2018-05-18",
+         days_bef = as.Date("2018-10-12") - parole_status_date,
+         days2 = as.integer(days_bef)^2,
+         restored = ifelse(is.na(restored), F, restored),
+         days_since_m21 = parole_status_date - as.Date("2018-05-19"),
+         v2016 = ifelse(is.na(v2016), 0, v2016),
+         v2008 = ifelse(is.na(v2008), 0, v2008),
+         registered = voter_status %in% c("ACTIVE", "INACTIVE"))
+
+
+
+
+model1 <- lm(registered ~ finished_post + as.factor(race) +
+               as.factor(sex) + age + v2008 +
+               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef,
+             data = filter(parolees, year(parole_status_date) >= 2017),
+             cluster = "finished_post")
+
+m1_ses <- data.table(summary(lm.cluster(registered ~ finished_post + as.factor(race) +
+                                          as.factor(sex) + age + v2008 +
+                                          felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef,
+                                        data = filter(parolees, year(parole_status_date) >= 2017),
+                                        cluster = "finished_post"))[,2])
+
+parolees$pb <- (parolees$race == "BLACK") * (parolees$finished_post == T)
+
+model2 <- lm(registered ~ finished_post + as.factor(race) +
+               as.factor(sex) + age + v2008 +
+               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef + pb,
+             data = filter(parolees, year(parole_status_date) >= 2017),
+             cluster = "finished_post")
+
+m2_ses <- data.table(summary(lm.cluster(registered ~ finished_post + as.factor(race) +
+                                          as.factor(sex) + age + v2008 +
+                                          felony_a + felony_b + felony_c + felony_d + felony_e + parole_time +
+                                          days_bef + pb,
+                                        data = filter(parolees, year(parole_status_date) >= 2017),
+                                        cluster = "finished_post"))[,2])
+
+save(model1, m1_ses, model2, m2_ses, file = "./temp/app_reg.rdata")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 parolees <- fread("./temp/iv_data.csv")
 
 stata("
