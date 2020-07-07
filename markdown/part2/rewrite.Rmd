@@ -1,16 +1,11 @@
 ---
 title: "Welcome Home --- Now Vote!"
 subtitle: "Voting Rights Restoration and Post-Supervision Participation"
-thanks: Prepared for the 2020 Annual Meeting of the Midwest Political Science Association. The author thanks Jacob Faber, Jeff Manza, Myrna Pérez, Ariel White, and Peter Miller for their comments on this project. All errors are my responsibility.
+thanks: The author thanks Jacob Faber, Jeff Manza, Myrna Pérez, Ariel White, and Peter Miller for their comments on this project. All errors are my responsibility.
 author: Kevin Morris^[Researcher, Brennan Center for Justice at NYU School of Law, 120 Broadway Ste 1750, New York, NY 10271 (kevin.morris@nyu.edu)]
 institute: "Brennan Center for Justice"
 date: |
   `r format(Sys.time(), '%B %d, %Y')`
-  \linebreak
-  \linebreak
-  \linebreak
-  \linebreak
-  Word Count: 9,596
 output:
   bookdown::pdf_document2:
     toc: no
@@ -19,13 +14,14 @@ output:
     keep_tex: true
 bibliography: "../welcome_home_vote.bib"
 link-citations: yes
-fontsize: 10pt
+fontsize: 12pt
+fontface: Times New Roman
 header-includes:
     - \usepackage{rotating}
     - \newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{A\arabic{table}} \setcounter{figure}{0} \renewcommand{\thefigure}{A\arabic{figure}}}
     - \usepackage{setspace}
 abstract: |
-  This paper presents causal estimates of the effect of voting rights restoration prior to discharge from parole on post-supervision participation. In 2018, New York State began restoring voting rights to parolees, after previously restoring voting rights only at the completion of parole. By leveraging randomness in parole discharge date, I interrogate whether restoring voting rights to formerly incarcerated individuals while still on parole increases their post-supervision propensity to cast a ballot. I demonstrate that in-person rights restoration prior to parole discharge significantly increased turnout. This group-level effect, however, masks race-specific effects. Although rights restoration prior to parole discharge effectively doubled turnout among white former parolees, it had no measurable effect on the turnout of non-white former parolees. This raises serious questions about how rights restoration programs are implemented, and how incarceration might differently structure Black Americans’ view of the democratic process.
+  This paper presents causal estimates of the effect of voting rights restoration prior to discharge from parole on post-supervision participation. In 2018, New York State began restoring voting rights to parolees, after previously restoring voting rights only at the completion of parole. By leveraging randomness in parole discharge date, we interrogate whether restoring voting rights to formerly incarcerated individuals while still on parole increases their post-supervision propensity to cast a ballot. We demonstrate that in-person rights restoration prior to parole discharge significantly increased turnout. This group-level effect, however, masks race-specific effects. Although rights restoration prior to parole discharge increased turnout by non-Black former parolees by 1.4 percentage points, the treatment effect was substantially smaller for Black former parolees. This raises serious questions about how rights restoration programs are implemented, and how incarceration might differently structure Black Americans’ view of the democratic process.
 ---
 <!-- --- -->
 <!-- title: "Neighborhoods and Felony Disenfranchisement: The Case of New York City" -->
@@ -56,52 +52,135 @@ loadfonts()
 \pagenumbering{arabic}
 # Introduction {-}
 
-In all but two states (Maine and Vermont), felony disenfranchisement laws mean that American citizens convicted of felony offenses lose the right to vote for at least some period of time. In some states, such as Oregon and Massachusetts, individuals lose that right only for the period in which they are actively incarcerated. Iowa stands alone at the other end of the spectrum, where felony convictions result in lifelong disenfranchisement unless a returned citizen receives an individual pardon from the state's governor [@bcj_laws]. This variation in laws arises from language in the Fourteenth Amendment which allows states to revoke individuals' voting rights "for participation in rebellion, or other crime." The definition of "other crime," left so vague in the Constitution, is now generally used by states to disenfranchise citizens for any felony offense. The Supreme Court, in cases such as *Richardson v. Ramirez* (1974), has upheld this practice. Collectively, these laws disenfranchise as many as 4.7 million American citizens. Of these, the majority are no longer incarcerated [@sentencing_2016].^[The figures reported in @sentencing_2016 have been adjusted to reflect the impact of Amendment 4 in Florida.]
+In all but two states (Maine and Vermont), felony disenfranchisement laws mean that American citizens convicted of felony offenses lose the right to vote for at least some period of time. In some states, such as Oregon and Massachusetts, individuals lose that right only for the period in which they are actively incarcerated. Iowa stands alone at the other end of the spectrum, where all felony convictions result in lifelong disenfranchisement unless a returned citizen receives an individual pardon from the state's governor [@bcj_laws]. This variation in laws arises from language in the Fourteenth Amendment which allows states to revoke individuals' voting rights "for participation in rebellion, or other crime." The definition of "other crime," left so vague in the Constitution, is now generally used by states to disenfranchise citizens for any felony offense. The Supreme Court, in cases such as *Richardson v. Ramirez* (1974), has upheld this practice. Collectively, these laws disenfranchise as many as 4.7 million American citizens. Of these, the majority are no longer incarcerated [@sentencing_2016].^[The figures reported in @sentencing_2016 have been adjusted to reflect the potential impact of Amendment 4 in Florida.]
 
-There is some evidence that incarceration continues to structure political participation even after an individual is no longer legally disenfranchised. As previous literature has established, interactions with the criminal justice system leaves residents less likely to vote in the future [@White2019; but see @Gerber2017]. As @Burch2011 and others have shown, moreover, turnout rates among the formerly incarcerated are extremely low. Formal disenfranchisement policy, the literature has made clear, is just one piece of an interlocking system that serves to disenfranchise minority and marginalized voters. The incarcerated population is drawn from a pool of individuals unlikely to vote even prior to their incarceration. To address only the formal laws contributing to disenfranchisement without also interrogating efforts to boost post-supervision participation risks leaving much of the system of effective disenfranchisement undisturbed. New York State offers us the opportunity to test how the timing and method of the re-instation of voting rights structures post-supervision participation.
+There is some evidence that incarceration continues to structure political participation even after an individual is no longer legally disenfranchised. Some literature argues that interactions with the criminal justice system leaves residents less likely to vote in the future [@Weaver2010; @White2019], though other research casts some doubt on this conclusion [@Gerber2017]. One thing is clear: As @Burch2011 and others have shown, turnout rates among the formerly incarcerated are extremely low. Formal disenfranchisement policy, the literature has made clear, is just one piece of an interlocking system that serves to reduce the representation of minority and marginalized voters. The incarcerated population is drawn from a pool of individuals unlikely to vote even prior to their incarceration. To address only the formal laws contributing to disenfranchisement without also interrogating efforts to boost post-supervision participation risks leaving much of the system of effective disenfranchisement undisturbed. New York State offers us the opportunity to test how the timing and method of the re-instation of voting rights structures post-supervision participation.
 
 Prior to 2018, New Yorkers convicted of felony offenses and sentenced to prison were disenfranchised until they had completed all terms of their sentence --- their period of incarceration as well as any parole term. For New Yorkers on life parole or sentenced to life in prison, this law resulted in effective lifetime disenfranchisement. New Yorkers sentenced to felony probation, on the other hand, did not lose their voting rights.
 
-In the spring of 2018,^[Although the executive order was signed on April 18^th^, it did not go into effect until May 18^th^.] Governor Andrew Cuomo signed Executive Order 181 which effectively ended the disenfranchisement of New Yorkers on parole. Such a move of course directly re-enfranchised individuals who were still on parole on election day. The change in policy is also perhaps beneficial for felony probationers: despite the fact that probationers do not formally lose their voting rights, there is evidence that confusion around the law contributes to *de facto* disenfranchisement among probationers [@Drucker2005].
+In the spring of 2018,^[Although the executive order was signed on April 18th, it did not go into effect until May 18th.] Governor Andrew Cuomo signed Executive Order 181 which effectively ended the disenfranchisement of New Yorkers on parole. The policy change of course directly re-enfranchised individuals who were still on parole on election day, but the consequences might be further reaching. The change in policy is also perhaps beneficial for felony probationers: despite the fact that probationers do not formally lose their voting rights, there is evidence that confusion around the law contributes to *de facto* disenfranchisement among probationers [@Drucker2005]. By re-enfranchising anyone not actively incarcerated, the rules were substantially simplified.
 
-The executive order may also have increased the political participation of *formerly* disenfranchised individuals. Prior to the policy change, formerly incarcerated individuals had their voting rights restored automatically upon the completion of their parole term. New York's correction code provides no more guidance other than that "upon a person's discharge from community supervision, the department shall notify such person of his or her right to vote and provide such person with a form of application for voter registration" (Section 75 of the New York State Correction Law). Shortly after the implementation of the executive order, Acting Deputy Commissioner for Community Supervision Ana Enright sent a memorandum to New York State parole officers detailing the Department of Corrections' new approach.^[Link: https://nyassembly.gov/member_files/139/webdocs/82103.pdf] The memorandum directs all parole officers to present parolees with voter registration forms and to explain their purpose. Parole officers are instructed to offer any assistance needed, including help filling out the registration form. In addition to these directives, the memorandum communicates that voter registration is to receive "high priority attention," and it separately calls the program "a **priority** initiative" [emphasis in the original]. Thus, the executive order demands not only that re-enfranchised individuals receive in-person notification of their voting rights, but also that parole officers prioritize their registration.
+The executive order may also have increased the political participation of *formerly* disenfranchised individuals. Prior to the policy change, formerly incarcerated individuals had their voting rights restored automatically upon the completion of their parole term. Beginning in 2010, New York State began including information about voter eligibility in parole discharge packets, a change that @Meredith2013 indicates did not increase turnout. Executive Order 181 both changed the timing of rights restoration (upon release from prison, not the end of parole) and the manner of restoration (via an in-person meeting, rather than in a discharge packet). This study tests the bundled effect of these changes.
 
-In the analysis below, I examine the effect of Executive Order 181 on individuals who finished parole before October 10th, 2018 (the registration deadline for 2018). I exclude individuals who were still on parole and could only vote because of the policy change in order to unpack how the mechanisms of rights restoration can shape turnout.
+Shortly after the implementation of the executive order, Acting Deputy Commissioner for Community Supervision Ana Enright sent a memorandum to New York State parole officers detailing the Department of Corrections' new approach.^[See https://nyassembly.gov/member_files/139/webdocs/82103.pdf] The memorandum directs all parole officers to present parolees with voter registration forms and to explain their purpose. Parole officers are instructed to offer any assistance needed, including help filling out the registration form. In addition to these directives, the memorandum communicates that voter registration is to receive "high priority attention," and it separately calls the program "a **priority** initiative" [emphasis in the original]. Thus, the executive order demands not only that re-enfranchised individuals receive in-person notification of their voting rights, but also that parole officers prioritize their registration.
 
-By examining the effect of rights restoration in the context of a personal relationship with a parole officer against a status quo in which formerly incarcerated individuals were informed of their eligibility through the mail, Executive Order 181 offers us the opportunity to build on existing research. Do these human interactions repair damage done to the formerly incarcerated individual's relationship to the state? Or do parole officers exhibit biases against their stewards, making them ineffective or uneven conduits for restoration?
+In the analysis below, we examine the effect of Executive Order 181 on individuals who finished parole before October 10th, 2018 (the registration deadline for the 2018 general election). We exclude individuals who were still on parole and could only vote because of the policy change in order to isolate the effect of the timing and manner of rights restoration for individuals whose legal eligibility to vote was not changed.
+
+By examining the effect of rights restoration in the context of a personal relationship with a parole officer against a status quo in which formerly incarcerated individuals were informed of their eligibility via brochures in a parole discharge packet, Executive Order 181 offers us the opportunity to build on existing research. Do these human interactions repair damage done to the formerly incarcerated individual's relationship to the state [@Lerman2014]? Or do parole officers exhibit biases against their stewards, making them ineffective or uneven conduits for restoration [see, for instance, @White2015]?
 
 # Notification, Re-enfranchisement, and Turnout {-}
 
-Whether --- and to what extent --- incarceration causes lower turnout among citizens is the subject of some debate in the literature. @Gerber2017, for instance, argues that prison does not materially impact post-incarceration turnout, though @White2019 finds that jail time can decrease the future turnout of misdemeanants. Regardless of the causal impact of incarceration on turnout, however, it is well established that formerly incarcerated individuals turn out at relatively low rates (see, for instance, @Burch2011).
+Whether --- and to what extent --- incarceration causes lower turnout among citizens is the subject of some debate in the literature. Although @Gerber2017 argues that prison does not materially impact post-incarceration turnout, @White2019 finds that jail time can decrease the future turnout of misdemeanants. Regardless of the causal impact of incarceration on turnout, however, it is well established that formerly incarcerated individuals turn out at relatively low rates [see, for instance, @Burch2011]. Regardless of whether incarceration reduces turnout, the  state has a unique opportunity to craft policies that will impact individuals under formal supervision. Even if incarceration does not lead to lower turnout, policies targeting individuals caught up in the criminal justice system might still be effective at increasing their turnout, both while serving their sentence and afterwards.
 
-Regardless of whether incarceration reduces turnout, the  state has a unique opportunity to craft policies that will impact individuals under formal supervision. Even if incarceration does not lead to lower turnout, policies targeting individuals caught up in the criminal justice system might still be effective at increasing their turnout.
+@Meredith2013 examines the direct effect of changing rights restoration notification policies in New Mexico, New York, and North Carolina. In the case of New Mexico, formerly disenfranchised individuals began automatically receiving a certificate attesting to their eligibility to vote, a certificate they were previously required to affirmatively request. In New York and North Carolina, parole discharge packets began including explicit information about eligibility to vote. @Meredith2013 finds no effect on turnout from notification in the absence of eligibility changes. In the three states studied in @Meredith2013, however, newly re-enfranchised individuals received this information as part of a discharge packet. Moreover, in the case of New York, the brochure included in the discharge packet did not explicitly inform former parolees that their voting rights had been restored. Formerly convicted individuals are very often confused about their eligibility to vote [@Drucker2005; @locked_out], and it is possible that these brochures, in-explicit and bundled with other documents as they were, were ineffective at dispelling misinformation.
 
-Formerly convicted individuals are very often confused about their eligibility to vote [@Drucker2005; @locked_out]. Some research indicates that dispelling misinformation boosts turnout among the formerly disenfranchised. @Meredith2015 examines the impact of ending permanent disenfranchisement in Iowa. Prior to 2005 (and after 2011), individuals with felony convictions were permanently disenfranchised unless they submitted an application to the governor. Executive Order 42 eliminated this requirement, instead re-enfranchising individuals automatically upon sentence completion. Although all formerly disenfranchised individuals were re-enfranchised upon the signing of the Executive Order, not all re-enfranchised individuals were informed of their change in status. @Meredith2015 leverages differences in notification to test whether the notification increased turnout, finding a strong positive effect. @Meredith2013, on the other hand, examines states where so-called notification laws went into effect. Although rules about eligibility did not change in these states, new policies required Departments of Corrections to notify formerly disenfranchised individuals of their re-instated voting rights. @Meredith2013 finds no effect on turnout from notification in the absence of eligibility changes.
+@Meredith2015 examines the impact of ending permanent disenfranchisement in Iowa. Prior to 2005 (and after 2011), individuals with felony convictions were permanently disenfranchised unless they submitted an application to the governor. Executive Order 42 eliminated this requirement, instead re-enfranchising individuals automatically upon sentence completion. Although all formerly disenfranchised individuals were re-enfranchised upon the signing of the Executive Order, not all re-enfranchised individuals were informed of their change in status. @Meredith2015 leverages differences in notification to test whether the notification increased turnout, finding a strong positive effect.
 
-@Gerber2015 built on the quasi-experimental design of @Meredith2015, conducting a field experiment in Connecticut in advance of the 2012 presidential election. In their field experiment, some formerly convicted (but eligible) residents were reminded of their eligibility; others were not. Like @Meredith2015, they find evidence that these reminders successfully increased turnout. "Whatever the participatory consequences of incarceration," they conclude, "they are not in large part impossible to overcome" (924). Even if incarceration does not decrease individuals' propensity to vote, there is reason to believe that reminding formerly incarcerated individuals of their rights increases participation.
+@Gerber2015 built on the quasi-experimental design of @Meredith2015, conducting a field experiment in Connecticut in advance of the 2012 presidential election. In their field experiment, some formerly disenfranchised (but eligible) residents were reminded of their eligibility; others were not. Like @Meredith2015, they find evidence that these reminders successfully increased turnout. "Whatever the participatory consequences of incarceration," they conclude, "they are not in large part impossible to overcome" (924). Even if incarceration does not decrease individuals' propensity to vote, there is reason to believe that reminding formerly incarcerated individuals of their rights increases participation.
 
-@Meredith2015 and @Gerber2015 provide valuable insight into mechanisms that can increase the turnout of formerly disenfranchised individuals. Nevertheless, the research to date has examined the effect of mail notification on post-supervision turnout. In the case of New York State, formerly incarcerated individuals were already informed of their voting rights through the mail when they finished their sentence prior to the executive order. In other words, the treatment identified in past research is here incorporated into the status quo, or control, condition. This study therefore tests not the efficacy of notification laws but rather whether in-person restoration prior to discharge increases turnout above-and-beyond any increase associated with mail notification. 
+This research provide valuable insight into mechanisms that can increase the turnout of formerly disenfranchised individuals. While information included in discharge packets seems ineffective at boosting turnout, there is some evidence that notification delivered on its own is successful. Nevertheless, the research to date has examined the effect of rights restoration notification outside a personal relationship on post-supervision turnout. It seems likely that an in-person meeting will be more effective at dispelling confusion about eligibility than a brochure included in a discharge packet.
 
-There is reason to believe that some of the negative treatment effects of incarceration arise from the very nature of person-to-person relationships in the criminal justice system. @Lerman2014 argues that contact with the criminal justice system can uniquely structure democratic participation more than other types of government contact. "It may also be," they write, "that social benefits [arising from non-criminal justice contact with the state] are less visible to citizens because they often occur through the mail, rather than through personal contact with government agencies or officials, making it easier to disconnect social benefits from government and the political system" (93). Because Executive Order 181 operates *not* through the mail but rather through "personal contact with government... officials," its effects may differ from the mail notification programs. The social benefits (restoration of voting rights) might be communicated more effectively and in ways that improve the formerly incarcerated individuals' opinions of their democratic state, thus increasing turnout further.
+There is reason to believe that some of the negative treatment effects of incarceration arise from the very nature of person-to-person relationships in the criminal justice system. @Lerman2014 argues that contact with the criminal justice system can uniquely structure democratic participation more than other types of government contact. "It may also be," they write, "that social benefits [arising from non-criminal justice contact with the state] are less visible to citizens because they often occur through the mail, rather than through personal contact with government agencies or officials, making it easier to disconnect social benefits from government and the political system" (93). Because Executive Order 181 operates *not* through the mail (or discharge packet) but rather through "personal contact with government... officials," its effects may differ from the mail notification programs. The social benefits (restoration of voting rights) might be communicated more effectively and in ways that improve the formerly incarcerated individuals' opinions of their democratic state, thus increasing turnout further.
 
 Of course, reliance on a human-mediated system to deliver social benefits poses potential practical and scientific complications. A notification sent in the mail is a binary treatment: the letter was either sent or not sent. Communicating the restoration of voting rights through human interaction means that the treatment might vary by individuals: if parolees have a warm relationship with their parole officer, they may be strongly encouraged to register and participate. On the other hand, if parole officers are biased against their parolees (due either to racial hostility, personal dislike, or expected partisan affiliation) they may not provide any effective treatment at all. Thus, while the communication of voting rights restoration in the context of a personal relationship has the potential to deliver much larger benefits, it also opens the door to potential discrepancies in treatment.
 
-I expect that restoring voting rights while an individual is still on parole increases that individual's later propensity to vote substantially. This increase will operate through two mechanisms: as the previous literature has established, notification of voting rights can increase turnout, and being informed by a parole officer likely leaves a former parolee more sure of her voting rights than a letter in the mail. Secondly, the interpersonal nature of the parolee-parole officer relationship is expected to more effectively repair (some of) the damage done to the former parolees interpretation of the state. Individual, in-person invitations to rejoin the body politic are likely effective.
+We expect that restoring voting rights while an individual is still on parole increases that individual's later propensity to vote. This increase will operate through two mechanisms: as the previous literature has established, notification of voting rights can increase turnout, and being informed by a parole officer likely leaves a former parolee more sure of her voting rights than a brochure. Secondly, the interpersonal nature of the parolee-parole officer relationship is expected to more effectively repair (some of) the damage done to the former parolees interpretation of the state. Individual, in-person invitations to rejoin the body politic are likely effective.
 
 # Data {-}
 ## Criminal Justice Data {-}
 
 The criminal justice dataset comes from a public records request filed by the author to obtain individual-level incarceration and parole records for individuals sentenced to incarceration in New York State since 1990. The data includes a host of information, including: first, middle, and last name; date of birth; class of offense; incarceration start and end dates; dates of parole; county of commitment; and others. This analysis is limited to individuals incarcerated for felony offenses. Individuals convicted of misdemeanors are not disenfranchised in New York State. These data come from the New York State Department of Corrections and Community Supervision (NYSDOCCS). These data are used to determine when individuals were incarcerated or on parole, when they finished their parole supervision, and demographic information such as age and race.
 
-Following Executive Order 181, the Department of Corrections and Community Supervision began indicating on their online Parolee Lookup Tool whether a parolee had her voting rights restored. By using the identification number provided from the parolee public records request and this website, I was able to identify individuals who had their voting rights restored.^[Not all parolees listed in the public records request data are included in the lookup tool. Roughly 1 percent of former parolees are not in the online lookup.] There were `r comma(readRDS("./temp/how_many_restored.rds"))` individuals who were discharged from parole before the registration deadline whose rights were restored while still under supervision. Roughly 1,200 individuals who were discharged between the effective date of the executive order and the registration deadline did not have voting rights restored, due largely to their status as noncitizens.
+Following Executive Order 181, the Department of Corrections and Community Supervision began indicating on their online Parolee Lookup Tool whether a parolee had her voting rights restored. By using the identification number provided from the parolee public records request and this website, we identify individuals who had their voting rights restored.^[Not all parolees listed in the public records request data are included in the lookup tool. Roughly 1 percent of former parolees are not in the online lookup.] There were `r comma(readRDS("./temp/how_many_restored.rds"))` individuals who were discharged from parole before the registration deadline whose rights were restored while still under supervision. Roughly 1,200 individuals who were discharged between the effective date of the executive order and the registration deadline did not have voting rights restored, due largely to their status as noncitizens.
 
 ## Voter File Data {-}
-Most states in the United States are required to maintain files with information on all registered voters. In New York, this information is publicly available from the Board of Elections. It includes information on all registered voters, including: first, middle, and last name; date of birth; vote history; and other information. The New York State Voter File also includes information on voters who were previously registered but have since been purged, either because they moved, died, or were incarcerated for a felony offense. I use a snapshot of the registered voter file from March 3^rd^, 2019.
+Most states in the United States are required to maintain files with information on all registered voters. In New York, this information is publicly available from the Board of Elections. It includes information on all registered voters, including: first, middle, and last name; date of birth; vote history; and other information. The New York State Voter File also includes information on voters who were previously registered but have since been purged, either because they moved, died, or were incarcerated for a felony offense. We use a snapshot of the registered voter file from March 3rd, 2019.
 
 ## Matching {-}
-Turnout in the 2018 midterm election is estimated by matching the parole records with the registered voter file. I match individuals in each dataset using first name, middle name, last name, and date of birth. To be considered a "match," records must have the exact same birth date. The first and last names must also be exact matches (conditional on the adjustments discussed below). Middle names must match exactly as well, except for if one record has only a middle initial, which is allowed to match to a full middle name in the other set of records.
+Turnout in the 2018 midterm election is estimated by matching the parole records with the registered voter file. We match individuals in each dataset using first name, middle name, last name, and date of birth. To be considered a "match," records must have the exact same birth date. The first and last names must also be exact matches (conditional on the adjustments discussed below). Middle names must match exactly as well, except for if one record has only a middle initial, which is allowed to match to a full middle name in the other set of records.
 
-I adopt the test developed in @Meredith2013 to test the prevalence of false positives. I slightly alter the date of birth reported in the parole discharge dataset to create false records. Comparing the number of matches between these "fake" discharge records and the voter file with the number of matches between the "true" records and the voter file provides an estimate of how frequently false positives occur. Table \ref{tab:change-dobs} shows the results of true matches, as well as when I construct a set of fake records by adding or subtracting 35 days from a parolee's birthdate. This analysis indicates that false positives account for between 0.6 and 0.7 percent of all matches, a share that is likely too small to have any material impact on the overall analysis.
+I adopt the test developed in @Meredith2013 to test the prevalence of false positives. We slightly alter the date of birth reported in the parole discharge dataset to create false records. Comparing the number of matches between these "fake" discharge records and the voter file with the number of matches between the "true" records and the voter file provides an estimate of how frequently false positives occur. Table \ref{tab:change-dobs} shows the results of true matches, as well as when we construct a set of fake records by adding or subtracting 35 days from a parolee's birthdate. This analysis indicates that false positives account for between 0.6 and 0.7 percent of all matches, a share that is likely too small to have any material impact on the overall analysis.
+
+TABLE 1 ABOUT HERE
+
+Testing for false negatives is more challenging. If an individual marries and changes her name after being discharged from parole, for instance, we will not identify her using this matching methodology. Similarly, "John Doe" and "Jonathan Doe" would not result in a match. To reduce the likelihood of these false negatives we remove all punctuation from all names, and standardize capitalization. A record with a last name of "O'Donnell" in one dataset, therefore, would match a last name of "O DONNELL" in the other (provided the other criteria are satisfied). Such standardizations, however, will miss individuals who change their names entirely. For three reasons, however, this is not likely to present major challenges: firstly, women are far more likely to change their last names than men, and women make up barely 6 percent of individuals who have been discharged from felony parole. Secondly, because both parolee discharge and voter registration are legal records, individuals are likely to be recorded using their full names (that is to say, an individual is unlikely to be "John" in one set of records and "Jonathan" in the other). Finally, rates of false negatives are likely to be constant within the state during the study period, and there is no reason to believe that these false negatives would be associated with being discharged from parole after the Executive Order went into effect.
+
+# Research Design {-}
+
+In this paper, we exploit randomness in discharge date from parole in New York State to determine the efficacy of the policy change. All individuals discharged from parole after the effective date of the executive order are assigned to the treatment group; individuals discharged earlier are assigned to the control group. When we limit the pool of formerly incarcerated individuals to those discharged from parole in 2017 and 2018, the control and treatment voters look virtually identical along observable characteristics. The assignment to treatment, therefore, is as nearly random as can be hoped for in the context of a natural experiment. The basic design is therefore an interrupted time series, in which we test whether individuals discharged after the executive order took effect turned out at higher rates than those discharged before the policy change. This allows us to test the intention-to-treat (ITT) effect of the executive order; in other words, the extent to which the policy change impacted overall turnout among formerly incarcerated individuals.
+
+As discussed above, not all formerly incarcerated individuals were eligible to have their rights restored; the ITT effect will therefore be biased towards zero, insofar as the behavior of ineligible parolees remains unchanged. After estimating the ITT effect, we leverage the restoration records to estimate the complier average causal effect (CACE). In this setup, rights restoration prior to parole discharge is instrumented by whether an individual was assigned to the treatment group (that is to say, was discharged after the executive order went into effect). This instrumentation process is a common method for identifying the CACE [see, for instance, @Ansolabehere1999; @Gerber2000; @Milligan2004; @Lassen2004; @Sondheimer2010]. The CACE will provide the causal estimate of rights restoration prior to discharge from parole for the individuals actually affected by the policy change.^[This manuscript is primarily interested in the effect of in-person rights restoration prior to parole discharge on ultimate political representation. To that end we use turnout --— not registration —-- as the dependent variable of interest throughout. However, replacing "turnout" with "registration" in the models presented herein demonstrates that Executive Order 181 increased registration among former parolees.]
+
+# Results {-}
+
+Before estimating the interrupted time series model, we must establish that any change in turnout between those discharged before and after the policy went into effect is not due to underlying trends. It is possible, for instance, that individuals discharged from parole shortly before an election are more likely to vote, regardless of whether their voting rights are restored before they finish their sentence.
+
+Table \ref{tab:to-18-logit-short} presents an ordinary least squares regression using only the control voters. The variable *Days off Parole Before Election* indicates the number of days between a parolee's discharge date and the 2018 election. As the table makes clear, for individuals discharged between January 1, 2017, and May 17, 2018 --- the day before the executive order went into effect --- there was no relationship between time-off-parole and 2018 turnout.
+
+TABLE 2 ABOUT HERE
+
+To further demonstrate the validity of the interrupted time series model, Table \ref{tab:demo-rd} shows the demographic characteristics of individuals in the control group (those discharged between January 1st, 2017, and May 17th, 2018) and the ITT group (those discharged between May 18th and October 12th, 2018) with a difference-of-means t-test. With the exception of age, the control and ITT groups are statistically indistinguishable from one another, further demonstrating the validity of the natural experiment conceptualization. The control group is, on average, slightly older, which Table \ref{tab:to-18-logit-short} indicates makes them more likely to vote. To the extent our control group perhaps has a marginally higher propensity to vote than our ITT group our setup is (slightly) biased against finding a significant increase due to the executive order.
+
+TABLE 3 ABOUT HERE
+
+Having established the validity of the interrupted time series model, Table \ref{tab:to-18-logit} presents the results of OLS specifications exploring whether individuals who were discharged on or after May 18th, 2018, turned out at higher rates than those discharged earlier. Model 1 controls only for whether an individual was discharged after Executive Order 181 went into effect (*Discharged After EO 181*). Model 2 also controls for individual-level characteristics: sex, age on November 6th, 2018, race, and whether they voted in the 2008 general election. Model 3 adds sentence-specific information to Model 2: the amount of time the individual spent on parole, and the class(es) of felony for which they were convicted. Model 4 interacts the ITT indicator with a dummy variable specifying whether a former parolee was Black; this allows us to test whether the ITT differed for Black and non-Black individuals.
+
+In Model 5 we estimate a "placebo" regression as a final check against the possibility that individuals discharged in the summer of an election year turn out at higher rates. Model 5 includes all individuals last discharged between January 1, 2015, and October 14th, 2016. The dummy *Discharged After EO 181* measures whether an individual was discharged after May 18, 2016, and the dependent variable is turnout in the 2016 general election.
+
+In each model, robust standard errors are clustered by control / intention-to-treat status 
+
+TABLE 4 ABOUT HERE
+
+The coefficients on *Discharged After EO 181* in Table \ref{tab:to-18-logit} indicate that individuals discharged after the policy changed turned out at higher rates than those discharged earlier. As expected, the coefficient is nonsignificant in the placebo regression, implying that individuals discharged shortly before an election are not generally more likely to vote. After controlling for other covariates, Model 3 estimates an ITT effect of 0.6 percentage points. Turnout among the control voters was 2.1 percent, meaning the executive order raised turnout by roughly 29 percent.
+
+Table \ref{tab:to-18-logit} also makes clear that formerly incarcerated men were far less likely to vote than formerly incarcerated women; that older formerly incarcerated individuals were more likely to cast a ballot; and individuals who spent longer on parole were more likely to participate in the midterm election.
+
+Model 4 estimates that the ITT for non-Black voters was 1.0 percentage points, though the interaction effect --- *Black × Discharged After EO 181* --- is negative 0.8 percentage points. The executive order was apparently substantially more effective at boosting turnout for non-Black former parolees than Black parolees. This appears to have had a leveling effect: although Black former parolees in the control group turned out at higher rates than non-Black parolees in that group, the turnout rate among Black and non-Black voters in the ITT group in 2018 was virtually identical, as shown in Table \ref{tab:re}.
+
+TABLE 5 ABOUT HERE
+
+## Sensitivity Analysis {-}
+
+The models in Table \ref{tab:to-18-logit} leverage a large pool of voters on either side of the effective date of the executive order; it is perhaps implausible that voters discharged in the early months of 2017 are truly good controls for those discharged in the summer of 2018, despite the above diagnostics. To explore whether these results are sensitive to the window used around the effective date, Figure \ref{fig:sens} re-estimates Models 3 and 5 using different windows. In the most conservative window, we include only parolees discharged one month before or after the executive order went into effect (and the same period in 2016). As the window increases, we gain more observations --- and therefore statistical power --- at the cost of further distance between parole discharge dates for control and ITT observations.^[The post-treatment window never extends past the 2018 and 2016 registration deadlines; the estimates at the far right of Figure \ref{fig:sens}, therefore, are only extending the window backwards in time.]
+
+FIGURE 1 ABOUT HERE
+
+Although a small handful of the windows in the 2018 regressions are statistically nonsignificant, the size of the estimated treatment effect is stable and significant at the 95% level in 13 of the 16 models. The estimated effect in the placebo regressions, on the other hand, are consistently nonsignificant (in 10 specifications) or negative (in the remaining 6 specifications). This means that voters discharged in the summer before an election are perhaps *less* likely to vote absent treatment. This implies our estimated effect of the executive order is perhaps somewhat conservative.
+
+## Instrumental Variables Approach {-}
+
+The analyses in the previous section indicate that executive order was successful at increasing turnout among formerly incarcerated individuals as a group. They do not, however, provide us an estimate of the effect of rights restoration prior to parole discharge on the specific individuals who were eligible for treatment. To answer this question, we must specifically control for whether an individual actually had his rights restored before he was discharged from parole --- not simply whether he was discharged after the policy change. Because our ITT pool in the previous section include individuals not eligible for treatment, we expect that the ITT effect will be lower than the treatment effect on the treated individuals. We consider individuals discharged on or after May 18 whose rights were in fact restored prior to discharge from parole as "compliers."
+
+Two-stage least squares models allow us to leverage the random assignment to treatment to identify the complier average causal effect (CACE). To use assignment to treatment as an instrument for compliance, assignment to treatment group must be uncorrelated with the outcome variable except via the treatment [@Angrist1996]. In other words, we can only uncover the CACE in this setup if, in the absence of the policy change, individuals discharged from parole before and after May 18 would have voted at the same rate in 2018. The nonsignificance of the coefficients *Days off Parole* in Tables \ref{tab:to-18-logit-short} and \ref{tab:to-18-logit}, and the general nonsignificance of the placebo regressions in Figure \ref{fig:sens} indicate that this condition is met.
+
+Table \ref{tab:iv-tab} presents the results of the two-stage least squares regression. Model 1 includes just *Rights Restored Before Discharge* (instrumented by *Discharged After EO 181*) while Model 2 includes the additional covariates from past specifications. In Model 3, we test whether the CACE was different for Black former parolees by interacting *Rights Restored Before Discharge* with *Black* (this endogenous variable is instrumented by *Black × Discharged After EO 181*).  As before, robust standard errors are clustered by treatment assignment group.
+
+TABLE 6 ABOUT HERE
+
+The two-stage least squares approach indicates that the CACE was roughly 0.9 percentage points. Because overall turnout for individuals whose rights were restored was 3.2 percent, this implies that rights restoration prior to discharge from parole increased turnout by 39 percent. Once again, however, we see that the treatment effect differed sharply by race: the CACE for non-Black former parolees was 1.4 percentage points, but just 0.3 percentage points for Black former parolees.
+
+## Discussion {-}
+
+Restoring voting rights to individuals on parole is an important step toward undermining the disenfranchisement (both *de jure* and *de facto*) of communities of color disproportionately caught up in the criminal justice system. Prior to New York's Executive Order 181, parolees were required to wait until they finished their parole term to register to vote. That changed in 2018. On October 12th --- the registration deadline for the 2018 midterms --- there were `r comma(readRDS("./temp/new_eligible_18.rds"))` active parolees whose voting rights had been restored. Without the executive order, every single one of these individuals would have been barred from participating. Though turnout among this group was low (just `r comma(readRDS("./temp/new_votes_18.rds"))`, or `r round((readRDS("./temp/new_votes_18.rds")/readRDS("./temp/new_eligible_18.rds"))*100, 2)` percent, of these individuals successfully cast a ballot), their re-enfranchisement marks an important milestone for New York State.
+
+As this analysis demonstrates, however, the impact of Executive Order 181 was not limited only to the individuals who would have been disenfranchised in its absence. In the case of New York State, rights restoration prior to discharge from parole was successful at boosting post-supervision participation rates. In this project we estimate that overall turnout among formerly disenfranchised individuals increased by about 0.6 percentage points (or 29 percent), and that individuals whose rights were restored saw turnout about 0.9 percentage points (or 39 percent) above where it would have been otherwise. Although the absolute impact of the policy change is small, it is meaningful given the low turnout among these individuals.
+
+The mechanism through which the rules change increased turnout among these individuals is not clear. As discussed above, the literature indicates that this could be because of the relational nature of the restoration process here [@Lerman2014] or because of better information communication of eligibility [@Meredith2015; @Gerber2015]. In reality, the executive order's success at boosting turnout likely operated through multiple mechanisms. Future work should attempt to "unbundle" this treatment to understand the relative importance of the constituent mechanisms.
+
+Troublingly, the effect of pre-discharge rights restoration seems to vary based on parolees' race. This discrepancy could be caused by a number of different factors. Firstly, Black and white individuals on parole might differ in meaningful ways that impact the successfulness of the intervention. As discussed above, Black participation among individuals discharged from parole prior to the executive order voted at significantly higher rates in 2018. The intervention was likely successful for parolees who would not have voted otherwise, but needed only a small encouragement. It may be that fewer Black former parolees are susceptible to small encouragements: they may separate more cleanly into voters and nonvoters, with fewer individuals susceptible to parole officer encouragement.
+
+We cannot, however, rule out the possibility that racial bias among parole officers plays some role in the effectiveness of the intervention. Although parole officers may not be overtly or consciously biased toward their parolees, such bias is possible. Although there is limited literature examining racial variation in parolees' perceptions of their parole officers, there is some evidence that Black prisoners report worse inmate-staff relationships than white prisoners [@Hemmens2000]. Moreover, recent research indicates that street-level bureaucrats may exhibit some racial bias in the services they provide. @White2015, for instance, shows that local election administrators are less likely to respond to email questions from Latino aliases than non-Latino white aliases. There is also evidence that politicians are less likely to respond to requests from constituents of different races [@Butler2011], and that public housing officials respond less to inquiries from Latinos [@Einstein2017].
+
+Parole officers may more enthusiastically encourage white parolees to register to vote and cast a ballot. This variation in encouragement would not necessarily be indicative of racial animus: it could arise from a parole officer's expectations about a parolee's political preferences. Officers are likely to provide greater encouragement to parolees they perceive to have similar political preferences. In the case of former parolees in New York State, race does serve as an effective proxy for partisanship: 82.5 percent of Black individuals discharged from parole since 2012 who participated in the 2018 election were registered Democrats; just 31.2 percent of such white individuals were registered Democrats. Ultimately, the data at hand cannot answer why the intervention succeeded at raising turnout only among white former parolees; future research must investigate why this is the case.
+
+Re-enfranchising voters while they are still under formal supervision is obviously beneficial to the individuals who are on parole on election day; such policies allow them to make their voices heard. The case of Executive Order 181 also indicates that restoring voting rights prior to parole discharge has further benefits. In 2018, it increased turnout among individuals who were formally discharged from parole prior to the registration deadline, and therefore would have been eligible to vote even if their rights were not restored until the completion of their sentence. This is encouraging, demonstrating that the state has a unique opportunity to shape the future participation of individuals who are currently under their supervision. By restoring voting rights before individuals have completed their sentence, and by requiring parole officers to inform their parolees of their voting rights, the state can increase the political participation of a group of often-marginalized individuals, thereby increasing the democratic representation of our elections. Nevertheless, the success of the executive order is tempered by the racially disparate effects.
+
+\newpage
+# References {-}
+<div id="refs"></div>
+
+\newpage
+
 \begin{singlespace}
 ```{r shift-dobs-chunk, echo = F}
 less_35 <- scales::comma(readRDS("./temp/m35_2.rds"))
@@ -121,24 +200,6 @@ j <- table %>%
 j
 
 ```
-\end{singlespace}
-Testing for false negatives is more challenging. If an individual marries and changes her name after being discharged from parole, for instance, I will not identify her using my matching methodology. Similarly, "John Doe" and "Jonathan Doe" would not result in a match. To reduce the likelihood of these false negatives I remove all punctuation from all names, and standardize capitalization. A record with a last name of "O'Donnell" in one dataset, therefore, would match a last name of "O DONNELL" in the other (provided the other criteria are satisfied). Such standardizations, however, will miss individuals who change their names entirely. For three reasons, however, this is not likely to present major challenges: firstly, women are far more likely to change their last names than men, and women make up barely 6 percent of individuals who have been discharged from felony parole. Secondly, because both parolee discharge and voter registration are legal records, individuals are likely to be recorded using their full names (that is to say, an individual is unlikely to be "John" in one set of records and "Jonathan" in the other). Finally, rates of false negatives are likely to be constant within the state during the study period, and there is no reason to believe that these false negatives would be associated with being discharged from parole after the Executive Order went into effect.
-
-# Research Design {-}
-
-In this paper, I exploit randomness in discharge date from parole in New York State to determine the efficacy of the policy change. All individuals discharged from parole after the effective date of the executive order are assigned to the treatment group; individuals discharged earlier are assigned to the control group. When I limit the pool of formerly incarcerated individuals to those discharged from parole in 2017 and 2018, the control and treatment voters look virtually identical along observable characteristics. The assignment to treatment, therefore, is as nearly random as can be hoped for in the context of a natural experiment. The basic design is therefore an interrupted time series, in which I test whether turnout for individuals discharged after the executive order took effect turned out at higher rates than those discharged before the policy change. This allows us to test the intention-to-treat (ITT) effect of the executive order; in other words, the extent to which the policy change impacted overall turnout among formerly incarcerated individuals.
-
-As discussed above, not all formerly incarcerated individuals were eligible to have their rights restored; the ITT effect will therefore be biased towards zero, insofar as the behavior of ineligible parolees remains unchanged. After estimating the ITT effect, we leverage the restoration records to estimate the complier average causal effect (CACE). In this setup, rights restoration prior to parole discharge is instrumented by whether an individual was assigned to the treatment group (that is to say, was discharged after the executive order went into effect). This instrumentation process is a common method for identifying the CACE [see, for instance, @Ansolabehere1999; @Gerber2000; @Milligan2004; @Lassen2004; @Sondheimer2010]. The CACE will provide the causal estimate of rights restoration prior to discharge from parole for the individuals actually affected by the policy change.
-
-This paper is primarily interested in the effect of in-person rights restoration prior to parole discharge on ultimate political representation. To that end I use turnout --— not registration —-- as the dependent variable of interest throughout. The Supplemental Information demonstrates that all treatment effects discussed here (including for subgroups within the population) also hold when the dependent variable is registration, not turnout.
-
-# Results {-}
-
-Before estimating the interrupted time series model, we must establish that any change in turnout between those discharged before and after the policy went into effect is not due to underlying trends. It is possible, for instance, that individuals discharged from parole shortly before an election are more likely to vote, regardless of whether their voting rights are restored before they finish their sentence.
-
-Table \ref{tab:to-18-logit-short} presents an ordinary least squares regression using only the control voters. The variable *Days off Parole Before Election* indicates the number of days between a parolee's discharge date and the 2018 election. As the table makes clear, for individuals discharged between January 1, 2017, and May 17, 2018 --- the day before the executive order went into effect --- there was no relationship between time-off-parole and 2018 turnout.
-
-\begin{singlespace}
 ```{r logit-reg-chunk-short, echo = F, results = "hide", message = F, warning = F}
 load("./temp/short_term_to.rdata")
 
@@ -146,8 +207,8 @@ stargazer(date_to_model_time,
           header = F,
           type = "text", notes.align = "l",
           covariate.labels = c("Days off Parole Before Election", "Days off Parole Before Election\\textsuperscript{2}",
-                               "D(Voted in 2008)",
-                               "D(Male)", "Age (Years)",
+                               "Voted in 2008",
+                               "Male", "Age (Years)",
                                "Years on Parole"),
           dep.var.labels = c("Cast Ballot in 2018 Election"),
           title = "\\label{tab:to-18-logit-short} 2018 Turnout for Control Group",
@@ -155,6 +216,7 @@ stargazer(date_to_model_time,
           omit = c("race", "felony"),
           add.lines=list(c("Race / Ethnicity FE", "X", "X"),
                          c("Felony Class FE", "X", "X")),
+          keep.stat = c("n", "rsq", "adj.rsq"),
           table.layout = "-dm#-t-a-s-n",
           out = "./temp/test.tex",
           notes = "TO REPLACE",
@@ -182,13 +244,9 @@ write.table(j, "./temp/table3.tex", quote = F, col.names = F,
 
 ```
 \input{"../../temp/table3.tex"}
-\end{singlespace}
-
-To further demonstrate the validity of the interrupted time series model, Table \ref{tab:demo-rd} shows the demographic characteristics of individuals in the control group (those discharged between January 1st, 2017, and May 17th, 2018) and the ITT group (those discharged between May 18th and October 12th, 2018) with a difference-of-means t-test. With the exception of age, the control and ITT groups are statistically indistinguishable from one another, further demonstrating the validity of the natural experiment conceptualization. The control group is, on average, slightly older, which Table \ref{tab:to-18-logit-short} indicates makes them more likely to vote. To the extent our control group perhaps has a marginally higher propensity to vote than our ITT group our setup is (slightly) biased against finding a significant increase due to the executive order.
-
-\begin{singlespace}
 ```{r rd-demo-chunk, echo = F, warning = F}
 t <- readRDS("./temp/demos_rd_time.rds")
+colnames(t) <- c("Variable", "Control", "ITT", "p-value")
 j <- knitr::kable(t, booktabs = T, caption = "(\\#tab:demo-rd) Demographics of Control and ITT Groups", linesep = "",
                   align = c("l", "c", "c"), "latex") %>% 
   kable_styling(latex_options = c("HOLD_position"),
@@ -218,20 +276,16 @@ write.table(j, "./temp/table_whatever2.tex", quote = F, col.names = F,
             row.names = F)
 ```
 \input{"../../temp/table_whatever2.tex"}
-\end{singlespace}
-
-Having established the validity of the interrupted time series model, Table \ref{tab:to-18-logit} presents the results of OLS specifications exploring whether individuals who were discharged on or after May 18th, 2018, turned out at higher rates than those discharged earlier. Model 1 controls only for whether an individual was discharged after Executive Order 181 went into effect. Model 2 also controls for individual-level characteristics: sex, age on November 6th, 2018, and race. Model 3 adds sentence-specific information to Model 2: the amount of time the individual spent on parole, and the class(es) of felony for which they were convicted. Model 4 replicates Model 3 but uses 2016 characteristics and turnout. This "placebo" regression provides a final check against the possibility that individuals discharged in the summer of an election year turn out at higher rates. Robust standard errors are clustered by control / intention-to-treat status [@Angrist2008].
-
-Models 1 --- 3 include all individuals discharged from parole between January 1st, 2017, through October 12th, 2018 (the registration deadline in New York State), while Model 4 includes individuals last discharged from parole between January 1, 2015, and October 14th, 2016.
-\begin{singlespace}
 ```{r logit-reg-chunk, echo = F, results = "hide", message = F, warning = F}
 load("./temp/individual_turnout_18_itt.rdata")
 load("./temp/individual_turnout_16.rdata")
 
-stargazer(model1, model2, model3, model4,
+stargazer(model1, model2, model3, model5, model4,
           header = F,
           type = "text", notes.align = "l",
-          covariate.labels = c("D(Discharged After EO 181)", "D(Male)", "Age (Years)",
+          covariate.labels = c("Discharged After EO 181",
+                               "Black $\\times$ Discharged After EO 181",
+                               "Male", "Age (Years)",
                                "Voted in 2008",
                                "Years on Parole",
                                "Days off Parole Before Election"),
@@ -240,16 +294,17 @@ stargazer(model1, model2, model3, model4,
           table.placement = "H",
           omit = c("race", "felony"),
           keep.stat = c("n", "rsq", "adj.rsq"),
-          add.lines=list(c("Race / Ethnicity FE", "", "X", "X", "X"),
-                         c("Felony Class FE", "", "", "X", "X")),
+          add.lines=list(c("Race / Ethnicity FE", "", "X", "X", "X", "X"),
+                         c("Felony Class FE", "", "", "X", "X", "X")),
           table.layout = "-dm#-t-a-s-n",
           out = "./temp/test.tex",
           notes = "TO REPLACE",
           out.header = F,
-          se = list(m1_ses$V1, m2_ses$V1, m3_ses$V1, m4_ses$V1))
+          order = c("finished_post", "pb"),
+          se = list(m1_ses$V1, m2_ses$V1, m3_ses$V1, m5_ses$V1, m4_ses$V1))
 j <- fread("./temp/test.tex", header = F, sep = "+")
 
-note.latex <- "\\multicolumn{5}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.}}}"
+note.latex <- "\\multicolumn{6}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.}}}"
 
 j <- j %>% 
   mutate(V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
@@ -268,76 +323,6 @@ write.table(j, "./temp/table4.tex", quote = F, col.names = F,
 
 ```
 \input{"../../temp/table4.tex"}
-\end{singlespace}
-
- Table \ref{tab:to-18-logit} makes clear that formerly incarcerated men were far less likely to vote than formerly incarcerated women; that older formerly incarcerated individuals were more likely to cast a ballot; and individuals who spent longer on parole were more likely to participate in the midterm election.
-
-Table \ref{tab:to-18-logit} also indicates that, although being discharged in the summer of 2016 had no impact on 2016 turnout, being discharged after the executive order went into effect in 2018 *was* associated with increased turnout. After controlling for other covariates, Model 3 indicates that the intention-to-treat effect was 0.6 percentage points. Turnout among the control voters was 2.1 percent, indicating that the executive order raised turnout by roughly 29 percent.
-
-The models in Table \ref{tab:to-18-logit} leverage a large pool of voters on either side of the effective date of the executive order; it is perhaps implausible that voters discharged in the early months of 2017 are truly good controls for those discharged in the summer of 2018, despite the above diagnostics. To explore whether these results are sensitive to the window used around the effective date, Figure \ref{fig:sens} re-estimates Models 3 and 4 using different windows. At the furthest left, we use a one-month window on either side of the effective date of the executive order, and gradually increase the size of the window. The window never extends past the registration deadline in the 2018 and 2016 registration deadlines; the estimates at the far right, therefore, are only extending the window backwards in time.
-
-```{r sensitivity, echo = FALSE, message = F, warning = F, fig.width = 7.5, fig.height = 6, fig.cap = "\\label{fig:sens}Estimated Treatment Effect by Window Size", fig.pos = "H", fig.align = "center"}
-j <- readRDS("./temp/reestimates.rds")
-print(j)
-```
-
-Although a small handful of the windows in the 2018 regressions are statistically nonsignificant, the size of the estimated treatment effect is stable and significant at the 95% level in 13 of the 16 models. The estimated effect in the placebo regressions, on the other hand, are consistently nonsignificant or negative. This means that voters discharged in the summer before an election are perhaps *less* likely to vote --- implying that our estimated effect of the executive order is perhaps somewhat conservative.
-
-## Racial Variation {-}
-
-Although these models demonstrate that rights restoration had a generally positive effect on participation in the 2018 election, the models hide substantial variation between races. Table \ref{tab:racevar} re-estimates Model 3 from Table \ref{tab:to-18-logit}, but now interacts the treatment variable with a dummy variable indicating that a former parolee was Black. As before, robust standard errors are clustered by treatment assignment group.
-
-\begin{singlespace}
-```{r race-reg-chunk, echo = F, results = "hide", message = F, warning = F}
-load("./temp/individual_turnout_18_itt.rdata")
-
-stargazer(model5,
-          header = F,
-          type = "text", notes.align = "l",
-          covariate.labels = c("D(Discharged After EO 181)", "D(Male)", "Age (Years)",
-                               "Voted in 2008",
-                               "Years on Parole",
-                               "Days off Parole Before Election",
-                               "Black $\\times$ D(Discharged After EO 181)"),
-          dep.var.labels = c("Voted in 2018", "Voted in 2016"),
-          title = "\\label{tab:racevar} ITT By Race",
-          table.placement = "H",
-          omit = c("race", "felony"),
-          keep.stat = c("n", "rsq", "adj.rsq"),
-          add.lines=list(c("Race / Ethnicity FE", "", "X", "X", "X"),
-                         c("Felony Class FE", "", "", "X", "X")),
-          table.layout = "-dm#-t-a-s-n",
-          out = "./temp/test.tex",
-          notes = "TO REPLACE",
-          out.header = F,
-          se = list(m5_ses$V1))
-
-j <- fread("./temp/test.tex", header = F, sep = "+")
-
-note.latex <- "\\multicolumn{2}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.}}}"
-
-j <- j %>% 
-  mutate(V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
-         V1 = ifelse(grepl("\\\\#tab", V1), gsub("\\\\#", "", V1), V1)) %>% 
-  filter(!grepl("Note:", V1)) %>% 
-  mutate(n = row_number())
-
-insert1 <- "\\fontsize{10}{12}\\selectfont"
-
-j <- bind_rows(j, data.frame(V1 = c(insert1), n = c(1.1))) %>% 
-  arrange(n) %>% 
-  select(-n)
-
-write.table(j, "./temp/table5.tex", quote = F, col.names = F,
-            row.names = F)
-
-```
-\input{"../../temp/table5.tex"}
-\end{singlespace}
-
-The estimated treatment effect for non-Black voters in Table \ref{tab:racevar} is 1.0 percentage points, though the interaction effect --- *Black × D(Discharged After EO 181)* --- is negative 0.8 percentage points. The executive order was apparently substantially more effective at boosting turnout for non-Black former parolees than Black parolees. This appears to have had a leveling effect: although Black former parolees in the control group turned out at higher rates than non-Black parolees in that group, the turnout rate among Black and non-Black voters in the ITT group in 2018 was virtually identical, as shown in Table \ref{tab:re}.
-
-\begin{singlespace}
 ```{r rd-dmeans, echo = F, warning = F}
 k <- readRDS("./temp/means_diff_black.rds")
 j <- knitr::kable(k, booktabs = T, caption = "(\\#tab:re) Turnout by Treatment Group, Race", linesep = "",
@@ -369,24 +354,15 @@ write.table(j, "./temp/table_whatever3.tex", quote = F, col.names = F,
             row.names = F)
 ```
 \input{"../../temp/table_whatever3.tex"}
-\end{singlespace}
-
-## Instrumental Variables Approach {-}
-
-The analyses in the previous section indicate that executive order was successful at increasing turnout among formerly incarcerated individuals as a group. They do not, however, provide us an estimate of the effect of rights restoration prior to parole discharge on the specific individuals who were eligible for treatment. To answer this question, we must specifically control for whether an individual actually had his rights restored before he was discharged from parole --- not simply whether he was discharged after the policy change. Because our ITT pool in the previous section include individuals not eligible for treatment, we expect that the ITT effect will be lower than the treatment effect on the treated individuals. We consider individuals whose rights were in fact restored prior to discharge from parole "compliers."
-
-Two-stage least squares models allow us to leverage the random assignment to treatment to identify the complier average causal effect (CACE). To use assignment to treatment as an instrument for compliance, assignment to treatment group must be uncorrelated with the outcome variable except via treatment [@Angrist1996]. In other words, we can only uncover the CACE in this setup if, in the absence of the policy change, individuals discharged from parole before and after May 18 would have voted at the same rate in 2018. The nonsignificance of the coefficients *Days off Parole* in Tables \ref{tab:to-18-logit-short} and \ref{tab:to-18-logit} indicate that this condition is met.
-
-Table \ref{tab:iv-tab} presents the results of the two-stage least squares regression. Model 1 includes just the dummy for whether an individual's rights were restored (instrumented by treatment assignment) while Model 2 includes the additional covariates from past specifications. As before, robust standard errors are clustered by treatment assignment group.
-
-\begin{singlespace}
 ```{r iv-reg-chunk, echo = F, results = "hide", message = F, warning = F}
 load("./temp/iv_individual_turnout_18.rdata")
 
-stargazer(iv1, iv3,
+stargazer(iv1, iv3, iv4,
           header = F,
           type = "text", notes.align = "l",
-          covariate.labels = c("D(Rights Restored Before Discharge)", "D(Male)", "Age (Years)",
+          covariate.labels = c("Rights Restored Before Discharge", 
+                               "Black $\\times$ Rights Restored Before Discharge",
+                               "Male", "Age (Years)",
                                "Voted in 2008",
                                "Years on Parole",
                                "Days off Parole Before Election"),
@@ -396,16 +372,16 @@ stargazer(iv1, iv3,
           omit = c("race", "felony"),
           keep.stat = c("n", "rsq", "adj.rsq"),
           add.lines=list(c("Race / Ethnicity FE", "", "X", "X", "X"),
-                         c("Felony Class FE", "", "", "X", "X")),
+                         c("Felony Class FE", "", "X", "X", "X")),
           table.layout = "-dm#-t-a-s-n",
           out = "./temp/test.tex",
           notes = "TO REPLACE",
           out.header = F,
-          se = list(iv1_ses, iv3_ses))
+          se = list(iv1_ses, iv3_ses, iv4_ses))
 
 j <- fread("./temp/test.tex", header = F, sep = "+")
 
-note.latex <- "\\multicolumn{3}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.\\\\Instrument is dummy indicating whether\\\\individual discharged after EO 181 went into effect.\\\\First-stage equations include covariates in Model 2.}}}"
+note.latex <- "\\multicolumn{4}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.\\\\First-stage equations include covariates in Models 2 and 3.}}}"
 
 j <- j %>% 
   mutate(V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),
@@ -426,25 +402,8 @@ write.table(j, "./temp/table6.tex", quote = F, col.names = F,
 \input{"../../temp/table6.tex"}
 \end{singlespace}
 
-The two-stage least squares approach indicates that the CACE was roughly 0.9 percentage points. Because overall turnout for individuals whose rights were restored was 3.2 percent, this implies that rights restoration prior to discharge from parole increased turnout by 39 percent.
-
-## Discussion {-}
-
-Restoring voting rights to individuals on parole is an important step toward undermining the disenfranchisement (both *de jure* and *de facto*) of communities of color disproportionately caught up in the criminal justice system. Prior to New York's Executive Order 181, parolees were required to wait until they finished their parole term to register to vote. That changed in 2018. On October 12^th^ --- the registration deadline for the 2018 midterms --- there were `r comma(readRDS("./temp/new_eligible_18.rds"))` active parolees whose voting rights had been restored. Without the executive order, every single one of these individuals would have been barred from participating. Though turnout among this group was low (just `r comma(readRDS("./temp/new_votes_18.rds"))`, or `r round((readRDS("./temp/new_votes_18.rds")/readRDS("./temp/new_eligible_18.rds"))*100, 2)` percent, of these individuals successfully cast a ballot), their re-enfranchisement marks an important milestone for New York State.
-
-As this analysis demonstrates, however, the impact of Executive Order 181 was not limited only to the individuals who would have been disenfranchised in its absence. In the case of New York State, rights restoration prior to discharge from parole is successful at boosting post-supervision participation rates. In this project we estimate that overall turnout among formerly disenfranchised individuals increased by about 0.6 percentage points (or 29 percent), and that individuals whose rights were restored saw turnout about 0.9 percentage points (or 39 percent) above where it would have been otherwise. Although the absolute impact of the policy change is small, it is meaningful given the low turnout among these individuals.
-
-The mechanism through which the rules change increased turnout among these individuals is not clear, and deserves futher study. @Weaver2010 argues that contact with the criminal justice system restructures how individuals understand their relationship with the government and sours their desire to participate. Automatic voting rights restoration upon the completion of a sentence likely does little to combat these negative perceptions of the government. On the other hand, a parolee whose parole officer actively encourages them to register and participate may believe that the state is interested in their political participation. Such interactions may undo some of the negative socialization identified by @Weaver2010.
-
-It could also be a story of better information. As @Meredith2015 and @Gerber2015 show, reminding formerly disenfranchised individuals of their restored voting rights can increase their participation (but see @Meredith2013). Research such as @locked_out further demonstrates that many formerly incarcerated individuals wrongly believe that they are ineligible to participate. When a parolee has her voting rights restored prior to discharge --- and when her parole officer is required to inform her of that fact --- she is far more likely to be confident in her voting eligibility. Of course, even voters in the control group were receiving notification of their eligibility through the mail. If the full scope of the causal effect of Executive Order 181 is informational, it is clear that information is communicated far more effectively through in-person meetings. In reality, the executive order's success at boosting turnout likely operated through multiple mechanisms.
-
-Troublingly, the effect of pre-discharge rights restoration seems to vary based on parolees' race. This discrepancy could be caused by a number of different factors. Firstly, Black and white individuals on parole might differ in meaningful ways that impact the successfulness of the intervention. As discussed above, Black participation among individuals discharged from parole prior to the executive order voted at significantly higher rates in 2018. The intervention was likely successful for parolees who would not have voted otherwise, but needed only a small encouragement. It may be that fewer Black former parolees are susceptible to small encouragements: they may separate more cleanly into voters and nonvoters, with fewer individuals susceptible to parole officer encouragement.
-
-We cannot, however, rule out the possibility that racial bias among parole officers plays some role in the effectiveness of the intervention. Although parole officers may not be overtly or consciously biased toward their parolees, such bias is possible. Although there is limited literature examining racial variation in parolees' perceptions of their parole officers, there is some evidence that Black prisoners report worse inmate-staff relationships than white prisoners [@Hemmens2000]. Moreover, recent research indicates that street-level bureaucrats may exhibit some racial bias in the services they provide. @White2015, for instance, shows that local election administrators are less likely to respond to email questions from Latino aliases than non-Latino white aliases. There is also evidence that politicians are less likely to respond to requests from constituents of different races [@Butler2011], and that public housing officials respond less to inquiries from Latinos [@Einstein2017].
-
-Parole officers may more enthusiastically encourage white parolees to register to vote and cast a ballot. This variation in encouragement would not necessarily be indicative of racial animus: it could arise from a parole officer's expectations about a parolee's political preferences. Officers are likely to provide greater encouragement to parolees they perceive to have similar political preferences. In the case of former parolees in New York State, race does serve as an effective proxy for partisanship: 82.5 percent of Black individuals discharged from parole since 2012 who participated in the 2018 election were registered Democrats; just 31.2 percent of such white individuals were registered Democrats. Ultimately, the data at hand cannot answer why the intervention succeeded at raising turnout only among white former parolees; future research must investigate why this is the case.
-
-Re-enfranchising voters while they are still under formal supervision is obviously beneficial to the individuals who are on parole on election day; such policies allow them to make their voices heard. The case of Executive Order 181 also indicates that restoring voting rights prior to parole discharge has further benefits. In 2018, it increased turnout among individuals who were formally discharged from parole prior to the registration deadline, and therefore would have been eligible to vote even if their rights were not restored until the completion of their sentence. This is encouraging, demonstrating that the state has a unique opportunity to shape the future participation of individuals who are currently under their supervision. By restoring voting rights before individuals have completed their sentence, and by requiring parole officers to inform their parolees of their voting rights, the state can increase the political participation of a group of often-marginalized individuals, thereby increasing the democratic representation of our elections. Nevertheless, the success of the executive order is tempered by the racially disparate effects.
-
 \newpage
-# References {-}
+```{r sensitivity, echo = FALSE, message = F, warning = F, fig.width = 7.5, fig.height = 6, fig.cap = "\\label{fig:sens}Estimated Treatment Effect by Window Size", fig.pos = "H", fig.align = "center"}
+j <- readRDS("./temp/reestimates.rds")
+print(j)
+```

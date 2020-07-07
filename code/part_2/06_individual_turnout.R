@@ -224,8 +224,19 @@ iv3 <- ivreg(v2018 ~ restored + as.factor(race) +
 
 iv3_ses <- cluster.robust.se(iv3, filter(parolees, year(parole_status_date) >= 2017)$finished_post)[,2]
 
+parolees$rw <- with(parolees, (race == "BLACK") * restored == T)
+parolees$pw <- with(parolees, (race == "BLACK") * finished_post == T)
 
-save(iv1, iv3, iv1_ses, iv3_ses, file = "./temp/iv_individual_turnout_18.rdata")
+iv4<- ivreg(v2018 ~ restored + rw + as.factor(race) +
+               as.factor(sex) + age + v2008 +
+               felony_a + felony_b + felony_c + felony_d + felony_e +
+               parole_time + days_bef | . -restored - rw + finished_post + pw,
+             data = filter(parolees, year(parole_status_date) >= 2017))
+
+iv4_ses <- cluster.robust.se(iv4, filter(parolees, year(parole_status_date) >= 2017)$finished_post)[,2]
+stargazer(iv4, se = list(iv4_ses), type = "text")
+
+save(iv1, iv3, iv4, iv1_ses, iv3_ses, iv4_ses, file = "./temp/iv_individual_turnout_18.rdata")
 
 ### variable treatment effect
 stata("

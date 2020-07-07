@@ -104,13 +104,13 @@ p1 <- ggplot(filter(cints)) +
             fill = "gray60", alpha = 0.5) +
   geom_errorbar(aes(x = months,
                     ymin = lower, ymax = upper), size = 0.2) +
-  geom_line(aes(x = months, y = estimate, linetype = type), size = 0.2) + 
-  geom_point(aes(x = months, y = estimate, shape = type), size = 1.5) + 
+  geom_line(aes(x = months, y = estimate), size = 0.2) + 
+  geom_point(aes(x = months, y = estimate), size = 1.5) + 
   theme_bw() +
-  labs(y = "Estimated Treatment Effect",
+  labs(y = "Estimated ITT Effect",
        x = "Months Around Cutpoint",
        caption = "Notes: 95% confidence bars shown.
-Regressions include covariates displayed in Table 4.
+Regressions include covariates from Models 3 and 5 of Table 4.
 Number of observations in each regression shown on right axis.",
        shape = "Year",
        linetype = "Year") +
@@ -120,9 +120,10 @@ Number of observations in each regression shown on right axis.",
                                          breaks = seq(0, 20000, 10000))) +
   theme(text = element_text(family = "LM Roman 10"),
         plot.caption = element_text(hjust = 0),
-        plot.title = element_text(hjust = 0.5)) +
+        plot.title = element_text(hjust = 0.5),
+        legend.position = NULL) +
   geom_hline(yintercept = 0, linetype = "dashed", size = 1)
-
+p1
 saveRDS(p1, "./temp/reestimates.rds")
 
 ####################################################################################
