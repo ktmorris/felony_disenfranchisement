@@ -20,23 +20,29 @@ parolees <- left_join(parolees, nys_roll, by = "din") %>%
          days_since_m21 = parole_status_date - as.Date("2018-05-19"),
          v2016 = ifelse(is.na(v2016), 0, v2016),
          v2008 = ifelse(is.na(v2008), 0, v2008),
-         registered = voter_status %in% c("ACTIVE", "INACTIVE"))
+         registered = (voter_status %in% c("ACTIVE", "INACTIVE")) & (registration_date <= 20181012))
 ###########################################
 pool <- filter(parolees, year(parole_status_date) >= 2017) %>% 
   mutate(b = race == "BLACK")
 
-h <- t.test(v2018 ~ b, filter(pool, !finished_post))
-j <- t.test(v2018 ~ b, filter(pool, finished_post))
+g <- t.test(v2018 ~ b, filter(pool, !finished_post))
+h <- t.test(v2018 ~ b, filter(pool, finished_post))
+
+i <- t.test(registered ~ b, filter(pool, !finished_post))
+j <- t.test(registered ~ b, filter(pool, finished_post))
 
 k <- pool %>% 
   group_by(b, finished_post) %>% 
-  summarize(turnout = percent(mean(v2018), accuracy = .01)) %>% 
-  pivot_wider(id_cols = "finished_post", values_from = "turnout", names_from = "b") %>% 
-  mutate(finished_post = ifelse(finished_post, "ITT", "Control"))
+  summarize(Turnout = percent(mean(v2018), accuracy = .01),
+            Registration = percent(mean(registered), accuracy = .01)) %>% 
+  pivot_longer(cols = c(Turnout, Registration)) %>% 
+  pivot_wider(id_cols = c(name, finished_post), values_from = c(value), names_from = "b") %>% 
+  mutate(finished_post = ifelse(finished_post, "ITT", "Control")) %>% 
+  arrange(desc(name), finished_post)
 
-k$p <- round(c(h$p.value, j$p.value), digits = 3)
+k$p <- round(c(g$p.value, h$p.value, i$p.value, j$p.value), digits = 3)
 
-colnames(k) <- c("Group", "Non-Black", "Black", "p-value")
+colnames(k) <- c("Statistic", "Group", "Non-Black", "Black", "p-value")
 saveRDS(k, "./temp/means_diff_black.rds")
 
 ####################
@@ -44,86 +50,64 @@ saveRDS(k, "./temp/means_diff_black.rds")
 how_many_restored <- sum(parolees$restored)
 saveRDS(how_many_restored, "./temp/how_many_restored.rds")
 
-control_to <- mean(filter(parolees, !finished_post, year(parole_status_date) >= 2017)$v2018)
-saveRDS(control_to, "./temp/control_to_18.rds")
-
-model1 <- glm(v2018 ~ restored + days_since_done + days2,
-              family = "binomial", data = parolees)
-
-model2 <- glm(v2018 ~ restored + days_since_done + days2 +
-                as.factor(race) + as.factor(sex) + age,
-              family = "binomial", data = parolees)
-
-model3 <- glm(v2018 ~ restored + days_since_done + days2 +
-                as.factor(race) + as.factor(sex) + age +
-                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
-              family = "binomial", data = parolees)
-
-save(model1, model2, model3, file = "./temp/individual_turnout_18.rdata")
 
 ## intend-to-treat models
-
-model1 <- lm(v2018 ~ finished_post,
-              data = filter(parolees, year(parole_status_date) >= 2017),
-              cluster = "finished_post")
-
-m1_ses <- data.table(summary(lm.cluster(v2018 ~ finished_post,
-             data = filter(parolees, year(parole_status_date) >= 2017),
-             cluster = "finished_post"))[, 2])
-
-model2 <- lm(v2018 ~ finished_post + 
-                as.factor(race) + as.factor(sex) + age + v2008,
-              data = filter(parolees, year(parole_status_date) >= 2017),
-              cluster = "finished_post")
-
-m2_ses <- data.table(summary(lm.cluster(v2018 ~ finished_post + 
-                                          as.factor(race) + as.factor(sex) + age + v2008,
-                                        data = filter(parolees, year(parole_status_date) >= 2017),
-                                        cluster = "finished_post"))[,2])
-
-model3 <- lm(v2018 ~ finished_post + as.factor(race) +
-                as.factor(sex) + age + v2008 +
-                felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef,
-              data = filter(parolees, year(parole_status_date) >= 2017),
-              cluster = "finished_post")
-
-m3_ses <- data.table(summary(lm.cluster(v2018 ~ finished_post + as.factor(race) +
-                                          as.factor(sex) + age + v2008 +
-                                          felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef,
-                                        data = filter(parolees, year(parole_status_date) >= 2017),
-                                        cluster = "finished_post"))[,2])
-
 parolees$pb <- (parolees$race == "BLACK") * (parolees$finished_post == T)
 
-model5 <- lm(v2018 ~ finished_post + as.factor(race) +
-               as.factor(sex) + age + v2008 +
-               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef + pb,
-             data = filter(parolees, year(parole_status_date) >= 2017),
-             cluster = "finished_post")
+rd <- filter(parolees, year(parole_status_date) >= 2017)
 
-m5_ses <- data.table(summary(lm.cluster(v2018 ~ finished_post + as.factor(race) +
-                                          as.factor(sex) + age + v2008 +
-                                          felony_a + felony_b + felony_c + felony_d + felony_e + parole_time +
-                                          days_bef + pb,
-                                        data = filter(parolees, year(parole_status_date) >= 2017),
-                                        cluster = "finished_post"))[,2])
+f1 <- v2018 ~ finished_post + as.factor(race) +
+  as.factor(sex) + age + v2008 +
+  felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef
 
-save(model1, model2, model3, model5,
-     m1_ses, m2_ses, m3_ses, m5_ses, file = "./temp/individual_turnout_18_itt.rdata")
+f2 <- v2018 ~ finished_post + as.factor(race) +
+  as.factor(sex) + age + v2008 +
+  felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef + pb
+
+f3 <- registered ~ finished_post + as.factor(race) +
+  as.factor(sex) + age + v2008 +
+  felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef
+
+f4 <- registered ~ finished_post + as.factor(race) +
+  as.factor(sex) + age + v2008 +
+  felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef + pb
+
+models <- lapply(c(f1, f2, f3, f4), function(f){
+  m <- lm(f, data = rd)
+})
+
+ses_cl <- list(
+  summary(lm.cluster(formula = f1, data = rd, cluster = rd$finished_post))[ , 2],
+  summary(lm.cluster(formula = f2, data = rd, cluster = rd$finished_post))[ , 2],
+  summary(lm.cluster(formula = f3, data = rd, cluster = rd$finished_post))[ , 2],
+  summary(lm.cluster(formula = f4, data = rd, cluster = rd$finished_post))[ , 2]
+)
+
+save(models, ses_cl, file = "./temp/individual_turnout_18_itt.rdata")
 
 
 #### 
 date_to_model_time <- lm(v2018 ~ days_bef + days2 + v2008 +
+                           as.factor(race) + as.factor(sex) + age +
+                           felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                         data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-18"))
+
+date_ses <- data.table(lm_robust(v2018 ~ days_bef + days2 + v2008 +
+                                   as.factor(race) + as.factor(sex) + age +
+                                   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                                 data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-18"))$std.error)
+
+date_reg_model_time <- lm(registered ~ days_bef + days2 + v2008 +
                             as.factor(race) + as.factor(sex) + age +
                             felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
                           data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-18"))
 
-date_ses <- data.table(lm_robust(v2018 ~ days_bef + days2 + v2008 +
-                 as.factor(race) + as.factor(sex) + age +
-                 felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
-               data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-18"))$std.error)
+date_reg_ses <- data.table(lm_robust(registered ~ days_bef + days2 + v2008 +
+                                       as.factor(race) + as.factor(sex) + age +
+                                       felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
+                                     data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-18"))$std.error)
 
-save(date_to_model_time, date_ses, file = "./temp/short_term_to.rdata")
+save(date_to_model_time, date_ses, date_reg_model_time, date_reg_ses, file = "./temp/short_term_to.rdata")
 
 
 ##### RUN THE IV MODELS IN STATA BECAUSE MARGINAL EFFECTS ARE SO MUCH EASIER
@@ -136,85 +120,8 @@ parolees$registered <- parolees$registered * 1
 
 fwrite(filter(parolees, year(parole_status_date) >= 2017), "./temp/iv_data.csv")
 
-stata("
-
-insheet using \"temp/iv_data.csv\", clear
-
-foreach var in race sex county{
-	encode `var', gen(x)
-	drop `var'
-	rename x `var'
-}
-
-gen months_past = ceil((date(parole_status_date, \"YMD\") - date(\"2018-5-18\", \"YMD\")) / 30.5) * restored2
-
-label var restored2 \"D(Rights Restored)\"
-label var v2016 \"D(Voted in 2016)\"
-label var male \"D(Male)\"
-label var age \"Age (Years)\"
-label var parole_time \"Years on Parole\"
-label var months_past \"Months Restored\"
-
-* simple 2sls regression
-ivregress 2sls v2018 ///
-	(restored2 = finished_post2), vce(robust)
-	
-outreg2 using temp/iv_tables, replace lab dec(4) adjr2
-
-* add in sentence info
-ivregress 2sls v2018 i.race male age felony_a felony_b ///
-	felony_c felony_d felony_e parole_time (restored2 = finished_post2), vce(robust)
-	
-outreg2 using temp/iv_tables, append drop(i.race felony*) lab ///
-	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4) adjr2
-	
-
-* ivprobit with all of the covariates
-ivprobit v2018 i.race male age felony_a felony_b ///
-	felony_c felony_d felony_e parole_time (restored2 = finished_post2), vce(robust)
-	
-local chisq `e(chi2)'
-
-*predict marginal effects
-margins, dydx(*) predict(pr) post
-	
-outreg2 using temp/iv_tables, append drop(i.race felony*) lab ///
-  adds(\"Wald $\\chi^2$\", `chisq') ///
-	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4)
-
-*bivariate probit model no covariates
-biprobit (v2018 = restored2) ///
-	(restored2 = finished_post2), vce(robust)
-	
-local chisq `e(chi2)'
-local rho `e(rho)'
-* predict marginal effects
-margins, dydx(*) predict(pmarg1) post
-
-outreg2 using temp/iv_tables, append drop(i.race felony*) lab ///
-  adds(\"Wald $\\chi^2$\", `chisq', \"$\\rho$\", `rho') dec(4)
-	
-
-*bivariate probit model with all covariates
-biprobit (v2018 = restored2 i.race male age felony_a felony_b ///
-	felony_c felony_d felony_e parole_time) ///
-	(restored2 = finished_post2 i.race male age felony_a felony_b ///
-	felony_c felony_d felony_e parole_time), vce(robust)
-local chisq `e(chi2)'
-local rho `e(rho)'	
-
-* predict marginal effects
-margins, dydx(*) predict(pmarg1) post
-
-outreg2 using temp/iv_tables, append tex(frag) drop(i.race felony*) lab ///
-  adds(\"Wald $\\chi^2$\", `chisq', \"$\\rho$\", `rho') ///
-	addtext(Race / Ethnicity FE, X, Felony Class FE, X) dec(4)
-	
-")
-
-iv1 <- ivreg(v2018 ~ restored | . -restored + finished_post,
-             data = filter(parolees, year(parole_status_date) >= 2017))
-iv1_ses <- cluster.robust.se(iv1, filter(parolees, year(parole_status_date) >= 2017)$finished_post)[,2]
+parolees$rw <- with(parolees, (race == "BLACK") * restored == T)
+parolees$pw <- with(parolees, (race == "BLACK") * finished_post == T)
 
 iv3 <- ivreg(v2018 ~ restored + as.factor(race) +
                as.factor(sex) + age + v2008 +
@@ -224,19 +131,33 @@ iv3 <- ivreg(v2018 ~ restored + as.factor(race) +
 
 iv3_ses <- cluster.robust.se(iv3, filter(parolees, year(parole_status_date) >= 2017)$finished_post)[,2]
 
-parolees$rw <- with(parolees, (race == "BLACK") * restored == T)
-parolees$pw <- with(parolees, (race == "BLACK") * finished_post == T)
-
 iv4<- ivreg(v2018 ~ restored + rw + as.factor(race) +
-               as.factor(sex) + age + v2008 +
-               felony_a + felony_b + felony_c + felony_d + felony_e +
-               parole_time + days_bef | . -restored - rw + finished_post + pw,
-             data = filter(parolees, year(parole_status_date) >= 2017))
+              as.factor(sex) + age + v2008 +
+              felony_a + felony_b + felony_c + felony_d + felony_e +
+              parole_time + days_bef | . -restored - rw + finished_post + pw,
+            data = filter(parolees, year(parole_status_date) >= 2017))
 
 iv4_ses <- cluster.robust.se(iv4, filter(parolees, year(parole_status_date) >= 2017)$finished_post)[,2]
-stargazer(iv4, se = list(iv4_ses), type = "text")
 
-save(iv1, iv3, iv4, iv1_ses, iv3_ses, iv4_ses, file = "./temp/iv_individual_turnout_18.rdata")
+iv3b <- ivreg(registered ~ restored + as.factor(race) +
+                as.factor(sex) + age + v2008 +
+                felony_a + felony_b + felony_c + felony_d + felony_e +
+                parole_time + days_bef | . -restored + finished_post,
+              data = filter(parolees, year(parole_status_date) >= 2017))
+
+iv3_sesb <- cluster.robust.se(iv3b, filter(parolees, year(parole_status_date) >= 2017)$finished_post)[,2]
+
+iv4b <- ivreg(registered ~ restored + rw + as.factor(race) +
+                as.factor(sex) + age + v2008 +
+                felony_a + felony_b + felony_c + felony_d + felony_e +
+                parole_time + days_bef | . -restored - rw + finished_post + pw,
+              data = filter(parolees, year(parole_status_date) >= 2017))
+
+iv4_sesb <- cluster.robust.se(iv4b, filter(parolees, year(parole_status_date) >= 2017)$finished_post)[,2]
+
+
+save(iv3, iv4, iv3b, iv4b,
+     iv3_ses, iv4_ses, iv3_sesb, iv4_sesb, file = "./temp/iv_individual_turnout_18.rdata")
 
 ### variable treatment effect
 stata("
@@ -524,10 +445,10 @@ model4 <- lm(v2016 ~ finished_post +
                 felony_a + felony_b + felony_c + felony_d + felony_e + parole_time +
                days_bef,
               data = parolees)
-m4_ses <- data.table(summary(lm.cluster(v2016 ~ finished_post +
-                                          as.factor(race) + as.factor(sex) + age + v2008 +
-                                          felony_a + felony_b + felony_c + felony_d + felony_e + parole_time +
-                                          days_bef,
-                                        cluster = "finished_post", data = parolees)))
+
+m4_ses <- summary(lm.cluster(formula = v2016 ~ finished_post +
+                               as.factor(race) + as.factor(sex) + age + v2008 +
+                               felony_a + felony_b + felony_c + felony_d + felony_e + parole_time +
+                               days_bef, data = parolees, cluster = parolees$finished_post))[ , 2]
 
 save(model4, m4_ses, file = "./temp/individual_turnout_16.rdata")

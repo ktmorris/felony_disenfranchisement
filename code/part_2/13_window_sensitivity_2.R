@@ -110,7 +110,7 @@ p1 <- ggplot(filter(cints)) +
   labs(y = "Estimated ITT Effect",
        x = "Months Around Cutpoint",
        caption = "Notes: 95% confidence bars shown.
-Regressions include covariates from Models 3 and 5 of Table 4.
+Regressions include covariates from Models 1 and 5 of Table 4.
 Number of observations in each regression shown on right axis.",
        shape = "Year",
        linetype = "Year") +
