@@ -28,6 +28,8 @@ pool <- filter(parolees, year(parole_status_date) >= 2017) %>%
 g <- t.test(v2018 ~ b, filter(pool, !finished_post))
 h <- t.test(v2018 ~ b, filter(pool, finished_post))
 
+g1 <- t.test(v2008 ~ b, filter(pool))
+
 i <- t.test(registered ~ b, filter(pool, !finished_post))
 j <- t.test(registered ~ b, filter(pool, finished_post))
 
@@ -39,6 +41,13 @@ k <- pool %>%
   pivot_wider(id_cols = c(name, finished_post), values_from = c(value), names_from = "b") %>% 
   mutate(finished_post = ifelse(finished_post, "ITT", "Control")) %>% 
   arrange(desc(name), finished_post)
+
+k2 <- pool %>% 
+  group_by(b) %>% 
+  summarize(`Turnout 2008` = percent(mean(v2008), accuracy = .01)) %>% 
+  pivot_longer(cols = c(`Turnout 2008`)) %>% 
+  pivot_wider(id_cols = c(name), values_from = c(value), names_from = "b") %>% 
+  arrange(desc(name))
 
 k$p <- round(c(g$p.value, h$p.value, i$p.value, j$p.value), digits = 3)
 
@@ -56,19 +65,19 @@ parolees$pb <- (parolees$race == "BLACK") * (parolees$finished_post == T)
 
 rd <- filter(parolees, year(parole_status_date) >= 2017)
 
-f1 <- v2018 ~ finished_post + as.factor(race) +
+f1 <- registered ~ finished_post + as.factor(race) +
   as.factor(sex) + age + v2008 +
   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef
 
-f2 <- v2018 ~ finished_post + as.factor(race) +
+f2 <- registered ~ finished_post + as.factor(race) +
   as.factor(sex) + age + v2008 +
   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef + pb
 
-f3 <- registered ~ finished_post + as.factor(race) +
+f3 <- v2018 ~ finished_post + as.factor(race) +
   as.factor(sex) + age + v2008 +
   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef
 
-f4 <- registered ~ finished_post + as.factor(race) +
+f4 <- v2018 ~ finished_post + as.factor(race) +
   as.factor(sex) + age + v2008 +
   felony_a + felony_b + felony_c + felony_d + felony_e + parole_time + days_bef + pb
 
@@ -107,7 +116,7 @@ date_reg_ses <- data.table(lm_robust(registered ~ days_bef + days2 + v2008 +
                                        felony_a + felony_b + felony_c + felony_d + felony_e + parole_time,
                                      data = filter(parolees, year(parole_status_date) >= 2017, parole_status_date < "2018-05-18"))$std.error)
 
-save(date_to_model_time, date_ses, date_reg_model_time, date_reg_ses, file = "./temp/short_term_to.rdata")
+save(date_reg_model_time, date_reg_ses, date_to_model_time, date_ses, file = "./temp/short_term_to.rdata")
 
 
 ##### RUN THE IV MODELS IN STATA BECAUSE MARGINAL EFFECTS ARE SO MUCH EASIER
