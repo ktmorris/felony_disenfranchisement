@@ -1,9 +1,9 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020/W32TeX) (preloaded format=xelatex 2020.10.27)  28 OCT 2020 09:43
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020/W32TeX) (preloaded format=xelatex 2020.10.27)  28 OCT 2020 10:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**rewrite.tex
-(./rewrite.tex
+**table_embed.tex
+(./table_embed.tex
 LaTeX2e <2020-10-01> patch level 2
 L3 programming layer <2020-10-05> xparse <2020-03-03>
 (c:/Users/morrisk/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
@@ -663,7 +663,7 @@ Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
 \TeXr@lab=\toks34
 )
 \cslhangindent=\skip67
-(./rewrite.aux
+(./table_embed.aux
 
 LaTeX Warning: Label `' multiply defined.
 
@@ -671,7 +671,7 @@ LaTeX Warning: Label `' multiply defined.
 LaTeX Warning: Label `' multiply defined.
 
 )
-\openout1 = `rewrite.aux'.
+\openout1 = `table_embed.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 109.
 LaTeX Font Info:    ... okay on input line 109.
@@ -979,9 +979,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 109.
 LaTeX Info: Redefining \pageref on input line 109.
 LaTeX Info: Redefining \nameref on input line 109.
-(./rewrite.out) (./rewrite.out)
+(./table_embed.out) (./table_embed.out)
 \@outlinefile=\write3
-\openout3 = `rewrite.out'.
+\openout3 = `table_embed.out'.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1083,24 +1083,24 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 8.3991pt on input line 135.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 5.99936pt on input line 135.
-[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18
-] [19] [20] (../../temp/table3.tex
+[1] [2] [3] [4] [5] [6] [7] [8] [9] (../../temp/table3.tex
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 8.0pt on input line 39.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
 (Font)              scaled to size 8.00073pt on input line 39.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 7.99915pt on input line 39.
-) (../../temp/table_whatever2.tex) [21] (../../temp/table4.tex
+) [10] [11] (../../temp/table_whatever2.tex) (../../temp/table4.tex
 Overfull \hbox (17.17497pt too wide) in paragraph at lines 5--44
  [][] 
  []
 
-) (../../temp/table_whatever3.tex) [22] (../../temp/table6.tex) [23]
-File: rewrite_files/figure-latex/sensitivity-1.pdf Graphic file (type pdf)
-<use rewrite_files/figure-latex/sensitivity-1.pdf>
-[24] (./rewrite.aux)
-Package rerunfilecheck Info: File `rewrite.out' has not changed.
+) [12] [13] (../../temp/table_whatever3.tex) [14]
+File: table_embed_files/figure-latex/sensitivity-1.pdf Graphic file (type pdf)
+<use table_embed_files/figure-latex/sensitivity-1.pdf>
+[15] [16] (../../temp/table6.tex) [17] [18] [19] [20] [21] [22] [23] [24] (./ta
+ble_embed.aux)
+Package rerunfilecheck Info: File `table_embed.out' has not changed.
 (rerunfilecheck)             Checksum: 9864DEB770CE73A97444FCC33981AB1D;1617.
 
 LaTeX Warning: There were multiply-defined labels.
@@ -1108,11 +1108,11 @@ LaTeX Warning: There were multiply-defined labels.
  ) 
 Here is how much of TeX's memory you used:
  18463 strings out of 479446
- 321906 string characters out of 5879537
- 791862 words of memory out of 5000000
+ 321994 string characters out of 5879537
+ 789872 words of memory out of 5000000
  37478 multiletter control sequences out of 15000+600000
  544559 words of font info for 105 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 94i,17n,118p,1765b,504s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 94i,17n,118p,1769b,504s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on rewrite.pdf (25 pages).
+Output written on table_embed.pdf (25 pages).
