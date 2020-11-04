@@ -378,7 +378,7 @@ stargazer(iv3b, iv4b, iv3, iv4,
 
 j <- fread("./temp/test.tex", header = F, sep = "+")
 
-note.latex <- "\\multicolumn{4}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.\\\\First-stage equations include covariates in Models 2 and 3.}}}"
+note.latex <- "\\multicolumn{4}{l}{\\scriptsize{\\parbox{.5\\linewidth}{\\vspace{2pt}$^{***}p<0.01$, $^{**}p<0.05$, $^*p<0.1$. \\\\Robust standard errors in parentheses.\\\\First-stage equations include covariates in Models 2 and 4.}}}"
 
 j <- j %>% 
   mutate(V1 = ifelse(grepl("TO REPLACE", V1), note.latex, V1),

@@ -17,7 +17,7 @@ nys_roll <- select(nys_roll, -a, -b, -c)
 
 nys_roll <- nys_roll %>%
   mutate_at(vars(last_name, first_name, middle_name),
-            ~ gsub("[[:punct:]]| ", "", ifelse(. == "", NA, .))) %>% 
+            ~ tolower(gsub("[[:punct:]]| ", "", ifelse(. == "", NA, .)))) %>% 
   mutate(dob = as.Date(as.character(dob), "%Y%m%d"))
 
 #### MATCH DOC TO VOTER FILE ####
@@ -25,7 +25,7 @@ nys_roll <- nys_roll %>%
 doccs_to_rolls <- readRDS("./temp/parolees_with_restoration.rds")
 doccs_to_rolls <- doccs_to_rolls %>% 
   mutate_at(vars(last_name, first_name, middle_name),
-            ~ gsub("[[:punct:]]| ", "", ifelse(. == "", NA, .))) %>% 
+            ~ tolower(gsub("[[:punct:]]| ", "", ifelse(. == "", NA, .)))) %>% 
   rename(dob = dob_parole)
 
 merge_list <- match_rolls_to_doc(doccs_to_rolls, "din", nys_roll, "nys_id")
